@@ -6,6 +6,8 @@ import CustomPrice from '@/db/models/CustomPrice';
 import { revalidatePath } from 'next/cache';
 import mongoose from 'mongoose';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 interface PriceTier {
   minGuests: number;
@@ -100,7 +102,7 @@ export async function updateCustompriceForDate(data: CustomPriceUpdate) {
       updateOne: {
         filter: {
           propertyId: new mongoose.Types.ObjectId(data.propertyId),
-          date: dayjs(date).startOf('day').toDate() 
+          date: dayjs.utc(date).startOf('day').toDate() 
         },
         update: {
           $set: {
@@ -127,7 +129,7 @@ export async function deleteCustomPricesForDate(data: { propertyId: string; date
   try {
     await dbConnect();
 
-    const datesAsDates = data.dates.map(date => dayjs(date).startOf('day').toDate());
+    const datesAsDates = data.dates.map(date => dayjs.utc(date).startOf('day').toDate());
 
     await CustomPrice.deleteMany({
       propertyId: new mongoose.Types.ObjectId(data.propertyId),
@@ -152,7 +154,7 @@ export async function getCustomPrices(propertyId: string): Promise<CustomPriceEn
       .toArray();
 
     return prices.map((p: any) => ({
-      date: dayjs(p.date).format('YYYY-MM-DD'),
+      date: dayjs.utc(p.date).format('YYYY-MM-DD'),
       prices: p.prices ?? [],
       previewPrice: p.prices?.[0]?.price ?? 0,
       propertyId: p.propertyId.toString(),
