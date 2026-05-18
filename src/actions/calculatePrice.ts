@@ -215,7 +215,7 @@ export async function calculateDynamicPrice(
     // ── 1. CustomPrice (Najwyższy priorytet) ──
     const customPrice = await CustomPrice.findOne({
       propertyId,
-      date: { $gte: d, $lt: new Date(d.getTime() + 86_400_000) },
+      date: dateStr,
     });
 
     if (customPrice) {

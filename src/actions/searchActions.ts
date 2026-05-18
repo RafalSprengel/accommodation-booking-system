@@ -243,8 +243,8 @@ export async function calculateTotalPrice(
       CustomPrice.find({
         propertyId: propertySelection,
         date: {
-          $gte: dayjs(startDate).toDate(),
-          $lt: dayjs(endDate).toDate(),
+          $gte: dayjs(startDate).format('YYYY-MM-DD'),
+          $lte: dayjs(endDate).subtract(1, 'day').format('YYYY-MM-DD'),
         },
       }),
       Season.find({ isActive: true }).sort({ order: 1, startDate: 1 }),
@@ -269,7 +269,7 @@ export async function calculateTotalPrice(
   );
 
   const customPricesMap = new Map<string, any>(
-    customPricesDocs.map((cp: any) => [dayjs(cp.date).format('YYYY-MM-DD'), cp])
+    customPricesDocs.map((cp: any) => [cp.date, cp])
   );
 
   const resolvedBasicPrices = basicPrices;

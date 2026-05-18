@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 interface IPriceTier {
   minGuests: number;
@@ -15,23 +15,25 @@ const PriceTierSchema = new Schema(
   { _id: false }
 );
 
-const CustomPriceSchema = new Schema({
-  propertyId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Property',
-    required: true,
-    index: true,
+const CustomPriceSchema = new Schema(
+  {
+    propertyId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Property',
+      required: true,
+      index: true,
+    },
+    date: {
+      type: String,
+      required: true,
+      index: true,
+      match: /^\d{4}-\d{2}-\d{2}$/,
+    },
+    prices: { type: [PriceTierSchema], required: true, default: [] },
+    extraBedPrice: { type: Number, required: true, min: 0 },
   },
-  date: {
-    type: Date,
-    required: true,
-    index: true,
-  },
-  prices: { type: [PriceTierSchema], required: true, default: [] },
-  extraBedPrice: { type: Number, required: true, min: 0, default: 50 },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
+  { timestamps: true }
+);
 
 CustomPriceSchema.index({ propertyId: 1, date: 1 }, { unique: true });
 
