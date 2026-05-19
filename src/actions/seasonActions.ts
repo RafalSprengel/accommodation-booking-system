@@ -6,6 +6,7 @@ import PropertyPrices from '@/db/models/PropertyPrices';
 import Property from '@/db/models/Property';
 import CustomPrice from '@/db/models/CustomPrice';
 import { revalidatePath } from 'next/cache';
+import { hasSeasonOverlap } from '@/utils/validateSeasonOverlap';
 
 export interface ISeasonData {
   _id: string;
@@ -182,12 +183,29 @@ export async function createSeason(name: string, description: string, order: num
       return { success: false, message: 'Nieprawidłowe daty sezonu' };
     }
 
+    const startMD = toMonthDayValue(parsedStartDate);
+    const endMD = toMonthDayValue(parsedEndDate);
+    const isCrossYear = endMD < startMD;
+    const normalizedStart = new Date(2000, parsedStartDate.getMonth(), parsedStartDate.getDate(), 12, 0, 0, 0);
+    const normalizedEnd = new Date(isCrossYear ? 2001 : 2000, parsedEndDate.getMonth(), parsedEndDate.getDate(), 12, 0, 0, 0);
+
+    const overlapResult = await hasSeasonOverlap(normalizedStart, normalizedEnd);
+    if (overlapResult.hasOverlap && overlapResult.overlappingSeason) {
+      const s = overlapResult.overlappingSeason;
+      const overlapStart = formatMonthDay(s.startDate as Date);
+      const overlapEnd = formatMonthDay(s.endDate as Date);
+      return {
+        success: false,
+        message: `Zakres dat nakłada się na sezon "${s.name as string}", który jest ustawiony od ${overlapStart} do ${overlapEnd}.`,
+      };
+    }
+
     const season = await Season.create({
       name: normalizedName,
       description: description.trim(),
       order,
-      startDate: parsedStartDate,
-      endDate: parsedEndDate,
+      startDate: normalizedStart,
+      endDate: normalizedEnd,
       isActive: true,
     });
 
