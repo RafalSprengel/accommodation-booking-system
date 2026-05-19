@@ -20,7 +20,6 @@ import {
   getAllSeasons,
   type ISeasonData,
   updateSeasonDates,
-  updateSeasonOrder,
 } from "@/actions/seasonActions";
 import Button from "@/app/_components/UI/Button/Button";
 import Modal from "@/app/_components/Modal/Modal";
@@ -119,7 +118,6 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
   const [seasonStartMonth, setSeasonStartMonth] = useState(1);
   const [seasonEndDay, setSeasonEndDay] = useState(1);
   const [seasonEndMonth, setSeasonEndMonth] = useState(1);
-  const [seasonOrder, setSeasonOrder] = useState<number | "">(0);
   const [isEditExpanded, setIsEditExpanded] = useState(false);
   const [isAddExpanded, setIsAddExpanded] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -127,7 +125,6 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
   const [isCreatingSeason, setIsCreatingSeason] = useState(false);
   const [newSeasonName, setNewSeasonName] = useState("");
   const [newSeasonDesc, setNewSeasonDesc] = useState("");
-  const [newSeasonOrder, setNewSeasonOrder] = useState("");
   const [seasonDateErrors, setSeasonDateErrors] = useState<{
     startDate?: string;
     endDate?: string;
@@ -164,8 +161,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
       seasonStartDay !== originalStart.date() ||
       seasonStartMonth !== originalStart.month() + 1 ||
       seasonEndDay !== originalEnd.date() ||
-      seasonEndMonth !== originalEnd.month() + 1 ||
-      seasonOrder !== selectedSeason.order
+      seasonEndMonth !== originalEnd.month() + 1
     );
   }, [
     selectedSeason,
@@ -175,7 +171,6 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
     seasonStartMonth,
     seasonEndDay,
     seasonEndMonth,
-    seasonOrder,
   ]);
 
   const isAnyDirty = isConfigDirty || isSeasonDirty;
@@ -207,7 +202,6 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
       setSeasonStartMonth(start.month() + 1);
       setSeasonEndDay(end.date());
       setSeasonEndMonth(end.month() + 1);
-      setSeasonOrder(season.order);
     }
   }, [selectedSeasonId, seasons]);
 
@@ -237,10 +231,6 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
 
   const handleUpdateSeasonSilent = async () => {
     if (!seasonName || !selectedSeasonId) return false;
-    if (seasonOrder === "") {
-      toast.error("Kolejność jest wymagana");
-      return false;
-    }
     if (!isSeasonDirty) return true;
 
     setSeasonDateErrors({});
@@ -250,9 +240,6 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
 
     setIsUpdatingSeason(true);
     try {
-      if (seasonOrder !== selectedSeason?.order) {
-        await updateSeasonOrder(selectedSeasonId, seasonOrder);
-      }
       const result = await updateSeasonDates(
         seasonName,
         seasonDesc,
@@ -315,7 +302,6 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
   const resetAddSeasonForm = () => {
     setNewSeasonName("");
     setNewSeasonDesc("");
-    setNewSeasonOrder("");
     setNewSeasonStartDate("");
     setNewSeasonEndDate("");
   };
@@ -345,7 +331,6 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
     setSeasonStartMonth(start.month() + 1);
     setSeasonEndDay(end.date());
     setSeasonEndMonth(end.month() + 1);
-    setSeasonOrder(selectedSeason.order);
   };
 
   const handleOpenEditSeasonModal = () => {
@@ -379,10 +364,6 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
       toast.error("Nazwa sezonu jest wymagana");
       return;
     }
-    if (newSeasonOrder.trim() === "") {
-      toast.error("Kolejność jest wymagana");
-      return;
-    }
     if (!newSeasonStartDate) {
       toast.error("Data rozpoczęcia jest wymagana");
       return;
@@ -395,17 +376,11 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
       toast.error("Data zakończenia nie może być wcześniejsza niż rozpoczęcia");
       return;
     }
-    const parsedOrder = parseInt(newSeasonOrder, 10);
-    if (Number.isNaN(parsedOrder)) {
-      toast.error("Kolejność musi być liczbą");
-      return;
-    }
     setIsCreatingSeason(true);
     try {
       const result = await createSeason(
         newSeasonName,
         newSeasonDesc,
-        parsedOrder,
         newSeasonStartDate,
         newSeasonEndDate,
       );
@@ -668,11 +643,13 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
               {isLoadingSeasons ? (
                 <option value="">Wczytywanie sezonów...</option>
               ) : (
-                seasons.map((season) => (
-                  <option key={season._id} value={season._id}>
-                    {season.name} {!season.isActive && "(nieaktywny)"}
-                  </option>
-                ))
+                [...seasons]
+                  .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+                  .map((season) => (
+                    <option key={season._id} value={season._id}>
+                      {season.name} {!season.isActive && "(nieaktywny)"}
+                    </option>
+                  ))
               )}
             </select>
             {isLoadingSeasons && (
@@ -1085,25 +1062,6 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
           <div className={styles.seasonEditRow}>
             <div className={styles.seasonEditLabelCol}>
               <label
-                htmlFor="newSeasonOrder"
-                className={styles.seasonEditLabel}
-              >
-                Kolejność na liście:
-              </label>
-            </div>
-            <div className={styles.seasonEditControlCol}>
-              <input
-                id="newSeasonOrder"
-                type="number"
-                value={newSeasonOrder}
-                onChange={(e) => setNewSeasonOrder(e.target.value)}
-                className={styles.seasonEditInput}
-              />
-            </div>
-          </div>
-          <div className={styles.seasonEditRow}>
-            <div className={styles.seasonEditLabelCol}>
-              <label
                 htmlFor="newSeasonStartDate"
                 className={styles.seasonEditLabel}
               >
@@ -1190,36 +1148,6 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 className={styles.seasonEditInput}
                 value={seasonDesc}
                 onChange={(e) => setSeasonDesc(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className={styles.seasonEditRow}>
-            <div className={styles.seasonEditLabelCol}>
-              <label
-                htmlFor="editSeasonOrder"
-                className={styles.seasonEditLabel}
-              >
-                Kolejność na liście:
-              </label>
-            </div>
-            <div className={styles.seasonEditControlCol}>
-              <input
-                id="editSeasonOrder"
-                type="number"
-                value={seasonOrder}
-                onChange={(e) => {
-                  if (e.target.value === "") {
-                    setSeasonOrder("");
-                    return;
-                  }
-
-                  const nextOrder = parseInt(e.target.value, 10);
-
-                  if (!Number.isNaN(nextOrder)) {
-                    setSeasonOrder(nextOrder);
-                  }
-                }}
-                className={styles.seasonEditInput}
               />
             </div>
           </div>

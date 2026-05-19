@@ -6,7 +6,6 @@ export interface ISeason {
   startDate: Date;
   endDate: Date;
   isActive: boolean;
-  order: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -18,7 +17,6 @@ const SeasonSchema = new Schema<ISeason>(
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     isActive: { type: Boolean, default: true },
-    order: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

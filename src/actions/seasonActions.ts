@@ -15,7 +15,6 @@ export interface ISeasonData {
   startDate: Date;
   endDate: Date;
   isActive: boolean;
-  order: number;
 }
 
 type MonthDaySegment = { start: number; end: number };
@@ -58,7 +57,7 @@ function rangesOverlap(
 export async function getAllSeasons() {
   try {
     await dbConnect();
-    const seasons = await Season.find({}).sort({ order: 1 }).lean();
+    const seasons = await Season.find({}).sort({ startDate: 1 }).lean();
     return JSON.parse(JSON.stringify(seasons)) as ISeasonData[];
   } catch (error) {
     console.error('Błąd pobierania sezonów:', error);
@@ -147,22 +146,7 @@ export async function updateSeasonDates(
   }
 }
 
-export async function updateSeasonOrder(seasonId: string, order: number) {
-  console.log('wykonuje update order, order to ', order);
-  order = order - 1;
-  try {
-    await dbConnect();
-    await Season.findByIdAndUpdate(seasonId, { order });
-    revalidatePath('/admin/settings/booking');
-    revalidatePath('/admin/prices');
-    return { success: true, message: 'Zaktualizowano kolejność wyświetlania' };
-  } catch (error) {
-    console.error('Błąd aktualizacji kolejności sezonu:', error);
-    return { success: false, message: 'Nie udało się zaktualizować kolejności' };
-  }
-}
-
-export async function createSeason(name: string, description: string, order: number, startDate: string, endDate: string) {
+export async function createSeason(name: string, description: string, startDate: string, endDate: string) {
   try {
     await dbConnect();
 
@@ -203,7 +187,6 @@ export async function createSeason(name: string, description: string, order: num
     const season = await Season.create({
       name: normalizedName,
       description: description.trim(),
-      order,
       startDate: normalizedStart,
       endDate: normalizedEnd,
       isActive: true,
