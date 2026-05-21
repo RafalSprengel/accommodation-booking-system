@@ -40,7 +40,8 @@
     background: white;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    width: fit-content;
+    max-width: 100%;
 }
 
 .calendarTable {
@@ -194,12 +195,19 @@
     content: '';
     position: absolute;
     top: 100%;
-    left: 50%;
+    left: var(--arrow-left, 50%);
     transform: translateX(-50%);
     border-width: 8px;
     border-style: solid;
     border-color: white transparent transparent transparent;
     filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+}
+
+.tooltipFlipped .tooltip::after {
+    top: auto;
+    bottom: 100%;
+    border-color: transparent transparent white transparent;
+    filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
 }
 
 .tooltipHeader {

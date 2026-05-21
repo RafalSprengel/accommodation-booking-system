@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useRef } from 'react'
 import dayjs from 'dayjs'
 import 'dayjs/locale/pl'
 import isBetween from 'dayjs/plugin/isBetween'
@@ -15,6 +15,67 @@ const MONTH_NAMES = [
   'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
   'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
 ]
+
+const TooltipWrapper = ({ children }: { children: React.ReactNode }) => {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const parent = el.parentElement
+    if (!parent) return
+
+    const reposition = () => {
+      el.style.left = '50%'
+      el.style.right = ''
+      el.style.transform = 'translateX(-50%) translateY(-5px)'
+      el.style.bottom = '100%'
+      el.style.top = ''
+      el.style.marginTop = ''
+      el.classList.remove(styles.tooltipFlipped)
+      el.style.removeProperty('--arrow-left')
+
+      const rect = el.getBoundingClientRect()
+      const pad = 8
+
+      if (rect.left < pad) {
+        el.style.left = '0'
+        el.style.transform = 'translateX(0) translateY(-5px)'
+      } else if (rect.right > window.innerWidth - pad) {
+        el.style.left = 'auto'
+        el.style.right = '0'
+        el.style.transform = 'translateX(0) translateY(-5px)'
+      }
+
+      if (rect.top < pad) {
+        el.style.bottom = 'auto'
+        el.style.top = '100%'
+        el.style.marginTop = '8px'
+        el.style.transform = el.style.transform.replace('translateY(-5px)', 'translateY(5px)')
+        el.classList.add(styles.tooltipFlipped)
+      }
+
+      const parentRect = parent.getBoundingClientRect()
+      const tooltipRect = el.getBoundingClientRect()
+      const parentCenterX = parentRect.left + parentRect.width / 2
+      const arrowLeft = Math.max(16, Math.min(parentCenterX - tooltipRect.left, tooltipRect.width - 16))
+      el.style.setProperty('--arrow-left', `${arrowLeft}px`)
+    }
+
+    parent.addEventListener('mouseenter', reposition)
+    parent.addEventListener('touchstart', reposition, { passive: true })
+    return () => {
+      parent.removeEventListener('mouseenter', reposition)
+      parent.removeEventListener('touchstart', reposition)
+    }
+  }, [])
+
+  return (
+    <div ref={containerRef} className={styles.tooltipContainer}>
+      {children}
+    </div>
+  )
+}
 
 const BookingTooltip = ({ details }: { details: BookingDetails }) => {
   if (!details) return null
@@ -195,7 +256,7 @@ export default function Calendar() {
                       return (
                         <td key={cabin.id} className={styles.cell} style={{ backgroundColor: isPast ? '#f5f5f5' : cell.details?.color }}>
                           <span className={styles.statusText}>{cell.status === 'booked' ? 'Zajęty' : 'Zablokowany'}</span>
-                          <div className={styles.tooltipContainer}><BookingTooltip details={cell.details!} /></div>
+                          <TooltipWrapper><BookingTooltip details={cell.details!} /></TooltipWrapper>
                         </td>
                       )
                     }
@@ -208,14 +269,14 @@ export default function Calendar() {
                             style={{ backgroundColor: (!isPast && cell.checkoutDetails) ? cell.checkoutDetails.color : '' }}
                           >
                             <span className={styles.halfText}>{cell.checkoutDetails ? 'OUT' : 'Wolny'}</span>
-                            {cell.checkoutDetails && <div className={styles.tooltipContainer}><BookingTooltip details={cell.checkoutDetails} /></div>}
+                            {cell.checkoutDetails && <TooltipWrapper><BookingTooltip details={cell.checkoutDetails} /></TooltipWrapper>}
                           </div>
                           <div
                             className={`${styles.half} ${cell.checkinDetails ? styles.bookedHalf : styles.freeHalf}`}
                             style={{ backgroundColor: (!isPast && cell.checkinDetails) ? cell.checkinDetails.color : '' }}
                           >
                             <span className={styles.halfText}>{cell.checkinDetails ? 'IN' : 'Wolny'}</span>
-                            {cell.checkinDetails && <div className={styles.tooltipContainer}><BookingTooltip details={cell.checkinDetails} /></div>}
+                            {cell.checkinDetails && <TooltipWrapper><BookingTooltip details={cell.checkinDetails} /></TooltipWrapper>}
                           </div>
                         </div>
                       </td>
