@@ -161,8 +161,8 @@
 }
 
 .tooltipContainer {
-    position: absolute;
-    bottom: 100%;
+    position: fixed;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
     width: 280px;
@@ -171,7 +171,6 @@
     visibility: hidden;
     transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
     pointer-events: none;
-    margin-bottom: 8px;
 }
 
 .cell:hover .tooltipContainer,

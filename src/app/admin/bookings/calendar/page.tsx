@@ -26,47 +26,58 @@ const TooltipWrapper = ({ children }: { children: React.ReactNode }) => {
     if (!parent) return
 
     const reposition = () => {
+      el.style.position = 'fixed'
       el.style.left = '50%'
       el.style.right = ''
-      el.style.transform = 'translateX(-50%) translateY(-5px)'
-      el.style.bottom = '100%'
-      el.style.top = ''
+      el.style.top = '0'
+      el.style.bottom = ''
+      el.style.transform = 'translateX(-50%)'
       el.style.marginTop = ''
       el.classList.remove(styles.tooltipFlipped)
       el.style.removeProperty('--arrow-left')
 
-      const rect = el.getBoundingClientRect()
-      const pad = 8
-
-      if (rect.left < pad) {
-        el.style.left = '0'
-        el.style.transform = 'translateX(0) translateY(-5px)'
-      } else if (rect.right > window.innerWidth - pad) {
-        el.style.left = 'auto'
-        el.style.right = '0'
-        el.style.transform = 'translateX(0) translateY(-5px)'
-      }
-
-      if (rect.top < pad) {
-        el.style.bottom = 'auto'
-        el.style.top = '100%'
-        el.style.marginTop = '8px'
-        el.style.transform = el.style.transform.replace('translateY(-5px)', 'translateY(5px)')
-        el.classList.add(styles.tooltipFlipped)
-      }
-
       const parentRect = parent.getBoundingClientRect()
+      const pad = 8
       const tooltipRect = el.getBoundingClientRect()
+      const tooltipWidth = tooltipRect.width
+      const baseLeft = parentRect.left + parentRect.width / 2
+
+      if (baseLeft - tooltipWidth / 2 < pad) {
+        el.style.left = `${pad}px`
+        el.style.transform = 'translateX(0)'
+      } else if (baseLeft + tooltipWidth / 2 > window.innerWidth - pad) {
+        el.style.left = 'auto'
+        el.style.right = `${pad}px`
+        el.style.transform = 'translateX(0)'
+      } else {
+        el.style.left = `${baseLeft}px`
+        el.style.transform = 'translateX(-50%)'
+      }
+
+      const aboveTop = parentRect.top - tooltipRect.height - 8
+      if (aboveTop < pad) {
+        el.style.top = `${parentRect.bottom + 8}px`
+        el.classList.add(styles.tooltipFlipped)
+      } else {
+        el.style.top = `${aboveTop}px`
+      }
+
+      const finalTooltipRect = el.getBoundingClientRect()
       const parentCenterX = parentRect.left + parentRect.width / 2
-      const arrowLeft = Math.max(16, Math.min(parentCenterX - tooltipRect.left, tooltipRect.width - 16))
+      const arrowLeft = Math.max(16, Math.min(parentCenterX - finalTooltipRect.left, finalTooltipRect.width - 16))
       el.style.setProperty('--arrow-left', `${arrowLeft}px`)
     }
 
     parent.addEventListener('mouseenter', reposition)
     parent.addEventListener('touchstart', reposition, { passive: true })
+    window.addEventListener('scroll', reposition, true)
+    window.addEventListener('resize', reposition)
+
     return () => {
       parent.removeEventListener('mouseenter', reposition)
       parent.removeEventListener('touchstart', reposition)
+      window.removeEventListener('scroll', reposition, true)
+      window.removeEventListener('resize', reposition)
     }
   }, [])
 
