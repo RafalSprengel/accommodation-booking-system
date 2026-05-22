@@ -1,22 +1,24 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   clearAllData,
   seedAdmin,
   seedAllData,
   seedBookingConfig,
   seedBookings,
+  seedExactBetterAuthUser,
   seedPriceConfigDefaults,
   seedProperties,
   seedPropertyPrices,
   seedSeasons,
   seedSystemConfig,
-} from "@/actions/seed";
-import Button from "@/app/_components/UI/Button/Button";
-import styles from "./page.module.css";
+} from '@/actions/seed';
+import styles from './page.module.css';
 
-export default function DevPage() {
+export default function DevPageClient() {
+  const router = useRouter();
   const [logs, setLogs] = useState<string[]>([]);
 
   const addLog = (msg: string) => {
@@ -25,7 +27,10 @@ export default function DevPage() {
     );
   };
 
-  const runAction = async (name: string, actionFn: () => Promise<{ success: boolean; message?: string; error?: string }>) => {
+  const runAction = async (
+    name: string,
+    actionFn: () => Promise<{ success: boolean; message?: string; error?: string }>,
+  ) => {
     addLog(`Uruchamiam: ${name}...`);
     try {
       const res = await actionFn();
@@ -35,9 +40,14 @@ export default function DevPage() {
         addLog(`❌ ERROR: ${res.error || res.message}`);
       }
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Nieznany błąd";
+      const message = error instanceof Error ? error.message : 'Nieznany błąd';
       addLog(`❌ EXCEPTION: ${message}`);
     }
+  };
+
+  const handleLogout = async () => {
+    await fetch('/dev/api/auth', { method: 'DELETE' });
+    router.refresh();
   };
 
   return (
@@ -45,99 +55,105 @@ export default function DevPage() {
       <div className={styles.devContainer}>
         <header className={styles.header}>
           <h1>Developer Console</h1>
-          <span className={styles.status}>Environment: Development</span>
+          <div className={styles.status}>Environment: Development</div>
         </header>
         <div className={styles.grid}>
           <section className={styles.actions}>
             <h3>Database Actions</h3>
             <div className={styles.buttonGroup}>
-              {/* ── Full reset ──────────────────────────────────────────────── */}
-              <Button
+              <button
+                type="button"
                 className={styles.btnPrimary}
-                onClick={() => runAction("Seed All (Reset)", seedAllData)}
+                onClick={() => runAction('Seed All (Reset)', seedAllData)}
               >
                 Seed All Data (Full Reset)
-              </Button>
+              </button>
 
               <hr className={styles.divider} />
 
-              {/* ── Jednotkowe seedy ────────────────────────────────────────── */}
-              <Button
+              <button
+                type="button"
                 className={styles.btnSecondary}
-                onClick={() =>
-                  runAction("Seed Properties (2 domki)", seedProperties)
-                }
+                onClick={() => runAction('Seed Properties (2 domki)', seedProperties)}
               >
                 Seed Properties Only
-              </Button>
-              <Button
+              </button>
+              <button
+                type="button"
                 className={styles.btnSecondary}
-                onClick={() =>
-                  runAction("Seed PropertyPrices (ceny)", seedPropertyPrices)
-                }
+                onClick={() => runAction('Seed PropertyPrices (ceny)', seedPropertyPrices)}
               >
                 Seed PropertyPrices (ceny per obiekt)
-              </Button>
-              <Button
+              </button>
+              <button
+                type="button"
                 className={styles.btnSecondary}
-                onClick={() => runAction("Seed Seasons", seedSeasons)}
+                onClick={() => runAction('Seed Seasons', seedSeasons)}
               >
-                Seed Seasons (3 sezony)
-              </Button>
-              <Button
+                Seed Seasons (4 sezony)
+              </button>
+              <button
+                type="button"
                 className={styles.btnSecondary}
-                onClick={() =>
-                  runAction(
-                    "Seed Price Config (Default)",
-                    seedPriceConfigDefaults,
-                  )
-                }
+                onClick={() => runAction('Seed Price Config (Default)', seedPriceConfigDefaults)}
               >
                 Seed Price Config (Default)
-              </Button>
-              <Button
+              </button>
+              <button
+                type="button"
                 className={styles.btnSecondary}
-                onClick={() =>
-                  runAction("Seed System Config", seedSystemConfig)
-                }
+                onClick={() => runAction('Seed System Config', seedSystemConfig)}
               >
                 Seed System Config
-              </Button>
-              <Button
+              </button>
+              <button
+                type="button"
                 className={styles.btnSecondary}
-                onClick={() =>
-                  runAction("Seed Booking Config", seedBookingConfig)
-                }
+                onClick={() => runAction('Seed Booking Config', seedBookingConfig)}
               >
                 Seed Booking Config
-              </Button>
-              <Button
+              </button>
+              <button
+                type="button"
                 className={styles.btnSecondary}
-                onClick={() => runAction("Seed Bookings", seedBookings)}
+                onClick={() => runAction('Seed Bookings', seedBookings)}
               >
                 Seed Bookings Only
-              </Button>
+              </button>
 
               <hr className={styles.divider} />
 
-              <Button
+              <button
+                type="button"
                 className={styles.btnDanger}
-                onClick={() => runAction("Clear Database", clearAllData)}
+                onClick={() => runAction('Clear Database', clearAllData)}
               >
                 Clear All Collections
-              </Button>
+              </button>
 
               <hr className={styles.divider} />
 
-              {/* ── Auth / Admin ─────────────────────────────────────────────── */}
-              <Button
+              <button
+                type="button"
                 className={styles.btnSecondary}
-                onClick={() =>
-                  runAction("Seed Admin (kontakt@wilczechatki.pl)", seedAdmin)
-                }
+                onClick={() => runAction('Seed Admin User', seedAdmin)}
               >
                 Seed Admin User
-              </Button>
+              </button>
+              <button
+                type="button"
+                className={styles.btnSecondary}
+                onClick={() => runAction('Seed exact BetterAuth user', seedExactBetterAuthUser)}
+              >
+                Seed exact BetterAuth user
+              </button>
+              <button
+                type="button"
+                className={styles.btnDanger}
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
             </div>
           </section>
 

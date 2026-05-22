@@ -9,6 +9,7 @@ import BookingConfig from '@/db/models/BookingConfig';
 import PriceConfig from '@/db/models/PriceConfig';
 import Season from '@/db/models/Season';
 import CustomPrice from '@/db/models/CustomPrice';
+import SiteSettings from '@/db/models/SiteSettings';
 import { Types } from 'mongoose';
 import mongoose from 'mongoose';
 import { getSiteSettings } from '@/actions/siteSettingsActions';
@@ -34,6 +35,7 @@ export async function clearAllData() {
     await PriceConfig.deleteMany({});
     await Season.deleteMany({});
     await CustomPrice.deleteMany({});
+    await SiteSettings.deleteMany({});
 
     const db = mongoose.connection.db;
     if (db) {
@@ -57,28 +59,48 @@ export async function seedSeasons() {
 
     const seasons = [
       {
-        name: 'Sezon wysoki (wakacje letnie)',
-        description: 'Ceny obowiązują w sezonie letnim – czerwiec, lipiec, sierpień',
-        startDate: new Date(currentYear, 5, 1, 12, 0, 0, 0),
-        endDate: new Date(currentYear, 7, 31, 12, 0, 0, 0),
+        _id: new Types.ObjectId('6a0276c6b002180738334dda'),
+        name: 'Sezon świąteczno-noworoczny',
+        description: 'Podwyższone ceny w okresie Świąt Bożego Narodzenia i Nowego Roku.',
+        startDate: new Date('2000-12-20T12:00:00.000Z'),
+        endDate: new Date('2001-01-05T12:00:00.000Z'),
         isActive: true,
         order: 3,
+        createdAt: new Date('2026-05-12T00:39:34.992Z'),
+        updatedAt: new Date('2026-05-16T18:10:18.050Z'),
       },
       {
-        name: 'Sezon świąteczno-noworoczny',
-        description: 'Podwyższone ceny w okresie świąt Bożego Narodzenia i Nowego Roku',
-        startDate: new Date(currentYear, 11, 20, 12, 0, 0, 0),
-        endDate: new Date(currentYear + 1, 0, 5, 12, 0, 0, 0),
+        _id: new Types.ObjectId('6a0276c6b002180738334ddb'),
+        name: 'Sezon ferii zimowych',
+        description: 'Ferie zimowe w północnej części Polski.',
+        startDate: new Date('2000-01-15T12:00:00.000Z'),
+        endDate: new Date('2000-02-29T12:00:00.000Z'),
         isActive: true,
-        order: 1,
+        order: 0,
+        createdAt: new Date('2026-05-12T00:39:34.992Z'),
+        updatedAt: new Date('2026-05-16T18:09:49.581Z'),
       },
       {
-        name: 'Sezon wiosenny',
-        description: 'Sezon przejściowy wiosna',
-        startDate: new Date(currentYear, 2, 1, 12, 0, 0, 0),
-        endDate: new Date(currentYear, 4, 31, 12, 0, 0, 0),
+        _id: new Types.ObjectId('6a0276c6b002180738334dd9'),
+        name: 'Sezon wysoki (wakacje letnie)',
+        description: 'Ceny obowiązują w sezonie letnim – czerwiec, lipiec, sierpień.',
+        startDate: new Date('2000-06-01T12:00:00.000Z'),
+        endDate: new Date('2000-08-31T12:00:00.000Z'),
+        isActive: true,
+        order: 3,
+        createdAt: new Date('2026-05-12T00:39:34.992Z'),
+        updatedAt: new Date('2026-05-12T01:13:05.556Z'),
+      },
+      {
+        _id: new Types.ObjectId('6a027c2be997703cfd85a1d0'),
+        name: 'Majówka',
+        description: 'Długi weekend majowy.',
+        startDate: new Date('2000-05-01T12:00:00.000Z'),
+        endDate: new Date('2000-05-03T12:00:00.000Z'),
         isActive: true,
         order: 2,
+        createdAt: new Date('2026-05-12T01:02:35.044Z'),
+        updatedAt: new Date('2026-05-12T01:12:29.811Z'),
       },
     ];
 
@@ -104,24 +126,30 @@ export async function seedProperties() {
 
     const properties = [
       {
-        name: 'Chatka A (Wilcza)',
+        _id: new Types.ObjectId('69d78477b191d7bb540f83e1'),
+        name: 'Chatka A',
         slug: 'chatka-a',
-        description: 'Przytulny domek z kominkiem, idealny dla par i małych rodzin.',
-        maxAdults: 4,
-        maxChildren: 4,
+        description: 'Przytulny domek z widokiem na las.',
+        maxAdults: 6,
+        maxChildren: 6,
         maxExtraBeds: 2,
         images: ['/gallery/wnetrze1.webp', '/gallery/wnetrze2.webp'],
         isActive: true,
+        createdAt: new Date('2026-04-09T10:50:31.743Z'),
+        updatedAt: new Date('2026-05-14T23:29:47.673Z'),
       },
       {
-        name: 'Chatka B (Leśna)',
+        _id: new Types.ObjectId('69d78477b191d7bb540f83e2'),
+        name: 'Chatka B',
         slug: 'chatka-b',
-        description: 'Domek z widokiem na las, wyposażony w saunę i jacuzzi.',
-        maxAdults: 4,
-        maxChildren: 4,
+        description: 'Przytulny domek z widokiem na las.',
+        maxAdults: 6,
+        maxChildren: 6,
         maxExtraBeds: 2,
         images: ['/gallery/wnetrze4.webp', '/gallery/wnetrze5.webp'],
         isActive: true,
+        createdAt: new Date('2026-04-09T10:50:31.744Z'),
+        updatedAt: new Date('2026-05-14T23:18:27.222Z'),
       },
     ];
 
@@ -147,103 +175,81 @@ export async function seedPropertyPrices() {
     await dbConnect();
 
     const properties = await Property.find({}).lean();
-    const seasons = await Season.find({}).lean();
 
     if (properties.length === 0) {
       return { success: false, error: 'Najpierw uruchom seedProperties()' };
     }
 
-    const summerSeason = seasons.find((s: any) =>
-      s.name.includes('wakacje')
-    );
-    const xmasSeason = seasons.find((s: any) =>
-      s.name.includes('świąteczno')
-    );
-    const springSeason = seasons.find((s: any) =>
-      s.name.includes('wiosenny')
-    );
-
-    const pricesToInsert: any[] = [];
-
-    for (const prop of properties) {
-      // ── Ceny podstawowe (poza sezonem) ─────────────────────────────────────
-      pricesToInsert.push({
-        propertyId: prop._id,
-        seasonId: null, // null = poza sezonem
+    const pricesToInsert = [
+      {
+        _id: new Types.ObjectId('6a102b906289d1081775ae75'),
+        propertyId: new Types.ObjectId('69d78477b191d7bb540f83e2'),
+        seasonId: new Types.ObjectId('6a0276c6b002180738334dd9'),
         weekdayPrices: [
-          { minGuests: 2, maxGuests: 3, price: 300 },
-          { minGuests: 4, maxGuests: 5, price: 400 },
-          { minGuests: 6, maxGuests: 10, price: 500 },
+          { minGuests: 1, maxGuests: 3, price: 350 },
+          { minGuests: 4, maxGuests: 6, price: 450 },
         ],
         weekendPrices: [
-          { minGuests: 2, maxGuests: 3, price: 400 },
-          { minGuests: 4, maxGuests: 5, price: 500 },
-          { minGuests: 6, maxGuests: 10, price: 600 },
+          { minGuests: 1, maxGuests: 3, price: 450 },
+          { minGuests: 4, maxGuests: 6, price: 550 },
         ],
-        weekdayExtraBedPrice: 50,
-        weekendExtraBedPrice: 70,
-      });
-
-      // ── Ceny sezon letni ────────────────────────────────────────────────────
-      if (summerSeason) {
-        pricesToInsert.push({
-          propertyId: prop._id,
-          seasonId: summerSeason._id,
-          weekdayPrices: [
-            { minGuests: 2, maxGuests: 3, price: 500 },
-            { minGuests: 4, maxGuests: 5, price: 600 },
-            { minGuests: 6, maxGuests: 10, price: 700 },
-          ],
-          weekendPrices: [
-            { minGuests: 2, maxGuests: 3, price: 600 },
-            { minGuests: 4, maxGuests: 5, price: 700 },
-            { minGuests: 6, maxGuests: 10, price: 800 },
-          ],
-          weekdayExtraBedPrice: 60,
-          weekendExtraBedPrice: 80,
-        });
-      }
-
-      // ── Ceny sezon świąteczny ───────────────────────────────────────────────
-      if (xmasSeason) {
-        pricesToInsert.push({
-          propertyId: prop._id,
-          seasonId: xmasSeason._id,
-          weekdayPrices: [
-            { minGuests: 2, maxGuests: 3, price: 450 },
-            { minGuests: 4, maxGuests: 5, price: 550 },
-            { minGuests: 6, maxGuests: 10, price: 650 },
-          ],
-          weekendPrices: [
-            { minGuests: 2, maxGuests: 3, price: 550 },
-            { minGuests: 4, maxGuests: 5, price: 650 },
-            { minGuests: 6, maxGuests: 10, price: 750 },
-          ],
-          weekdayExtraBedPrice: 55,
-          weekendExtraBedPrice: 75,
-        });
-      }
-
-      // ── Ceny sezon wiosenny ─────────────────────────────────────────────────
-      if (springSeason) {
-        pricesToInsert.push({
-          propertyId: prop._id,
-          seasonId: springSeason._id,
-          weekdayPrices: [
-            { minGuests: 2, maxGuests: 3, price: 320 },
-            { minGuests: 4, maxGuests: 5, price: 420 },
-            { minGuests: 6, maxGuests: 10, price: 520 },
-          ],
-          weekendPrices: [
-            { minGuests: 2, maxGuests: 3, price: 420 },
-            { minGuests: 4, maxGuests: 5, price: 520 },
-            { minGuests: 6, maxGuests: 10, price: 620 },
-          ],
-          weekdayExtraBedPrice: 50,
-          weekendExtraBedPrice: 70,
-        });
-      }
-    }
+        weekdayExtraBedPrice: 100,
+        weekendExtraBedPrice: 100,
+        createdAt: new Date('2026-05-12T01:31:36.769Z'),
+        updatedAt: new Date('2026-05-12T01:31:36.769Z'),
+      },
+      {
+        _id: new Types.ObjectId('6a102b906289d1081775ae77'),
+        propertyId: new Types.ObjectId('69d78477b191d7bb540f83e2'),
+        seasonId: new Types.ObjectId('6a0276c6b002180738334dda'),
+        weekdayPrices: [
+          { minGuests: 1, maxGuests: 3, price: 500 },
+          { minGuests: 4, maxGuests: 6, price: 600 },
+        ],
+        weekendPrices: [
+          { minGuests: 1, maxGuests: 3, price: 600 },
+          { minGuests: 4, maxGuests: 6, price: 700 },
+        ],
+        weekdayExtraBedPrice: 150,
+        weekendExtraBedPrice: 150,
+        createdAt: new Date('2026-05-12T01:34:12.214Z'),
+        updatedAt: new Date('2026-05-12T01:34:12.214Z'),
+      },
+      {
+        _id: new Types.ObjectId('6a102b906289d1081775ae79'),
+        propertyId: new Types.ObjectId('69d78477b191d7bb540f83e2'),
+        seasonId: new Types.ObjectId('6a0276c6b002180738334ddb'),
+        weekdayPrices: [
+          { minGuests: 1, maxGuests: 3, price: 400 },
+          { minGuests: 4, maxGuests: 6, price: 500 },
+        ],
+        weekendPrices: [
+          { minGuests: 1, maxGuests: 3, price: 500 },
+          { minGuests: 4, maxGuests: 6, price: 600 },
+        ],
+        weekdayExtraBedPrice: 110,
+        weekendExtraBedPrice: 110,
+        createdAt: new Date('2026-05-12T01:28:37.827Z'),
+        updatedAt: new Date('2026-05-12T01:28:37.827Z'),
+      },
+      {
+        _id: new Types.ObjectId('6a102b906289d1081775ae7b'),
+        propertyId: new Types.ObjectId('69d78477b191d7bb540f83e2'),
+        seasonId: new Types.ObjectId('6a027c2be997703cfd85a1d0'),
+        weekdayPrices: [
+          { minGuests: 1, maxGuests: 3, price: 400 },
+          { minGuests: 4, maxGuests: 6, price: 500 },
+        ],
+        weekendPrices: [
+          { minGuests: 1, maxGuests: 3, price: 500 },
+          { minGuests: 4, maxGuests: 6, price: 600 },
+        ],
+        weekdayExtraBedPrice: 110,
+        weekendExtraBedPrice: 110,
+        createdAt: new Date('2026-05-12T01:30:01.477Z'),
+        updatedAt: new Date('2026-05-12T01:30:01.477Z'),
+      },
+    ];
 
     await PropertyPrices.deleteMany({});
     const created = await PropertyPrices.insertMany(pricesToInsert);
@@ -299,7 +305,8 @@ export async function seedSystemConfig() {
     await SystemConfig.deleteMany({});
     const created = await SystemConfig.create({
       _id: 'main',
-      autoBlockOtherCabins: true
+      autoBlockOtherCabins: false,
+      lastOrderNumber: 50,
     });
     return {
       success: true,
@@ -312,18 +319,43 @@ export async function seedSystemConfig() {
   }
 }
 
+export async function seedSiteSettings() {
+  try {
+    await dbConnect();
+    await SiteSettings.deleteMany({});
+    const created = await SiteSettings.create({
+      _id: 'main',
+      phoneDisplay: '+48 503 420 551',
+      phoneHref: '+48503420551',
+      email: 'wilczechatki@gmail.com',
+      facebookUrl: 'https://facebook.com/profile.php?id=61584455637648',
+      bankAccountNumber: '20 1020 5226 0000 6702 0486 0336',
+    });
+    return {
+      success: true,
+      message: 'Ustawienia strony zostały utworzone',
+      data: toPlainObject(created),
+    };
+  } catch (error) {
+    console.error('Błąd podczas seedowania ustawień strony:', error);
+    return { success: false, error: 'Nie udało się utworzyć ustawień strony' };
+  }
+}
+
 export async function seedBookingConfig() {
   try {
     await dbConnect();
     await BookingConfig.deleteMany({});
     const created = await BookingConfig.create({
       _id: 'main',
-      minBookingDays: 1,
+      minBookingDays: 2,
       maxBookingDays: 30,
       childrenFreeAgeLimit: 13,
-      allowCheckinOnDepartureDay: true,
+      allowCheckinOnDepartureDay: false,
       checkInHour: 15,
       checkOutHour: 12,
+      createdAt: new Date('2026-04-09T10:50:32.119Z'),
+      updatedAt: new Date('2026-05-16T19:07:42.466Z'),
     });
     return {
       success: true,
@@ -456,6 +488,9 @@ export async function seedAllData() {
     const system = await seedSystemConfig();
     if (!system.success) throw new Error(system.error);
 
+    const siteSettings = await seedSiteSettings();
+    if (!siteSettings.success) throw new Error(siteSettings.error);
+
     const bookingConfig = await seedBookingConfig();
     if (!bookingConfig.success) throw new Error(bookingConfig.error);
 
@@ -483,12 +518,6 @@ export async function seedAdmin() {
       password: 'wilczki',
       name: 'Marika',
       username: 'Marika',
-    },
-    {
-      email: 'sprengel.rafal@gmail.com',
-      password: 'wilczki',
-      name: 'Rafał',
-      username: 'Rafal',
     },
   ];
 
@@ -542,5 +571,53 @@ export async function seedAdmin() {
     const message = error instanceof Error ? error.message : 'Nieznany błąd';
     console.error('seedAdmin error:', error);
     return { success: false, error: message };
+  }
+}
+
+export async function seedExactBetterAuthUser() {
+  try {
+    await dbConnect();
+    const db = mongoose.connection.db;
+    if (!db) throw new Error('Brak polaczenia z MongoDB');
+
+    const userId = new Types.ObjectId('69fddb9a2e82f94116ef90c4');
+    const accountId = new Types.ObjectId('69fddb9a2e82f94116ef90c5');
+
+    await db.collection('user').deleteOne({ _id: userId });
+    await db.collection('account').deleteOne({ _id: accountId });
+
+    await db.collection('user').insertOne({
+      _id: userId,
+      name: 'Marika',
+      email: 'test@gmail.com',
+      emailVerified: true,
+      role: 'admin',
+      displayUsername: 'Marika',
+      username: 'marika',
+      createdAt: new Date('2026-05-08T12:48:26.232Z'),
+      updatedAt: new Date('2026-05-16T19:30:58.008Z'),
+    });
+
+    await db.collection('account').insertOne({
+      _id: accountId,
+      accountId: '69fddb9a2e82f94116ef90c4',
+      providerId: 'credential',
+      userId,
+      password: 'f439ddc539dd4312032f817049d1c38f:1f5448a74a5f3c971990eb9965e2ea16054847d49bc96454f406d7c2bc5071d7f561d4359739fe94483310ad7cf72a80b01589e90a0d6fa7db7b11758e67d8b9',
+      createdAt: new Date('2026-05-08T12:48:26.268Z'),
+      updatedAt: new Date('2026-05-08T12:48:26.268Z'),
+    });
+
+    return {
+      success: true,
+      message: 'Utworzono rekordy better-auth user i account.',
+    };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Nieznany blad';
+    console.error('seedExactBetterAuthUser error:', error);
+    return {
+      success: false,
+      error: message,
+    };
   }
 }

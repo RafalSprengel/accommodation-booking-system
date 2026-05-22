@@ -25,7 +25,6 @@ export default function AdminLayout({
   const isPaymentsOnlineActive = pathname === '/admin/payments/online';
   const isPaymentsOfflineActive = pathname === '/admin/payments/offline';
   const isSettingsActive = pathname === '/admin/settings';
-  const isDevActive = pathname === '/admin/dev';
 
   const toggleBookings = () => setIsBookingsOpen(!isBookingsOpen);
   const togglePayments = () => setIsPaymentsOpen(!isPaymentsOpen);

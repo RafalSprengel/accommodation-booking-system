@@ -74,34 +74,59 @@
   gap: 12px;
 }
 
+:global(.button).btnPrimary {
+  background: #539bf5;
+  border-color: transparent;
+  color: #ffffff;
+}
+
 .btnPrimary {
-  --button-bg: #347d39;
+  --button-bg: #539bf5;
   --button-color: #ffffff;
-  --button-hover-bg: #2c6830;
-  font-size: 0.9rem;
-  justify-content: flex-start;
-  border-radius: 6px;
+  --button-hover-bg: #3b82f6;
+  font-size: 1rem;
+  min-height: 50px;
+  padding: 14px 18px;
+  width: 100%;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+:global(.button).btnSecondary {
+  background: #539bf5;
+  border-color: transparent;
+  color: #ffffff;
 }
 
 .btnSecondary {
-  --button-bg: #2d333b;
-  --button-border: #444c56;
-  --button-color: #cdd9e5;
-  --button-hover-bg: #373e47;
-  --button-hover-border: #539bf5;
+  --button-bg: #539bf5;
+  --button-color: #ffffff;
+  --button-hover-bg: #3b82f6;
+  --button-border: transparent;
+  --button-hover-border: transparent;
   --button-hover-color: #ffffff;
-  font-size: 0.85rem;
-  justify-content: flex-start;
-  border-radius: 6px;
+  font-size: 0.95rem;
+  min-height: 50px;
+  padding: 14px 18px;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+:global(.button).btnDanger {
+  background: #ef4444;
+  border-color: transparent;
+  color: #ffffff;
 }
 
 .btnDanger {
-  --button-bg: #ae2c2c;
+  --button-bg: #ef4444;
   --button-color: #ffffff;
-  --button-hover-bg: #912525;
-  font-size: 0.9rem;
-  justify-content: flex-start;
-  border-radius: 6px;
+  --button-hover-bg: #dc2626;
+  font-size: 0.95rem;
+  min-height: 50px;
+  padding: 14px 18px;
+  justify-content: center;
+  border-radius: 10px;
 }
 
 .divider {
@@ -148,6 +173,66 @@
   border-bottom: none;
   color: #ffffff;
   font-weight: 500;
+}
+
+.loginContainer {
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  background: #161b22;
+  border-radius: 12px;
+  border: 1px solid #2d333b;
+}
+
+.loginHeader {
+  margin-bottom: 24px;
+}
+
+.loginHeader h2 {
+  margin: 0 0 10px;
+  color: #cdd9e5;
+}
+
+.loginHeader p {
+  margin: 0;
+  color: #8b949e;
+  font-size: 0.95rem;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroup label {
+  font-size: 0.9rem;
+  color: #cdd9e5;
+}
+
+.inputGroup input {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  color: #c9d1d9;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+}
+
+.errorMessage {
+  color: #f85149;
+  font-size: 0.9rem;
+}
+
+.logoutButton {
+  margin-top: 12px;
+  align-self: flex-start;
 }
 
 @media (max-width: 768px) {
