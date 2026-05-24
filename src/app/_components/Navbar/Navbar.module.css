@@ -30,14 +30,35 @@
     backdrop-filter: blur(10px);
 }
 
+.smallerNavbar .logoText {
+    font-size: 17px;
+}
+
 .logoWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    text-decoration: none;
+}
+
+.logoImageWrapper {
     display: inline-block;
     position: relative;
     height: 90%;
     width: 56px;
     overflow: hidden;
     transition: height 0.3s ease, width 0.3s ease;
+}
 
+.logoText {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--primary-color);
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    transition: font-size 0.3s ease;
 }
 
 .logoImage {
@@ -152,6 +173,12 @@
 
 .navLinks a:hover {
     color: var(--accent-color);
+}
+
+@media screen and (max-width: 360px) {
+    .logoText {
+        display: none;
+    }
 }
 
 @media screen and (min-width: 1024px) {

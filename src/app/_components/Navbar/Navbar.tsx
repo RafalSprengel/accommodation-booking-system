@@ -41,12 +41,15 @@ export default function Navbar({isSmaller}: {isSmaller: boolean}) {
         <nav className={styles.container+(isSmaller ? ' '+styles.smallerNavbar : '')}>
             <div className={styles.inner}>
                 <Link className={styles.logoWrapper} href="/">
-                    <Image
-                        src="/assets/logo.webp" alt="logo"
-                        fill
-                        priority
-                        className={styles.logoImage}
-                    />
+                    <div className={styles.logoImageWrapper}>
+                        <Image
+                            src="/assets/logo.webp" alt="logo"
+                            fill
+                            priority
+                            className={styles.logoImage}
+                        />
+                    </div>
+                    <span className={styles.logoText}>Wilcze Chatki</span>
                 </Link>
                 <div className={styles.hamburgerContainer}>
                     <HamburgerButton
