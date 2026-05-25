@@ -1,3 +1,4 @@
+import { SlideLeft, SlideRight } from "../UI/Motions/Motions";
 import styles from './Attractions.module.css';
 
 export default function Attractions() {
@@ -66,29 +67,35 @@ export default function Attractions() {
     return (
         <section id="attractions" className={styles.section}>
             <div className={styles.container}>
-                <h2 className={styles.title}>Atrakcje w okolicy</h2>
-                <p className={styles.subtitle}>
-                    Odkryj uroki Szumlesia Królewskiego i serca Kaszub.
-                </p>
+                <SlideRight>
+                    <h2 className={styles.title}>Atrakcje w okolicy</h2>
+                </SlideRight>
+                <SlideLeft>
+                    <p className={styles.subtitle}>
+                        Odkryj uroki Szumlesia Królewskiego i serca Kaszub.
+                    </p>
+                </SlideLeft>
 
                 <div className={styles.grid}>
                     {attractions.map((item, idx) => (
-                        <div key={idx} className={styles.card}>
-                            <div className={styles.header}>
-                                <span className={styles.dot}></span>
-                                <p className={styles.cardTitle}>{item.title}</p>
+                        <SlideRight key={idx} delay={idx * 0.08}>
+                            <div className={styles.card}>
+                                <div className={styles.header}>
+                                    <span className={styles.dot}></span>
+                                    <p className={styles.cardTitle}>{item.title}</p>
+                                </div>
+                                <p className={styles.description}>{item.description}</p>
+                                <p className={styles.distanceInfo}>Odległość: {item.distance}</p>
+                                <a
+                                    href={item.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles.link}
+                                >
+                                    Dowiedz się więcej &raquo;
+                                </a>
                             </div>
-                            <p className={styles.description}>{item.description}</p>
-                            <p className={styles.distanceInfo}>Odległość: {item.distance}</p>
-                            <a
-                                href={item.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={styles.link}
-                            >
-                                Dowiedz się więcej &raquo;
-                            </a>
-                        </div>
+                        </SlideRight>
                     ))}
                 </div>
             </div>

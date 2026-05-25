@@ -33,6 +33,7 @@ html {
     scroll-padding-top: calc(var(--site-header-offset) + 16px);
     touch-action: manipulation;
     -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
 }
 
 body {
@@ -49,6 +50,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     touch-action: manipulation;
+    overflow-x: hidden;
 }
 
 section {
@@ -118,4 +120,10 @@ a,
 nav {
     font-family: var(--font-body);
     text-decoration: none;
+}
+
+@media(min-width: 768px) {
+    section {
+        padding: 80px 40px;
+    }
 }

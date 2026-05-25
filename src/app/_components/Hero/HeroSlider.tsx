@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { motion } from 'motion/react';
 import styles from './HeroSlider.module.css';
 
 interface SliderItem {
@@ -11,41 +12,53 @@ interface SliderItem {
   image: string;
 }
 
+const thumbnailContainerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.15, delayChildren: 0.3 },
+  },
+};
+
+const thumbnailItemVariants = {
+  hidden: { opacity: 0, x: 200 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: 'easeIn' as any } },
+};
+
 const items: SliderItem[] = [
-  { 
-    id: 1, 
-    title: 'Wilcze Chatki', 
-    topic: 'Kaszubska cisza', 
-    description: 'Dwa przytulne domki w Szumlesiu Królewskim, idealne na odpoczynek od miejskiego zgiełku.', 
-    image: '/images/img1.jpeg' 
+  {
+    id: 1,
+    title: 'Wilcze Chatki',
+    topic: 'Kaszubska cisza',
+    description: 'Dwa przytulne domki w Szumlesiu Królewskim, idealne na odpoczynek od miejskiego zgiełku.',
+    image: '/images/img1.jpeg'
   },
-  { 
-    id: 2, 
-    title: 'Strefa relaksu', 
-    topic: 'Sauna i jacuzzi', 
-    description: 'Całoroczna strefa relaksu w zamkniętej altanie z sauną infrared i jacuzzi ogrzewanym drewnem.', 
-    image: '/images/img2.jpeg' 
+  {
+    id: 2,
+    title: 'Strefa relaksu',
+    topic: 'Sauna i jacuzzi',
+    description: 'Całoroczna strefa relaksu w zamkniętej altanie z sauną infrared i jacuzzi ogrzewanym drewnem.',
+    image: '/images/img2.jpeg'
   },
-  { 
-    id: 3, 
-    title: 'Natura na wyciągnięcie ręki', 
-    topic: 'Serce Kaszub', 
-    description: 'Bliskość Kaszubskiego Parku Krajobrazowego, Wieżycy i malowniczych jezior.', 
-    image: '/images/img3.jpeg' 
+  {
+    id: 3,
+    title: 'Natura na wyciągnięcie ręki',
+    topic: 'Serce Kaszub',
+    description: 'Bliskość Kaszubskiego Parku Krajobrazowego, Wieżycy i malowniczych jezior.',
+    image: '/images/img3.jpeg'
   },
-  { 
-    id: 4, 
-    title: 'Rodzinny wypoczynek', 
-    topic: 'Plac zabaw i grill', 
-    description: 'Prywatny taras z grillem oraz plac zabaw z trampoliną i huśtawkami dla najmłodszych.', 
-    image: '/images/img4.jpeg' 
+  {
+    id: 4,
+    title: 'Rodzinny wypoczynek',
+    topic: 'Plac zabaw i grill',
+    description: 'Prywatny taras z grillem oraz plac zabaw z trampoliną i huśtawkami dla najmłodszych.',
+    image: '/images/img4.jpeg'
   },
-  { 
-    id: 5, 
-    title: 'Komfortowe domki', 
-    topic: 'Pełne wyposażenie', 
-    description: 'Klimatyzowane wnętrza, aneks kuchenny i przytulne sypialnie na poddaszu dla 6-8 osób.', 
-    image: '/images/img5.jpeg' 
+  {
+    id: 5,
+    title: 'Komfortowe domki',
+    topic: 'Pełne wyposażenie',
+    description: 'Klimatyzowane wnętrza, aneks kuchenny i przytulne sypialnie na poddaszu dla 6-8 osób.',
+    image: '/images/img5.jpeg'
   },
 ];
 
@@ -110,7 +123,7 @@ export default function HeroSlider() {
         {items.map((item, index) => {
           const isActive = index === activeIndex;
           const isPrev = index === prevIndex;
-          
+
           let statusClass = '';
           if (isActive) statusClass = styles.active;
           else if (isPrev) statusClass = direction === 'next' ? styles.exitNext : styles.exitPrev;
@@ -140,18 +153,26 @@ export default function HeroSlider() {
       </div>
 
       <div className={styles.sliderControls}>
-        <div className={styles.thumbnailsContainer}>
+        <motion.div
+          className={styles.thumbnailsContainer}
+          variants={thumbnailContainerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {items.map((item, index) => (
-            <div
+            <motion.div
               key={`thumb-${item.id}`}
-              className={`${styles.thumbItem} ${index === activeIndex ? styles.activeThumb : ''}`}
-              onClick={() => changeSlide(index)}
-            >
-              <img src={item.image} alt="" />
-              {index === activeIndex && <div className={styles.thumbProgress} />}
-            </div>
+              variants={thumbnailItemVariants}>
+              <div
+                className={`${styles.thumbItem} ${index === activeIndex ? styles.activeThumb : ''}`}
+                onClick={() => changeSlide(index)}
+              >
+                <img src={item.image} alt="" />
+                {index === activeIndex && <div className={styles.thumbProgress} />}
+              </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <div className={styles.bottomNav}>
           <div className={styles.paginationDots}>
@@ -168,6 +189,6 @@ export default function HeroSlider() {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 }

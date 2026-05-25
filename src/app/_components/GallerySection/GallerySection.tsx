@@ -1,5 +1,6 @@
 import styles from './GallerySection.module.css';
 import LightBoxGallery from '@components/LightBoxGallery/LightBoxGallery';
+import { SlideLeft, SlideRight } from '@components/UI/Motions/Motions';
 
 
 export default function GallerySection() {
@@ -12,18 +13,22 @@ export default function GallerySection() {
         { full: '/gallery/wnetrze5.webp', thumb: '/gallery/wnetrze5-thumb.webp', description: '' },
         { full: '/gallery/wnetrze6.webp', thumb: '/gallery/wnetrze6-thumb.webp', description: '' },
         { full: '/gallery/wnetrze7.webp', thumb: '/gallery/wnetrze7-thumb.webp', description: '' },
-        { full: '/gallery/sypialnia1.webp', thumb: '/gallery/sypialnia1-thumb.webp', description: 'Sypialnia' },
+        { full: '/gallery/sypialnia1.webp', thumb: '/gallery/sypialnia1-thumb.webp', description: '' },
     ];
 
     return (
         <section id='gallery-section'>
             <div className={styles.title}>
-                <h2>Galeria zdjęć</h2>
-            </div>
-            <div className={styles.galleryWrap}>
-                <LightBoxGallery images={images} />
-            </div>
+                <SlideRight>
+                    <h2>Galeria zdjęć</h2>
+                </SlideRight>
+            </div >
+            <SlideLeft>
+                <div className={styles.galleryWrap}>
+                    <LightBoxGallery images={images} />
+                </div>
+            </SlideLeft>
             <a href="/gallery" className={styles.link}>Zobacz więcej &raquo;</a>
-        </section>
+        </section >
     );
 }
