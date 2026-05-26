@@ -26,10 +26,7 @@
 
 .smallerNavbar {
     height: 50px;
-    opacity: .98;
-    background-color: rgba(248, 246, 242, 0.95);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    background-color: #f8f6f2;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
