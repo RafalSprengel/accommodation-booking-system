@@ -130,7 +130,7 @@ const BookingTooltip = ({ details }: { details: BookingDetails }) => {
     : isDeposit
       ? `Zaliczka (${details.paidAmount.toFixed(2)} PLN)`
       : 'Nieopłacone'
-  const statusBadgeText = details.status === 'confirmed' ? 'POTWIERDZONY' : details.status === 'pending' ? 'Klient jest w trakcie rezerwacji...' : 'ZABLOKOWANY'
+  const statusBadgeText = details.status === 'confirmed' ? 'POTWIERDZONY' : details.status === 'pending' ? 'Klient jest w trakcie rezerwacji' : 'ZABLOKOWANY'
   const extraBedsText = details.extraBeds && details.extraBeds > 0 ? `${details.extraBeds} dostawka` : '0'
 
   return (

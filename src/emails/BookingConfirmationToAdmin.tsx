@@ -18,6 +18,19 @@ interface BookingConfirmationToAdminProps {
   checkOut: string;
   totalPrice: number;
   siteSettings: Partial<ISiteSettings>;
+  guestPhone?: string;
+  guestEmail?: string;
+  guestAddress?: string;
+  adults?: number;
+  children?: number;
+  extraBeds?: number;
+  orderDate?: string;
+  invoiceRequested?: boolean;
+  companyName?: string;
+  nip?: string;
+  street?: string;
+  city?: string;
+  postalCode?: string;
 }
 
 export default function BookingConfirmationToAdmin({
@@ -27,6 +40,19 @@ export default function BookingConfirmationToAdmin({
   checkOut,
   totalPrice,
   siteSettings,
+  guestPhone,
+  guestEmail,
+  guestAddress,
+  adults,
+  children,
+  extraBeds,
+  orderDate,
+  invoiceRequested,
+  companyName,
+  nip,
+  street,
+  city,
+  postalCode,
 }: BookingConfirmationToAdminProps) {
   const mainStyle = {
     backgroundColor: '#f6f9fc',
@@ -106,16 +132,49 @@ export default function BookingConfirmationToAdmin({
             Wilcze Chatki — panel administracyjny
           </Heading>
           <Text style={textStyle}>
-            Otrzymano nową, opłaconą rezerwację przez Stripe.
+            Otrzymano nową, opłaconą online rezerwację przez Stripe.
           </Text>
 
           <Section style={sectionStyle}>
             <Text style={sectionTextStyle}><strong>Gość:</strong> {customerName}</Text>
+            {guestPhone && (
+              <Text style={sectionTextStyle}><strong>Telefon gościa:</strong> {guestPhone}</Text>
+            )}
+            {guestEmail && (
+              <Text style={sectionTextStyle}><strong>E-mail gościa:</strong> {guestEmail}</Text>
+            )}
+            {guestAddress && (
+              <Text style={sectionTextStyle}><strong>Adres gościa:</strong> {guestAddress}</Text>
+            )}
+            {(typeof adults !== 'undefined') && (
+              <Text style={sectionTextStyle}><strong>Dorosłych:</strong> {adults}</Text>
+            )}
+            {(typeof children !== 'undefined') && (
+              <Text style={sectionTextStyle}><strong>Dzieci:</strong> {children}</Text>
+            )}
+            {(typeof extraBeds !== 'undefined') && (
+              <Text style={sectionTextStyle}><strong>Dostawek:</strong> {extraBeds}</Text>
+            )}
+            {orderDate && (
+              <Text style={sectionTextStyle}><strong>Data zamówienia:</strong> {orderDate}</Text>
+            )}
             <Text style={sectionTextStyle}><strong>Nr zamówienia:</strong> {orderNumber}</Text>
             <Text style={sectionTextStyle}><strong>Zameldowanie:</strong> {checkIn}</Text>
             <Text style={sectionTextStyle}><strong>Wymeldowanie:</strong> {checkOut}</Text>
             <Hr style={hrStyle} />
             <Text style={sumStyle}>Kwota: {totalPrice} PLN</Text>
+            <Hr style={hrStyle} />
+            <Text style={sectionTextStyle}><strong>Faktura:</strong> {invoiceRequested ? 'Tak' : 'Nie'}</Text>
+            {invoiceRequested && (
+              <Section style={{ padding: '10px', backgroundColor: '#fff' }}>
+                {companyName && <Text style={sectionTextStyle}><strong>Nazwa firmy:</strong> {companyName}</Text>}
+                {nip && <Text style={sectionTextStyle}><strong>NIP:</strong> {nip}</Text>}
+                {street && <Text style={sectionTextStyle}><strong>Ulica:</strong> {street}</Text>}
+                {postalCode && city && (
+                  <Text style={sectionTextStyle}><strong>Kod pocztowy / Miasto:</strong> {postalCode} {city}</Text>
+                )}
+              </Section>
+            )}
           </Section>
 
           <Text style={footerTextStyle}>

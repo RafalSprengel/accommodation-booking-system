@@ -341,7 +341,8 @@ export default function BookingClient({
     ? searchResults.overlappingSeasons
     : [];
   const hasSeasonOverlap = overlappingSeasons.length > 0;
-
+  console.log("searchResults pokazuje:");
+  console.log(searchResults);
   return (
     <div className={styles.container}>
       {hasDraft && (
@@ -485,8 +486,8 @@ export default function BookingClient({
               )}
               {(bookingDates.start !== initialStart ||
                 bookingDates.end !== initialEnd) && (
-                <p>Zmieniłeś wyszukiwane daty.</p>
-              )}
+                  <p>Zmieniłeś wyszukiwane daty.</p>
+                )}
               <p>Kliknij "Szukaj" ponownie, aby odświeżyć wyniki.</p>
             </div>
           )}
@@ -714,7 +715,7 @@ export default function BookingClient({
                     {showSingleResults &&
                       searchResults.propertiesAvailable.map((option) => (
                         <ResultCard
-                          key={option.displayName}
+                          key={option.propertyId}
                           option={option}
                           extraBeds={extraBedsMap[option.displayName] || 0}
                           onExtraBedsChange={handleExtraBedsChange}

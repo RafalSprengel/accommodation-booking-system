@@ -20,6 +20,19 @@ interface BookingEmailProps {
   checkOut: string;
   totalPrice: number;
   siteSettings: Partial<ISiteSettings>;
+  guestPhone?: string;
+  guestEmail?: string;
+  guestAddress?: string;
+  adults?: number;
+  children?: number;
+  extraBeds?: number;
+  orderDate?: string;
+  invoiceRequested?: boolean;
+  companyName?: string;
+  nip?: string;
+  street?: string;
+  city?: string;
+  postalCode?: string;
 }
 
 export const BookingConfirmation = ({
@@ -29,6 +42,20 @@ export const BookingConfirmation = ({
   checkOut,
   totalPrice,
   siteSettings
+  ,
+  guestPhone,
+  guestEmail,
+  guestAddress,
+  adults,
+  children,
+  extraBeds,
+  orderDate,
+  invoiceRequested,
+  companyName,
+  nip,
+  street,
+  city,
+  postalCode,
 }: BookingEmailProps) => {
   const mainStyle = {
     backgroundColor: '#f6f9fc',
@@ -115,6 +142,13 @@ export const BookingConfirmation = ({
           
           <Section style={sectionStyle}>
             <Text style={sectionTextStyle}><strong>Nr zamówienia:</strong> {orderNumber}</Text>
+            {guestPhone && <Text style={sectionTextStyle}><strong>Telefon:</strong> {guestPhone}</Text>}
+            {guestEmail && <Text style={sectionTextStyle}><strong>E-mail:</strong> {guestEmail}</Text>}
+            {guestAddress && <Text style={sectionTextStyle}><strong>Adres:</strong> {guestAddress}</Text>}
+            {(typeof adults !== 'undefined') && <Text style={sectionTextStyle}><strong>Dorosłych:</strong> {adults}</Text>}
+            {(typeof children !== 'undefined') && <Text style={sectionTextStyle}><strong>Dzieci:</strong> {children}</Text>}
+            {(typeof extraBeds !== 'undefined') && <Text style={sectionTextStyle}><strong>Dostawek:</strong> {extraBeds}</Text>}
+            {orderDate && <Text style={sectionTextStyle}><strong>Data zamówienia:</strong> {orderDate}</Text>}
             <Text style={sectionTextStyle}><strong>Zameldowanie:</strong> {checkIn}</Text>
             <Text style={sectionTextStyle}><strong>Wymeldowanie:</strong> {checkOut}</Text>
             <Hr style={hrStyle} />
@@ -124,6 +158,18 @@ export const BookingConfirmation = ({
           <Text style={textStyle}>
             W razie pytań prosimy o kontakt na {siteSettings.email} lub telefonicznie pod numerem {siteSettings.phoneDisplay}.
           </Text>
+          <Hr style={hrStyle} />
+          <Text style={sectionTextStyle}><strong>Faktura:</strong> {invoiceRequested ? 'Tak' : 'Nie'}</Text>
+          {invoiceRequested && (
+            <Section style={{ padding: '10px', backgroundColor: '#fff' }}>
+              {companyName && <Text style={sectionTextStyle}><strong>Nazwa firmy:</strong> {companyName}</Text>}
+              {nip && <Text style={sectionTextStyle}><strong>NIP:</strong> {nip}</Text>}
+              {street && <Text style={sectionTextStyle}><strong>Ulica:</strong> {street}</Text>}
+              {postalCode && city && (
+                <Text style={sectionTextStyle}><strong>Kod pocztowy / Miasto:</strong> {postalCode} {city}</Text>
+              )}
+            </Section>
+          )}
           <Hr style={footerHrStyle} />
           <Link href="https://rafalsprengel.com" style={footerLinkStyle}>
             rafalsprengel.com

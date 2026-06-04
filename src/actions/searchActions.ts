@@ -436,7 +436,7 @@ export async function searchAction(params: SearchParams): Promise<SearchResults>
     const result = options.sort((a, b) => a.totalPrice - b.totalPrice);
 
     // Jeśli wybrano tylko jednego dorosłego, nie pokazuj opcji kilku domków
-    let areAllAvailable = result.length === totalActiveProperties;
+    let areAllAvailable = result.length === totalActiveProperties && result.length > 1;
     if (adults === 1 && result.length > 1) {
       areAllAvailable = false;
     }

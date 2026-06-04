@@ -165,7 +165,7 @@ export default function AllPropertiesCard({
           const canIncrementGuests = totalAssignedGuests < totalGuestsLimit
 
           return (
-            <div key={option.displayName} className={`${styles.resultCard} ${styles.allPropertiesResultCard}`}>
+            <div key={option.propertyId} className={`${styles.resultCard} ${styles.allPropertiesResultCard}`}>
               <div className={styles.cardHeader}>
                 <span className={`${styles.cardBadge} ${styles.badgeCabin}`}>
                   REZERWACJA ŁĄCZONA
