@@ -19,6 +19,8 @@ export async function getSiteSettings(): Promise<Partial<ISiteSettings>> {
       email: settings.email,
       facebookUrl: settings.facebookUrl,
       bankAccountNumber: settings.bankAccountNumber,
+      sendBookingConfirmationEmails: settings.sendBookingConfirmationEmails,
+      bookingNotificationsEmail: settings.bookingNotificationsEmail,
     };
   } catch (error) {
     console.error('Błąd podczas pobierania SiteSettings:', error);
@@ -36,7 +38,9 @@ export async function updateSiteSettings(
       'phoneHref',
       'email',
       'facebookUrl',
-      'bankAccountNumber'
+      'bankAccountNumber',
+      'sendBookingConfirmationEmails',
+      'bookingNotificationsEmail',
     ];
 
     const filteredValues: Partial<ISiteSettings> = {};

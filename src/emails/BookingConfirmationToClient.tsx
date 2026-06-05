@@ -19,6 +19,7 @@ interface BookingEmailProps {
   checkIn: string;
   checkOut: string;
   totalPrice: number;
+  paidAmount?: number;
   siteSettings: Partial<ISiteSettings>;
   guestPhone?: string;
   guestEmail?: string;
@@ -42,6 +43,7 @@ export const BookingConfirmation = ({
   checkIn,
   checkOut,
   totalPrice,
+  paidAmount,
   siteSettings
   ,
   guestPhone,
@@ -166,7 +168,14 @@ export const BookingConfirmation = ({
             </>
             )}
             <Hr style={hrStyle} />
-            <Text style={sumStyle}>Suma: {totalPrice} PLN</Text>
+            {typeof paidAmount === 'number' && paidAmount !== totalPrice ? (
+              <>
+                <Text style={sumStyle}>Wpłacono: {Number(paidAmount).toFixed(2)} zł</Text>
+                <Text style={sectionTextStyle}>Pozostało do zapłaty: {Number(totalPrice - paidAmount).toFixed(2)} zł</Text>
+              </>
+            ) : (
+              <Text style={sumStyle}>Kwota: {Number(totalPrice).toFixed(2)} PLN</Text>
+            )}
           </Section>
 
           <Text style={textStyle}>

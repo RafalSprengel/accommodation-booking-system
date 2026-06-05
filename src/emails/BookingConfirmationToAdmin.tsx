@@ -17,6 +17,7 @@ interface BookingConfirmationToAdminProps {
   checkIn: string;
   checkOut: string;
   totalPrice: number;
+  paidAmount?: number;
   siteSettings: Partial<ISiteSettings>;
   guestPhone?: string;
   guestEmail?: string;
@@ -32,6 +33,7 @@ interface BookingConfirmationToAdminProps {
   city?: string;
   postalCode?: string;
   cabinsCount?: number;
+  adminNotes?: string;
 }
 
 export default function BookingConfirmationToAdmin({
@@ -40,6 +42,7 @@ export default function BookingConfirmationToAdmin({
   checkIn,
   checkOut,
   totalPrice,
+  paidAmount,
   siteSettings,
   guestPhone,
   guestEmail,
@@ -55,6 +58,7 @@ export default function BookingConfirmationToAdmin({
   city,
   postalCode,
   cabinsCount,
+  adminNotes,
 }: BookingConfirmationToAdminProps) {
   const mainStyle = {
     backgroundColor: '#f6f9fc',
@@ -164,8 +168,12 @@ export default function BookingConfirmationToAdmin({
               <Text style={sectionTextStyle}><strong>Data zamówienia:</strong> {orderDate}</Text>
             )}
             <Text style={sectionTextStyle}><strong>Nr zamówienia:</strong> {orderNumber}</Text>
+
             <Text style={sectionTextStyle}><strong>Zameldowanie:</strong> {checkIn}</Text>
             <Text style={sectionTextStyle}><strong>Wymeldowanie:</strong> {checkOut}</Text>
+            {adminNotes && (
+                <Text style={sectionTextStyle}><strong>Uwagi wewnętrzne:</strong> {adminNotes}</Text>
+            )}
             {invoiceRequested && (<>
               <Text style={sectionTextStyle}><strong>Faktura VAT:</strong></Text>
               <Section style={{ padding: '10px', backgroundColor: '#fff' }}>
@@ -176,8 +184,17 @@ export default function BookingConfirmationToAdmin({
                 {city && <Text style={sectionTextStyle}><strong>Miasto:</strong> {city}</Text>}
               </Section>
             </>)}
+             
             <Hr style={hrStyle} />
-            <Text style={sumStyle}>Kwota: {totalPrice} PLN</Text>
+            {typeof paidAmount === 'number' && paidAmount !== totalPrice ? (
+              <>
+                <Text style={sumStyle}>Wpłacono: {Number(paidAmount).toFixed(2)} zł</Text>
+                <Text style={sectionTextStyle}>Pozostało do zapłaty: {Number(totalPrice - paidAmount).toFixed(2)} zł</Text>
+              </>
+            ) : (
+              <Text style={sumStyle}>Kwota: {Number(totalPrice).toFixed(2)} PLN</Text>
+            )}
+
             <Hr style={hrStyle} />
           </Section>
 

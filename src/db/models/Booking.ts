@@ -38,7 +38,6 @@ export interface IBooking extends Document {
     city?: string;
     postalCode?: string;
   };
-  customerNotes?: string;
   adminNotes?: string;
   source: 'online' | 'admin';
   createdAt: Date;
@@ -143,10 +142,6 @@ const BookingSchema = new Schema({
     street: { type: String, trim: true },
     city: { type: String, trim: true },
     postalCode: { type: String, trim: true }
-  },
-  customerNotes: {
-    type: String,
-    trim: true
   },
   adminNotes: {
     type: String,

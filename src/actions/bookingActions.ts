@@ -92,7 +92,6 @@ export async function createBookingFromDraft(draftData: BookingDraftData) {
       paymentMethod: 'online' as const,
       invoice: guestData.invoice,
       invoiceData: guestData.invoiceData,
-      customerNotes: '',
       source: 'online' as const,
       createdAt: new Date(),
       updatedAt: new Date(),

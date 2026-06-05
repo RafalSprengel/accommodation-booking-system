@@ -2,6 +2,7 @@ import { getSystemConfig } from '@/actions/adminConfigActions';
 import ToggleSwitch from './ToggleSwitchClient';
 import AdminAccountSettings from './AdminAccountSettings';
 import SiteSettingsForm from './SiteSettingsForm';
+import BookingConfirmationSettings from './BookingConfirmationSettings';
 import AdminShell from '../_components/AdminShell/AdminShell';
 import AdminCard from '../_components/AdminCard/AdminCard';
 import styles from './settings.module.css';
@@ -27,6 +28,7 @@ export default async function SettingsPage() {
       </AdminCard>
 
       <SiteSettingsForm />
+      <BookingConfirmationSettings />
       <AdminAccountSettings />
     </AdminShell>
   );

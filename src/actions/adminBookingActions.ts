@@ -11,6 +11,10 @@ import { resolveOccupiedPropertyIdsFromBookings } from '@/utils/lazyAvailability
 import { calculatePaymentStatus } from '@/utils/getPaymentStatus'
 import { Types } from 'mongoose'
 import { generateOrderId } from '@/utils/generateOrderId'
+import BookingConfirmationToClient from '@/emails/BookingConfirmationToClient'
+import BookingConfirmationToAdmin from '@/emails/BookingConfirmationToAdmin'
+import { sendBookingEmail } from '@/lib/sendEmail'
+import { getSiteSettings } from './siteSettingsActions'
 
 interface UnavailableDate {
   date: string | null
@@ -293,10 +297,80 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
       paymentMethod: 'transfer',
       invoice: rawData.invoice === 'true',
       invoiceData,
-      customerNotes: rawData.internalNotes,
+      adminNotes: rawData.internalNotes,
       source: 'admin',
     })
     await newBooking.save()
+    // Send confirmation emails: to client and to site admin
+    try {
+      const siteSettings = await getSiteSettings()
+      const customerName = `${newBooking.firstName || ''} ${newBooking.lastName || ''}`.trim()
+
+      // Only send confirmation emails if enabled in site settings
+      if (siteSettings.sendBookingConfirmationEmails !== false) {
+        await sendBookingEmail({
+          to: newBooking.guestEmail,
+          subject: 'Potwierdzenie rezerwacji w Wilcze Chatki',
+          react: BookingConfirmationToClient({
+            customerName,
+            orderNumber: newBooking.orderId ?? '',
+            checkIn: newBooking.startDate.toISOString().split('T')[0],
+            checkOut: newBooking.endDate.toISOString().split('T')[0],
+            totalPrice: newBooking.totalPrice,
+            paidAmount: newBooking.paidAmount,
+            siteSettings,
+            guestPhone: newBooking.guestPhone,
+            guestEmail: newBooking.guestEmail,
+            guestAddress: newBooking.guestAddress,
+            adults: newBooking.adults,
+            children: newBooking.children,
+            extraBeds: newBooking.extraBedsCount,
+            orderDate: newBooking.createdAt?.toISOString().split('T')[0],
+            invoiceRequested: Boolean(newBooking.invoice),
+            companyName: newBooking.invoiceData?.companyName,
+            nip: newBooking.invoiceData?.nip,
+            street: newBooking.invoiceData?.street,
+            city: newBooking.invoiceData?.city,
+            postalCode: newBooking.invoiceData?.postalCode,
+          }),
+        })
+
+        const adminEmail = siteSettings.bookingNotificationsEmail || siteSettings.email
+        console.log('[ADMIN EMAIL DEBUG] bookingNotificationsEmail:', siteSettings.bookingNotificationsEmail, 'email:', siteSettings.email, 'resolvedAdminEmail:', adminEmail)
+        if (adminEmail) {
+          await sendBookingEmail({
+            to: adminEmail,
+            subject: `Nowa rezerwacja: ${customerName} (${newBooking.orderId})`,
+            react: BookingConfirmationToAdmin({
+              customerName,
+              orderNumber: newBooking.orderId ?? '',
+              checkIn: newBooking.startDate.toISOString().split('T')[0],
+              checkOut: newBooking.endDate.toISOString().split('T')[0],
+              totalPrice: newBooking.totalPrice,
+              paidAmount: newBooking.paidAmount,
+              siteSettings,
+              guestPhone: newBooking.guestPhone,
+              guestEmail: newBooking.guestEmail,
+              guestAddress: newBooking.guestAddress,
+              adults: newBooking.adults,
+              children: newBooking.children,
+              extraBeds: newBooking.extraBedsCount,
+              orderDate: newBooking.createdAt?.toISOString().split('T')[0],
+              invoiceRequested: Boolean(newBooking.invoice),
+              companyName: newBooking.invoiceData?.companyName,
+              nip: newBooking.invoiceData?.nip,
+              street: newBooking.invoiceData?.street,
+              city: newBooking.invoiceData?.city,
+              postalCode: newBooking.invoiceData?.postalCode,
+              cabinsCount: 1,
+              adminNotes: newBooking.adminNotes,
+            }),
+          })
+        }
+      }
+    } catch (err) {
+      console.error('Błąd wysyłki maila po utworzeniu rezerwacji przez admina:', err)
+    }
     revalidatePath('/', 'layout')
     revalidatePath('/admin', 'layout')
     revalidatePath('/admin/bookings/list')
@@ -388,11 +462,82 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
       paymentMethod: 'transfer',
       invoice: rawData.invoice === 'true',
       invoiceData,
-      customerNotes: rawData.internalNotes,
+      adminNotes: rawData.internalNotes,
     }
     const updatedBooking = await Booking.findByIdAndUpdate(bookingId, bookingData, { new: true })
     if (!updatedBooking) {
       return { message: 'Nie znaleziono rezerwacji do zaktualizowania.', success: false }
+    }
+    // Send notification emails after update (non-blocking)
+    try {
+      const siteSettings = await getSiteSettings()
+      const customerName = `${updatedBooking.firstName || ''} ${updatedBooking.lastName || ''}`.trim()
+
+      if (siteSettings.sendBookingConfirmationEmails !== false) {
+        if (updatedBooking.guestEmail) {
+          await sendBookingEmail({
+            to: updatedBooking.guestEmail,
+            subject: 'Aktualizacja rezerwacji w Wilcze Chatki',
+            react: BookingConfirmationToClient({
+              customerName,
+              orderNumber: updatedBooking.orderId ?? '',
+              checkIn: updatedBooking.startDate.toISOString().split('T')[0],
+              checkOut: updatedBooking.endDate.toISOString().split('T')[0],
+              totalPrice: updatedBooking.totalPrice,
+              paidAmount: updatedBooking.paidAmount,
+              siteSettings,
+              guestPhone: updatedBooking.guestPhone,
+              guestEmail: updatedBooking.guestEmail,
+              guestAddress: updatedBooking.guestAddress,
+              adults: updatedBooking.adults,
+              children: updatedBooking.children,
+              extraBeds: updatedBooking.extraBedsCount,
+              orderDate: updatedBooking.createdAt?.toISOString().split('T')[0],
+              invoiceRequested: Boolean(updatedBooking.invoice),
+              companyName: updatedBooking.invoiceData?.companyName,
+              nip: updatedBooking.invoiceData?.nip,
+              street: updatedBooking.invoiceData?.street,
+              city: updatedBooking.invoiceData?.city,
+              postalCode: updatedBooking.invoiceData?.postalCode,
+            }),
+          })
+        }
+
+        const adminEmail = siteSettings.bookingNotificationsEmail || siteSettings.email
+        console.log('[ADMIN EMAIL DEBUG] bookingNotificationsEmail:', siteSettings.bookingNotificationsEmail, 'email:', siteSettings.email, 'resolvedAdminEmail:', adminEmail)
+        if (adminEmail) {
+          await sendBookingEmail({
+            to: adminEmail,
+            subject: `Zaktualizowana rezerwacja: ${customerName} (${updatedBooking.orderId})`,
+            react: BookingConfirmationToAdmin({
+              customerName,
+              orderNumber: updatedBooking.orderId ?? '',
+              checkIn: updatedBooking.startDate.toISOString().split('T')[0],
+              checkOut: updatedBooking.endDate.toISOString().split('T')[0],
+              totalPrice: updatedBooking.totalPrice,
+              paidAmount: updatedBooking.paidAmount,
+              siteSettings,
+              guestPhone: updatedBooking.guestPhone,
+              guestEmail: updatedBooking.guestEmail,
+              guestAddress: updatedBooking.guestAddress,
+              adults: updatedBooking.adults,
+              children: updatedBooking.children,
+              extraBeds: updatedBooking.extraBedsCount,
+              orderDate: updatedBooking.createdAt?.toISOString().split('T')[0],
+              invoiceRequested: Boolean(updatedBooking.invoice),
+              companyName: updatedBooking.invoiceData?.companyName,
+              nip: updatedBooking.invoiceData?.nip,
+              street: updatedBooking.invoiceData?.street,
+              city: updatedBooking.invoiceData?.city,
+              postalCode: updatedBooking.invoiceData?.postalCode,
+              cabinsCount: 1,
+              adminNotes: updatedBooking.adminNotes,
+            }),
+          })
+        }
+      }
+    } catch (err) {
+      console.error('Błąd wysyłki maila po aktualizacji rezerwacji przez admina:', err)
     }
     revalidatePath('/', 'layout')
     revalidatePath('/admin', 'layout')

@@ -149,6 +149,7 @@ export async function POST(request: Request) {
               checkIn,
               checkOut,
               totalPrice,
+              paidAmount: totalPrice,
               siteSettings,
               guestPhone: primary.guestPhone,
               guestEmail: primary.guestEmail,
@@ -168,10 +169,11 @@ export async function POST(request: Request) {
           });
           console.log("[WEBHOOK] Mail do klienta wysłany");
 
-          console.log("[WEBHOOK] Wysyłam maila o nowej rezerwacji do admina:", siteSettings.email);
-          if (siteSettings.email) {
+          const adminNotifEmail = siteSettings.bookingNotificationsEmail || siteSettings.email;
+          console.log("[WEBHOOK] Wysyłam maila o nowej rezerwacji do admina:", adminNotifEmail);
+          if (adminNotifEmail) {
             await sendBookingEmail({
-              to: siteSettings.email,
+              to: adminNotifEmail,
               subject: `Nowa rezerwacja: ${customerName} (${orderNumber})`,
               react: BookingConfirmationToAdmin({
                 customerName,
@@ -179,21 +181,23 @@ export async function POST(request: Request) {
                 checkIn,
                 checkOut,
                 totalPrice,
-                  siteSettings,
-                  guestPhone: primary.guestPhone,
-                  guestEmail: primary.guestEmail,
-                  guestAddress: primary.guestAddress,
-                  adults: totalAdults,
-                  children: totalChildren,
-                  extraBeds: totalExtraBeds,
-                  orderDate: primary.createdAt?.toISOString().split('T')[0],
-                  invoiceRequested: Boolean(primary.invoice),
-                  companyName: primary.invoiceData?.companyName,
-                  nip: primary.invoiceData?.nip,
-                  street: primary.invoiceData?.street,
-                  city: primary.invoiceData?.city,
-                  postalCode: primary.invoiceData?.postalCode,
-                  cabinsCount: bookings.length,
+                paidAmount: totalPrice,
+                siteSettings,
+                guestPhone: primary.guestPhone,
+                guestEmail: primary.guestEmail,
+                guestAddress: primary.guestAddress,
+                adults: totalAdults,
+                children: totalChildren,
+                extraBeds: totalExtraBeds,
+                orderDate: primary.createdAt?.toISOString().split('T')[0],
+                invoiceRequested: Boolean(primary.invoice),
+                companyName: primary.invoiceData?.companyName,
+                nip: primary.invoiceData?.nip,
+                street: primary.invoiceData?.street,
+                city: primary.invoiceData?.city,
+                postalCode: primary.invoiceData?.postalCode,
+                cabinsCount: bookings.length,
+                adminNotes: primary.adminNotes,
               }),
             });
             console.log("[WEBHOOK] Mail do admina wysłany");
@@ -242,12 +246,12 @@ export async function POST(request: Request) {
           to: failedBooking.guestEmail,
           subject: "Nieudana płatność za rezerwację w Wilcze Chatki",
           react: BookingFailure({
-              customerName: `${failedBooking.firstName || ''} ${failedBooking.lastName || ''}`.trim(),
-              orderNumber: failedBooking.orderId ?? '',
-              checkIn: failedBooking.startDate.toISOString().split('T')[0],
-              checkOut: failedBooking.endDate.toISOString().split('T')[0],
-              siteSettings,
-            }),
+            customerName: `${failedBooking.firstName || ''} ${failedBooking.lastName || ''}`.trim(),
+            orderNumber: failedBooking.orderId ?? '',
+            checkIn: failedBooking.startDate.toISOString().split('T')[0],
+            checkOut: failedBooking.endDate.toISOString().split('T')[0],
+            siteSettings,
+          }),
         });
         console.log("[WEBHOOK] Mail o nieudanej płatności wysłany");
       } catch (mailError) {

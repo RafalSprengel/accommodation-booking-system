@@ -7,6 +7,8 @@ export interface ISiteSettingsDoc extends Omit<Document, '_id'> {
   email: string;
   facebookUrl: string;
   bankAccountNumber: string;
+  sendBookingConfirmationEmails?: boolean;
+  bookingNotificationsEmail?: string;
 }
 
 export type ISiteSettings = ISiteSettingsDoc;
@@ -41,6 +43,15 @@ const SiteSettingsSchema = new Schema<ISiteSettings>(
       type: String,
       required: true,
       default: '00 0000 0000 0000 0000 0000 0000'
+    },
+    sendBookingConfirmationEmails: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
+    bookingNotificationsEmail: {
+      type: String,
+      default: ''
     }
   },
   {

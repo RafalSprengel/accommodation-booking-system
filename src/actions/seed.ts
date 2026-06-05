@@ -431,7 +431,6 @@ export async function seedBookings() {
           city: 'Warszawa',
           postalCode: '00-002',
         },
-        customerNotes: 'Rezerwacja testowa dla chatki A',
         source: 'online',
       },
       {
@@ -452,7 +451,6 @@ export async function seedBookings() {
         paymentMethod: 'transfer',
         status: 'confirmed',
         invoice: false,
-        customerNotes: 'Prośba o ciszę nocną',
         source: 'online',
       },
     ];
