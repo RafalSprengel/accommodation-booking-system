@@ -167,7 +167,7 @@ export default function BookingConfirmationToAdmin({
             <Text style={sectionTextStyle}><strong>Zameldowanie:</strong> {checkIn}</Text>
             <Text style={sectionTextStyle}><strong>Wymeldowanie:</strong> {checkOut}</Text>
             {invoiceRequested && (<>
-              <Text style={sectionTextStyle}><strong>Faktura VAT</strong></Text>
+              <Text style={sectionTextStyle}><strong>Faktura VAT:</strong></Text>
               <Section style={{ padding: '10px', backgroundColor: '#fff' }}>
                 {companyName && <Text style={sectionTextStyle}><strong>Nazwa firmy:</strong> {companyName}</Text>}
                 {nip && <Text style={sectionTextStyle}><strong>NIP:</strong> {nip}</Text>}
