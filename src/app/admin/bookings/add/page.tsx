@@ -38,6 +38,7 @@ interface PropertyOption {
   name: string;
   maxAdults: number;
   maxExtraBeds: number;
+  maxChildren: number;
 }
 
 interface InvoiceData {
@@ -103,7 +104,7 @@ export default function AddBookingPage() {
   const [feedbackModal, setFeedbackModal] = useState<{
     isOpen: boolean;
     title: string;
-    message: string;
+    message: React.ReactNode;
   }>({
     isOpen: false,
     title: "",
@@ -228,7 +229,18 @@ export default function AddBookingPage() {
       setFeedbackModal({
         isOpen: true,
         title: "Rezerwacja utworzona",
-        message: state.message,
+        message: (
+          <div className={styles.successDetails}>
+            <p>{state.message}</p>
+            <ul className={styles.successList}>
+              <li><strong>Obiekt:</strong> <span>{selectedProperty?.name}</span></li>
+              <li><strong>Termin:</strong> <span>{bookingDates.start ? formatDisplayDate(bookingDates.start) : ""} — {bookingDates.end ? formatDisplayDate(bookingDates.end) : ""}</span></li>
+              <li><strong>Dorosłych:</strong> <span>{adults}</span></li>
+              <li><strong>Dzieci:</strong> <span>{children}</span></li>
+              <li><strong>Dostawek:</strong> <span>{extraBeds}</span></li>
+            </ul>
+          </div>
+        ),
       });
       formRef.current?.reset();
       setExtraBeds(0);
@@ -282,11 +294,12 @@ export default function AddBookingPage() {
 
   const handlePaidAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (paidAmountError) setPaidAmountError("");
-    if (e.target.value === "") {
+    const rawValue = e.target.value.replace(/,/g, ".");
+    if (rawValue === "") {
       setPaidAmount(null);
       return;
     }
-    const value = parseFloat(e.target.value);
+    const value = parseFloat(rawValue);
     if (!isNaN(value)) setPaidAmount(Math.max(0, value));
   };
 
@@ -616,6 +629,12 @@ export default function AddBookingPage() {
               max={totalPrice}
               value={paidAmount ?? ""}
               onChange={handlePaidAmountChange}
+              onKeyDown={(e) => {
+                if (e.key === ",") {
+                  e.preventDefault();
+                  document.execCommand("insertText", false, ".");
+                }
+              }}
               className={paidAmountError ? styles.inputError : ""}
             />
             {paidAmountError && <span className={styles.errorText}>{paidAmountError}</span>}
@@ -808,7 +827,7 @@ export default function AddBookingPage() {
         title={feedbackModal.title}
         cancelText="Zamknij"
       >
-        <p>{feedbackModal.message}</p>
+        <div>{feedbackModal.message}</div>
       </Modal>
     </AdminShell>
   );

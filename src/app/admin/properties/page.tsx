@@ -6,17 +6,13 @@ import Button from "@/app/_components/UI/Button/Button";
 import AdminShell from '../_components/AdminShell/AdminShell';
 import StatusBadge from '../_components/StatusBadge/StatusBadge';
 import DeletePropertyButton from "./DeletePropertyButton";
+import TogglePropertyButton from "./TogglePropertyButton";
 import styles from "./page.module.css";
 
 export default async function PropertiesPage() {
   const properties = await getAllProperties();
 
-  async function handleToggleActive(formData: FormData) {
-    "use server";
-    const id = formData.get("id") as string;
-    const isActive = formData.get("isActive") === "true";
-    await togglePropertyActive(id, !isActive);
-  }
+
 
   return (
     <AdminShell
@@ -67,17 +63,7 @@ export default async function PropertiesPage() {
                 
               </div>
               <div className={styles.cardActions}>
-                <form action={handleToggleActive}>
-                  <input type="hidden" name="id" value={prop._id} />
-                  <input
-                    type="hidden"
-                    name="isActive"
-                    value={String(prop.isActive)}
-                  />
-                  <Button type="submit" variant="secondary" fullWidth>
-                    {prop.isActive ? "🔘 Dezaktywuj" : "✅ Aktywuj"}
-                  </Button>
-                </form>
+                <TogglePropertyButton id={prop._id} isActive={prop.isActive} />
                 <div className={styles.cardActionsRow}>
                   <Button variant='secondary' href={`/admin/properties/${prop._id}`}>
                     ✏️ Edytuj

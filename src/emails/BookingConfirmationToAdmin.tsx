@@ -1,4 +1,4 @@
-﻿import {
+import {
   Html,
   Head,
   Body,
@@ -138,7 +138,7 @@ export default function BookingConfirmationToAdmin({
             Wilcze Chatki — panel administracyjny
           </Heading>
           <Text style={textStyle}>
-            Otrzymano nową, opłaconą online rezerwację przez Stripe.
+            Zarejestrowano nową rezerwację, która została pomyślnie opłacona online.
           </Text>
 
           <Section style={sectionStyle}>

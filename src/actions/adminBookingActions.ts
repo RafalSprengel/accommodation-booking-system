@@ -332,11 +332,12 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
             street: newBooking.invoiceData?.street,
             city: newBooking.invoiceData?.city,
             postalCode: newBooking.invoiceData?.postalCode,
+            cabinsCount: 1,
           }),
         })
 
         const adminEmail = siteSettings.bookingNotificationsEmail || siteSettings.email
-        console.log('[ADMIN EMAIL DEBUG] bookingNotificationsEmail:', siteSettings.bookingNotificationsEmail, 'email:', siteSettings.email, 'resolvedAdminEmail:', adminEmail)
+
         if (adminEmail) {
           await sendBookingEmail({
             to: adminEmail,
@@ -499,12 +500,13 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
               street: updatedBooking.invoiceData?.street,
               city: updatedBooking.invoiceData?.city,
               postalCode: updatedBooking.invoiceData?.postalCode,
+              cabinsCount: 1,
             }),
           })
         }
 
         const adminEmail = siteSettings.bookingNotificationsEmail || siteSettings.email
-        console.log('[ADMIN EMAIL DEBUG] bookingNotificationsEmail:', siteSettings.bookingNotificationsEmail, 'email:', siteSettings.email, 'resolvedAdminEmail:', adminEmail)
+
         if (adminEmail) {
           await sendBookingEmail({
             to: adminEmail,
