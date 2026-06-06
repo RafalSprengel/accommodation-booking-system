@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { getSiteSettings, updateSiteSettings } from '@/actions/siteSettingsActions'
 import { toast } from 'react-hot-toast'
-import AdminCard from '../_components/AdminCard/AdminCard'
+import AdminSection from '@/app/_components/UI/AdminSection/AdminSection'
+import SettingRow from '@/app/_components/UI/SettingRow/SettingRow'
 import styles from './settings.module.css'
 import siteStyles from './SiteSettingsForm.module.css'
 
@@ -74,91 +75,83 @@ export default function BookingConfirmationSettings() {
 
   if (isLoading) {
     return (
-      <AdminCard title="Potwierdzenie rezerwacji" badge="Globalne">
+      <AdminSection title="Potwierdzenie rezerwacji" badge="Globalne">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner} />
           <p className={styles.loadingText}>Loading...</p>
         </div>
-      </AdminCard>
+      </AdminSection>
     )
   }
 
   return (
-    <AdminCard title="Potwierdzenie rezerwacji" badge="Globalne">
-      <div className={styles.settingRow}>
-        <div className={styles.settingContent}>
-          <label className={styles.settingLabel}>Wysyłka potwierdzenia rezerwacji</label>
-          <p className={styles.settingDescription}>
+    <AdminSection title="Potwierdzenie rezerwacji" badge="Globalne">
+      <SettingRow
+        label={<label>Wysyłka potwierdzenia rezerwacji</label>}
+        description={
+          <>
             Gdy ta opcja jest <strong>włączona</strong>, po każdej rezerwacji zostanie automatycznie wysłane potwierdzenie do klienta oraz powiadomienie do administratora strony.<br />
             Gdy <strong>wyłączona</strong>, żadne e-maile potwierdzające nie będą wysyłane.
-          </p>
+          </>
+        }
+      >
+        <div className={styles.toggleWrapper}>
+          <button
+            type="button"
+            onClick={handleToggle}
+            disabled={isTogglePending}
+            className={`${styles.toggleSwitch} ${confirmationEnabled ? styles.toggleOn : styles.toggleOff}${isTogglePending ? ` ${styles.toggleDisabled}` : ''}`}
+            aria-pressed={confirmationEnabled}
+            aria-label="Przełącz ustawienie"
+          >
+            <span className={styles.toggleKnob} />
+          </button>
+          <span className={`${styles.toggleStatusLabel} ${confirmationEnabled ? styles.statusActive : styles.statusInactive}`}>
+            {confirmationEnabled ? 'WŁĄCZONE' : 'WYŁĄCZONE'}
+          </span>
         </div>
-        <div className={styles.settingControl}>
-          <div className={styles.toggleWrapper}>
+      </SettingRow>
+
+      <SettingRow
+        label={<label htmlFor="booking-admin-email">Adres e-mail dla powiadomień</label>}
+        description="Adres, na który wysyłane będą e-maile z potwierdzeniami o rezerwacjach do admina."
+      >
+        <div className={siteStyles.siteSettings__inputGroup}>
+          <div className={siteStyles.siteSettings__editHeader}>
             <button
               type="button"
-              onClick={handleToggle}
-              disabled={isTogglePending}
-              className={`${styles.toggleSwitch} ${confirmationEnabled ? styles.toggleOn : styles.toggleOff}${isTogglePending ? ` ${styles.toggleDisabled}` : ''}`}
-              aria-pressed={confirmationEnabled}
-              aria-label="Przełącz ustawienie"
+              className={siteStyles.siteSettings__toggleEdit}
+              onClick={() => {
+                if (isEditing) setEmail(initialEmail)
+                setIsEditing(!isEditing)
+              }}
             >
-              <span className={styles.toggleKnob} />
+              {isEditing ? 'Anuluj' : 'Edytuj'}
             </button>
-            <span className={`${styles.toggleStatusLabel} ${confirmationEnabled ? styles.statusActive : styles.statusInactive}`}>
-              {confirmationEnabled ? 'WŁĄCZONE' : 'WYŁĄCZONE'}
-            </span>
           </div>
-        </div>
-      </div>
-
-      <div className={styles.settingRow}>
-        <div className={styles.settingContent}>
-          <label className={styles.settingLabel} htmlFor="booking-admin-email">
-            Adres e-mail dla powiadomień
-          </label>
-          <p className={styles.settingDescription}>
-            Adres, na który wysyłane będą e-maile z potwierdzeniami o rezerwacjach do admina.
-          </p>
-        </div>
-        <div className={styles.settingControl}>
-          <div className={siteStyles.siteSettings__inputGroup}>
-            <div className={siteStyles.siteSettings__editHeader}>
+          <input
+            id="booking-admin-email"
+            type="email"
+            className={siteStyles.siteSettings__input}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={!isEditing}
+            placeholder="admin@example.com"
+          />
+          {isEditing && (
+            <div className={siteStyles.siteSettings__actions}>
               <button
                 type="button"
-                className={siteStyles.siteSettings__toggleEdit}
-                onClick={() => {
-                  if (isEditing) setEmail(initialEmail)
-                  setIsEditing(!isEditing)
-                }}
+                className={siteStyles.siteSettings__saveBtn}
+                onClick={handleSaveEmail}
+                disabled={!hasEmailChanges || isSaving}
               >
-                {isEditing ? 'Anuluj' : 'Edytuj'}
+                {isSaving ? 'Zapisywanie...' : 'Zapisz'}
               </button>
             </div>
-            <input
-              id="booking-admin-email"
-              type="email"
-              className={siteStyles.siteSettings__input}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={!isEditing}
-              placeholder="admin@example.com"
-            />
-            {isEditing && (
-              <div className={siteStyles.siteSettings__actions}>
-                <button
-                  type="button"
-                  className={siteStyles.siteSettings__saveBtn}
-                  onClick={handleSaveEmail}
-                  disabled={!hasEmailChanges || isSaving}
-                >
-                  {isSaving ? 'Zapisywanie...' : 'Zapisz'}
-                </button>
-              </div>
-            )}
-          </div>
+          )}
         </div>
-      </div>
-    </AdminCard>
+      </SettingRow>
+    </AdminSection>
   )
 }

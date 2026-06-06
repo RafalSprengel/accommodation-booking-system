@@ -10,8 +10,6 @@
     --action-color: #c3a846;
     --error-color: #c0392b;
     --color-danger: #e4545b;
-    --section-bg-light: #f9f9f9;
-    --section-bg-dark: #eeeeee;
     --site-header-offset: 91px;
     --status-confirmed: #15803d;
     --status-failed: #dc2626;
@@ -66,18 +64,7 @@ body {
     overflow-x: hidden;
 }
 
-section {
-    padding: 60px 20px;
-    scroll-margin-top: calc(var(--site-header-offset) + 16px);
-}
 
-section:nth-child(odd) {
-    background-color: var(--section-bg-dark);
-}
-
-section:nth-child(even) {
-    background-color: var(--section-bg-light);
-}
 
 h1,
 h2,
@@ -130,9 +117,4 @@ nav {
     font-family: var(--font-body);
     text-decoration: none;
 }
-
-@media(min-width: 768px) {
-    section {
-        padding: 80px 40px;
-    }
-}
+

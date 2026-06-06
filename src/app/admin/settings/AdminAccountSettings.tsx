@@ -5,7 +5,7 @@ import { authClient } from '@/lib/auth-client'
 import { toast } from 'react-hot-toast'
 import { changeAdminEmail } from '@/actions/adminEmailActions'
 import styles from './AdminAccountSettings.module.css'
-import settingsStyles from './settings.module.css'
+import AdminSection from '@/app/_components/UI/AdminSection/AdminSection'
 
 export default function AdminAccountSettings() {
   const { data: session, isPending: sessionPending } = authClient.useSession()
@@ -41,15 +41,11 @@ export default function AdminAccountSettings() {
 
   if (sessionPending || username === null || email === null) {
     return (
-      <section className={`${settingsStyles.card} ${styles.accountSettings__card}`}>
-        <div className={settingsStyles.cardHeader}>
-          <h2>Dane Administratora</h2>
+      <AdminSection title="Dane administratora" badge="Profil">
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner} />
         </div>
-        <div className={settingsStyles.loadingContainer}>
-          <div className={settingsStyles.spinner}></div>
-          <p className={settingsStyles.loadingText}>Loading...</p>
-        </div>
-      </section>
+      </AdminSection>
     )
   }
 
@@ -78,19 +74,14 @@ export default function AdminAccountSettings() {
           return
         }
 
-        const { error: userError } = await (authClient as any).username.updateUsername({
-          newUsername: username,
-        })
-        if (userError) {
-          toast.error(userError.message)
-          return
-        }
-
-        const { error: updateError } = await authClient.updateUser({
+        const updateResult = await authClient.updateUser({
+          username: username,
           displayUsername: username,
         })
+        const updateError = updateResult?.error
         if (updateError) {
-          toast.error(updateError.message)
+          console.error('authClient.updateUser error:', updateError)
+          toast.error(updateError.message ?? JSON.stringify(updateError))
           return
         }
       }
@@ -120,7 +111,7 @@ export default function AdminAccountSettings() {
 
       if (password.length > 0) {
         if (!passwordsMatch) {
-          return // Blokowane przez disabled na przycisku, ale dla pewności zostawiamy early return
+          return
         }
 
         const { error: passwordError } = await authClient.changePassword({
@@ -181,12 +172,11 @@ export default function AdminAccountSettings() {
   }
 
   return (
-    <section className={`${settingsStyles.card} ${styles.accountSettings__card}`}>
-      <div className={settingsStyles.cardHeader}>
-        <h2>Dane Administratora</h2>
-        <span className={settingsStyles.cardBadge}>Profil</span>
-        <div><p>Dane te nie są wyświetlane nigdzie na stronie, służą wyłącznie do logowania do panelu admina.</p></div>
-      </div>
+    <AdminSection
+      title="Dane administratora"
+      badge="Profil"
+      description="Dane te nie są wyświetlane nigdzie na stronie, służą wyłącznie do logowania do panelu admina."
+    >
 
       {emailVerificationSentTo && (
         <div style={{
@@ -309,6 +299,6 @@ export default function AdminAccountSettings() {
           </div>
         )}
       </div>
-    </section>
+    </AdminSection>
   )
 }

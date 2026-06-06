@@ -23,6 +23,8 @@ import {
 } from "@/actions/seasonActions";
 import Button from "@/app/_components/UI/Button/Button";
 import Modal from "@/app/_components/Modal/Modal";
+import AdminSection from "@/app/_components/UI/AdminSection/AdminSection";
+import SettingRow from "@/app/_components/UI/SettingRow/SettingRow";
 import styles from "./booking.module.css";
 
 interface BookingConfig {
@@ -560,19 +562,11 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
         <input type="hidden" name="checkInHour" value={localCheckInHour} />
         <input type="hidden" name="checkOutHour" value={localCheckOutHour} />
 
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h2>Długość pobytu</h2>
-          </div>
-          <div className={styles.settingRow}>
-            <div className={styles.settingContent}>
-              <label htmlFor="minBookingDays" className={styles.settingLabel}>
-                Minimalna liczba nocy:
-              </label>
-              <p className={styles.settingDescription}>
-                Klient nie może wybrać okresu krótszego.
-              </p>
-            </div>
+        <AdminSection title="Długość pobytu">
+          <SettingRow
+            label={<label htmlFor="minBookingDays">Minimalna liczba nocy:</label>}
+            description="Klient nie może wybrać okresu krótszego."
+          >
             <div className={styles.settingControl}>
               <input
                 type="number"
@@ -592,16 +586,11 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 value={localMinDays === "" ? "" : localMinDays}
               />
             </div>
-          </div>
-          <div className={styles.settingRow}>
-            <div className={styles.settingContent}>
-              <label htmlFor="maxBookingDays" className={styles.settingLabel}>
-                Maksymalna liczba nocy:
-              </label>
-              <p className={styles.settingDescription}>
-                Klient nie może wybrać okresu dłuższego.
-              </p>
-            </div>
+          </SettingRow>
+          <SettingRow
+            label={<label htmlFor="maxBookingDays">Maksymalna liczba nocy:</label>}
+            description="Klient nie może wybrać okresu dłuższego."
+          >
             <div className={styles.settingControl}>
               <input
                 type="number"
@@ -621,22 +610,17 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 value={localMaxDays === "" ? "" : localMaxDays}
               />
             </div>
-          </div>
-        </div>
+          </SettingRow>
+        </AdminSection>
 
-        <div className={styles.card}>
-          <div id="seasons" className={`${styles.cardHeader} ${styles.cardHeaderSpaced}`}>
-            <h2>Ustawienia sezonów</h2>
-          </div>
-          <div className={styles.settingRow}>
-            <div className={styles.settingContent}>
-              <p className={styles.settingLabel}>Wybierz sezon:</p>
-              <p className={styles.settingDescription}>
-                Daty sezonu działają cyklicznie co roku.
-              </p>
-            </div>
-            <div className={styles.settingControl}>
-              <select
+        <div id="seasons">
+          <AdminSection title="Ustawienia sezonów">
+            <SettingRow
+              label={<label>Wybierz sezon:</label>}
+              description="Daty sezonu działają cyklicznie co roku."
+            >
+              <div className={styles.settingControl}>
+                <select
                 id="selectedSeason"
                 value={selectedSeasonId}
                 onChange={handleSeasonChange}
@@ -654,12 +638,12 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                       </option>
                     ))
                 )}
-              </select>
-              {isLoadingSeasons && (
-                <p className={styles.loadingText}>Wczytywanie...</p>
-              )}
-            </div>
-          </div>
+                </select>
+                {isLoadingSeasons && (
+                  <p className={styles.loadingText}>Wczytywanie...</p>
+                )}
+              </div>
+            </SettingRow>
 
           {selectedSeason && (
             <div className={styles.seasonDetailsBox}>
@@ -705,22 +689,17 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
 
               {selectedSeason.description &&
                 selectedSeason.description.trim() !== "" && (
-                  <div className={styles.settingRow}>
-                    <div className={styles.settingContent}>
-                      <p className={styles.settingLabel}>Opis sezonu:</p>
-                      <p className={styles.settingDescription}>
-                        {selectedSeason.description}
-                      </p>
-                    </div>
-                  </div>
+                  <SettingRow
+                    label={<p>Opis sezonu:</p>}
+                    description={selectedSeason.description}
+                  >
+                    <div />
+                  </SettingRow>
                 )}
 
-              <div className={styles.settingRow}>
-                <div className={styles.settingContent}>
-                  <label htmlFor="seasonStartDay" className={styles.settingLabel}>
-                    Data rozpoczęcia:
-                  </label>
-                </div>
+              <SettingRow
+                label={<label htmlFor="seasonStartDay">Data rozpoczęcia:</label>}
+              >
                 <div className={styles.settingControl}>
                   <div className={styles.seasonDateGrid}>
                     <div className={styles.seasonDateCol}>
@@ -780,14 +759,11 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                     </span>
                   )}
                 </div>
-              </div>
+              </SettingRow>
 
-              <div className={styles.settingRow}>
-                <div className={styles.settingContent}>
-                  <label htmlFor="seasonEndDay" className={styles.settingLabel}>
-                    Data zakończenia:
-                  </label>
-                </div>
+              <SettingRow
+                label={<label htmlFor="seasonEndDay">Data zakończenia:</label>}
+              >
                 <div className={styles.settingControl}>
                   <div className={styles.seasonDateGrid}>
                     <div className={styles.seasonDateCol}>
@@ -847,24 +823,17 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                     </span>
                   )}
                 </div>
-              </div>
+              </SettingRow>
             </div>
           )}
+          </AdminSection>
         </div>
 
-        <div className={styles.card}>
-          <div className={`${styles.cardHeader} ${styles.cardHeaderSpaced}`}>
-            <h2>Doba hotelowa</h2>
-          </div>
-          <div className={styles.settingRow}>
-            <div className={styles.settingContent}>
-              <label htmlFor="checkInHour" className={styles.settingLabel}>
-                Godzina rozpoczęcia doby (check-in):
-              </label>
-              <p className={styles.settingDescription}>
-                Od której godziny można się zameldować w dniu przyjazdu.
-              </p>
-            </div>
+        <AdminSection title="Doba hotelowa">
+          <SettingRow
+            label={<label htmlFor="checkInHour">Godzina rozpoczęcia doby (check-in):</label>}
+            description="Od której godziny można się zameldować w dniu przyjazdu."
+          >
             <div className={styles.settingControl}>
               <input
                 type="number"
@@ -885,16 +854,11 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 value={localCheckInHour === "" ? "" : localCheckInHour}
               />
             </div>
-          </div>
-          <div className={styles.settingRow}>
-            <div className={styles.settingContent}>
-              <label htmlFor="checkOutHour" className={styles.settingLabel}>
-                Godzina zakończenia doby (check-out):
-              </label>
-              <p className={styles.settingDescription}>
-                Do której godziny trzeba opuścić obiekt w dniu wyjazdu.
-              </p>
-            </div>
+          </SettingRow>
+          <SettingRow
+            label={<label htmlFor="checkOutHour">Godzina zakończenia doby (check-out):</label>}
+            description="Do której godziny trzeba opuścić obiekt w dniu wyjazdu."
+          >
             <div className={styles.settingControl}>
               <input
                 type="number"
@@ -915,22 +879,13 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 value={localCheckOutHour === "" ? "" : localCheckOutHour}
               />
             </div>
-          </div>
-        </div>
+          </SettingRow>
+        </AdminSection>
 
-        <div className={styles.card}>
-          <div className={`${styles.cardHeader} ${styles.cardHeaderSpaced}`}>
-            <h2>Dzieci</h2>
-          </div>
-          <div className={styles.settingRow}>
-            <div className={styles.settingContent}>
-              <label
-                htmlFor="childrenFreeAgeLimit"
-                className={styles.settingLabel}
-              >
-                Bezpłatny pobyt dzieci do lat:
-              </label>
-            </div>
+        <AdminSection title="Dzieci">
+          <SettingRow
+            label={<label htmlFor="childrenFreeAgeLimit">Bezpłatny pobyt dzieci do lat:</label>}
+          >
             <div className={styles.settingControl}>
               <input
                 type="number"
@@ -951,19 +906,14 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 value={localChildrenFreeAge === "" ? "" : localChildrenFreeAge}
               />
             </div>
-          </div>
-        </div>
+          </SettingRow>
+        </AdminSection>
 
-        <div className={styles.card}>
-          <div className={`${styles.cardHeader} ${styles.cardHeaderSpaced}`}>
-            <h2>Dostępność terminów</h2>
-          </div>
-          <div className={styles.settingRow}>
-            <div className={styles.settingContent}>
-              <p className={styles.settingLabel}>
-                Zezwalaj na zameldowanie w dniu wymeldowania poprzednich gości
-              </p>
-              <p className={styles.settingDescription}>
+        <AdminSection title="Dostępność terminów">
+          <SettingRow
+            label={<p>Zezwalaj na zameldowanie w dniu wymeldowania poprzednich gości</p>}
+            description={
+              <>
                 Jeśli <strong>włączone</strong>, nowi goście mogą przyjechać tego
                 samego dnia, w którym poprzedni wyjeżdżają (po {localCheckOutHour}
                 :00).
@@ -972,8 +922,9 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 zakończenia istniejących rezerwacji pokazują się w kalendarzu jako
                 niedostępne do zarezerwowania dla nowych gości (zasada "sprzątanie
                 obiektu bez pośpiechu").
-              </p>
-            </div>
+              </>
+            }
+          >
             <div className={styles.settingControl}>
               <div className={styles.toggleWrapper}>
                 <button
@@ -991,8 +942,8 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 </span>
               </div>
             </div>
-          </div>
-        </div>
+          </SettingRow>
+        </AdminSection>
 
         <div
           className={`${styles.floatingSaveBar} ${isAnyDirty ? styles.visible : ""}`}

@@ -558,3 +558,21 @@
     width: auto;
   }
 }
+
+/* Compact adjustments for settings cards only */
+.settingsCard > div {
+  padding: 10px; /* smaller header padding */
+  background-color: transparent; /* remove gray header only for settings cards */
+  border-bottom: 1px solid var(--color-border);
+  gap: 8px;
+}
+
+.settingsCard .settingRow {
+  padding: 10px;
+  gap: 12px;
+}
+
+.settingsCard .settingControl {
+  padding-top: 10px;
+  border-top: none;
+}

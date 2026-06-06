@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { getSiteSettings, updateSiteSettings } from '@/actions/siteSettingsActions'
 import { toast } from 'react-hot-toast'
 import styles from './SiteSettingsForm.module.css'
-import settingsStyles from './settings.module.css'
+import AdminSection from '@/app/_components/UI/AdminSection/AdminSection'
 
 export default function SiteSettingsForm() {
   const [isEditing, setIsEditing] = useState(false)
@@ -93,13 +93,11 @@ export default function SiteSettingsForm() {
 
 
   return (
-    <section className={`${settingsStyles.card} ${styles.siteSettings__card}`}>
-      <div className={settingsStyles.cardHeader}>
-        <h2>Dane Firmy / Obiektu</h2>
-        <span className={settingsStyles.cardBadge}>Globalne</span>
-        <div><p>Dane te są wyświetlane na stronie jako informacja dla odwiedzających.</p></div>
-      </div>
-
+    <AdminSection
+      title="Dane firmy / obiektu"
+      badge="Globalne"
+      description="Dane te są wyświetlane na stronie jako informacja dla odwiedzających."
+    >
       <div className={styles.siteSettings__editHeader}>
         <button
           type="button"
@@ -112,9 +110,9 @@ export default function SiteSettingsForm() {
 
       <div className={styles.siteSettings__form}>
         {isLoading ? (
-          <div className={settingsStyles.loadingContainer}>
-            <div className={settingsStyles.spinner}></div>
-            <p className={settingsStyles.loadingText}>Loading...</p>
+          <div className={styles.loadingContainer}>
+            <div className={styles.spinner}></div>
+            <p className={styles.loadingText}>Loading...</p>
           </div>
         ) : (
           <>
@@ -200,6 +198,6 @@ export default function SiteSettingsForm() {
           </>
         )}
       </div>
-    </section>
+    </AdminSection>
   )
 }
