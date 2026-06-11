@@ -1,6 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { isRangeAvailable } from '@/actions/availabilityActions'
+import { toast } from 'react-hot-toast'
+import Modal from '@/app/_components/Modal/Modal'
 import Button from "@/app/_components/UI/Button/Button";
 import FloatingBackButton from "@/app/_components/FloatingBackButton/FloatingBackButton";
 import type { BookingData, ClientData, InvoiceData } from "@/types/booking";
@@ -15,9 +18,28 @@ interface GuestData extends ClientData {
 
 const STORAGE_KEY = "wilczechatki_booking_draft";
 
+interface AvailabilityCheckResult {
+  available: boolean;
+  occupiedNames: string[];
+}
+
+async function checkBookingAvailability(data: BookingData): Promise<AvailabilityCheckResult> {
+  const ids = data.orders.map(o => o.propertyId);
+  const result = await isRangeAvailable(data.startDate, data.endDate, ids);
+  if (!result.available) {
+    const occupied = result.occupiedPropertyIds || [];
+    const occupiedNames = data.orders
+      .filter(o => occupied.includes(o.propertyId))
+      .map(o => o.displayName);
+    return { available: false, occupiedNames };
+  }
+  return { available: true, occupiedNames: [] };
+}
+
 export default function BookingDetailsPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isValidating, setIsValidating] = useState(true);
   const [formData, setFormData] = useState<GuestData>({
     firstName: "",
     lastName: "",
@@ -38,13 +60,50 @@ export default function BookingDetailsPage() {
   const [bookingSummary, setBookingSummary] = useState<BookingData | null>(
     null,
   );
+  const [unavailableModal, setUnavailableModal] = useState<{
+    isOpen: boolean
+    title: string
+    occupiedNames: string[]
+  }>({ isOpen: false, title: '', occupiedNames: [] });
+
+  const EMPTY_INVOICE_DATA = {
+    companyName: '',
+    nip: '',
+    street: '',
+    city: '',
+    postalCode: '',
+  };
+
+  const [networkModalOpen, setNetworkModalOpen] = useState(false);
+  const [networkModalMessage, setNetworkModalMessage] = useState('');
+  const [retryType, setRetryType] = useState<'initial' | 'submit' | null>(null);
+  const initialParsedRef = useRef<BookingData | null>(null);
+
+  const validateInitialBooking = async (parsed: BookingData) => {
+    try {
+      const { available, occupiedNames } = await checkBookingAvailability(parsed);
+
+      if (!available) {
+        localStorage.removeItem(STORAGE_KEY);
+        router.push("/booking");
+        return;
+      }
+    } catch (err) {
+      console.error('Błąd sprawdzania dostępności:', err);
+      setNetworkModalMessage('Nie udało się sprawdzić dostępności. Spróbuj ponownie.');
+      setRetryType('initial');
+      setNetworkModalOpen(true);
+    } finally {
+      setIsValidating(false);
+    }
+  };
 
   useEffect(() => {
     const savedData = localStorage.getItem(STORAGE_KEY);
+    let z=5;
     if (savedData) {
       try {
         const parsed: BookingData = JSON.parse(savedData);
-
         if (
           !Array.isArray(parsed.orders) ||
           parsed.orders.length === 0 ||
@@ -57,13 +116,16 @@ export default function BookingDetailsPage() {
           return;
         }
 
+        initialParsedRef.current = parsed;
         setBookingSummary(parsed);
+        validateInitialBooking(parsed);
+
         const hasInvoiceData = Boolean(
           parsed.invoiceData.companyName ||
-            parsed.invoiceData.nip ||
-            parsed.invoiceData.street ||
-            parsed.invoiceData.city ||
-            parsed.invoiceData.postalCode,
+          parsed.invoiceData.nip ||
+          parsed.invoiceData.street ||
+          parsed.invoiceData.city ||
+          parsed.invoiceData.postalCode,
         );
 
         setFormData((prev) => ({
@@ -82,7 +144,6 @@ export default function BookingDetailsPage() {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
     if (!formData.firstName.trim()) newErrors.firstName = "Imię jest wymagane";
     if (!formData.lastName.trim())
       newErrors.lastName = "Nazwisko jest wymagane";
@@ -131,21 +192,20 @@ export default function BookingDetailsPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-
     if (name === "invoice") {
       setFormData((prev) => ({
         ...prev,
         invoice: checked,
         ...(checked && !prev.invoiceData
           ? {
-              invoiceData: {
-                companyName: "",
-                nip: "",
-                street: "",
-                city: "",
-                postalCode: "",
-              },
-            }
+            invoiceData: {
+              companyName: "",
+              nip: "",
+              street: "",
+              city: "",
+              postalCode: "",
+            },
+          }
           : {}),
       }));
     } else if (name.startsWith("invoice.")) {
@@ -169,16 +229,10 @@ export default function BookingDetailsPage() {
     }
   };
 
-  const handleTermAndConditionsClick = () => {
+  const proceedToSummary = async () => {
     const nextInvoiceData = formData.invoice
       ? formData.invoiceData
-      : {
-          companyName: "",
-          nip: "",
-          street: "",
-          city: "",
-          postalCode: "",
-        };
+      : EMPTY_INVOICE_DATA;
 
     const updatedData: BookingData = {
       ...(bookingSummary as BookingData),
@@ -192,44 +246,90 @@ export default function BookingDetailsPage() {
       invoice: formData.invoice,
       invoiceData: nextInvoiceData,
     };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
 
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    router.push('/booking/summary');
+  };
+
+  const handleRetry = async () => {
+    if (retryType === 'initial') {
+      const parsed = initialParsedRef.current;
+      if (parsed) {
+        await validateInitialBooking(parsed);
+      }
+    }
+
+    if (retryType === 'submit') {
+      try {
+        const { available, occupiedNames } = await checkBookingAvailability(bookingSummary!);
+        if (!available) {
+          setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames });
+        } else {
+          await proceedToSummary();
+        }
+      } catch (retryErr) {
+        console.error('Retry failed:', retryErr);
+      }
+    }
+
+    setRetryType(null);
+    setNetworkModalOpen(false);
+  };
+
+  const handleTermAndConditionsClick = () => {
+    const nextInvoiceData = formData.invoice
+      ? formData.invoiceData
+      : EMPTY_INVOICE_DATA;
+
+    const updatedData: BookingData = {
+      ...(bookingSummary as BookingData),
+      clientData: {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        address: formData.address,
+        email: formData.email,
+        phone: formData.phone,
+      },
+      invoice: formData.invoice,
+      invoiceData: nextInvoiceData,
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
     router.push("/terms-and-conditions");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+   
     e.preventDefault();
     if (!validateForm()) return;
+
     setIsSubmitting(true);
 
-    const nextInvoiceData = formData.invoice
-      ? formData.invoiceData
-      : {
-          companyName: "",
-          nip: "",
-          street: "",
-          city: "",
-          postalCode: "",
-        };
+    if (bookingSummary) {
+      try {
+        const { available, occupiedNames } = await checkBookingAvailability(bookingSummary);
+        console.log(available, occupiedNames)
+        if (!available) {
+          setUnavailableModal({ isOpen: true, title: 'Termin niedostępny lub w procesie rezerwacji, prosimy spróbować ponownie za 15 minut. ', occupiedNames });
+          setIsSubmitting(false);
+          return;
+        }
+      } catch (err) {
+        console.error('Błąd walidacji dostępności przed submit:', err);
+        setNetworkModalMessage('Nie udało się sprawdzić dostępności. Spróbuj ponownie.');
+        setRetryType('submit');
+        setNetworkModalOpen(true);
+        setIsSubmitting(false);
+        return;
+      }
+    }
 
-    const updatedData: BookingData = {
-      ...(bookingSummary as BookingData),
-      clientData: {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        address: formData.address,
-        email: formData.email,
-        phone: formData.phone,
-      },
-      invoice: formData.invoice,
-      invoiceData: nextInvoiceData,
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    router.push("/booking/summary");
+    await proceedToSummary();
   };
 
   if (!bookingSummary) {
+      
     return (
       <div className={styles.container}>
         <FloatingBackButton />
@@ -245,6 +345,7 @@ export default function BookingDetailsPage() {
   const totalGuests = orders.reduce((sum, item) => sum + item.guests, 0);
   const totalExtraBeds = orders.reduce((sum, item) => sum + item.extraBeds, 0);
   const totalPrice = orders.reduce((sum, item) => sum + item.price, 0);
+
   const orderDisplayName =
     orders.length === 1
       ? orders[0].displayName
@@ -252,12 +353,45 @@ export default function BookingDetailsPage() {
 
   const nights = Math.ceil(
     (new Date(endDate).getTime() - new Date(startDate).getTime()) /
-      (1000 * 60 * 60 * 24),
+    (1000 * 60 * 60 * 24),
   );
 
   return (
     <div className={styles.container}>
       <FloatingBackButton />
+
+      <Modal
+        isOpen={networkModalOpen}
+        onClose={() => setNetworkModalOpen(false)}
+        title="Błąd sieci"
+        confirmText="Spróbuj ponownie"
+        cancelText="Anuluj"
+        confirmVariant="warning"
+        onConfirm={handleRetry}
+      >
+        <p>{networkModalMessage}</p>
+      </Modal>
+
+      <Modal
+        isOpen={unavailableModal.isOpen}
+        onClose={() => { setUnavailableModal({ ...unavailableModal, isOpen: false }); router.refresh(); }}
+        title={unavailableModal.title}
+        confirmText="Wróć do wyboru"
+        cancelText="Odśwież wyniki"
+        confirmVariant="warning"
+        onConfirm={() => {
+          localStorage.removeItem(STORAGE_KEY);
+          setUnavailableModal({ ...unavailableModal, isOpen: false });
+          router.push('/booking');
+        }}
+      >
+        <p>
+          {unavailableModal.occupiedNames.length > 0
+            ? `Niedostępne obiekty: ${unavailableModal.occupiedNames.join(', ')}`
+            : 'Wybrany termin jest już niedostępny.'}
+        </p>
+      </Modal>
+
       <header className={styles.header}>
         <h1>Dane gości</h1>
         <p>Wypełnij formularz, aby kontynuować rezerwację.</p>
@@ -399,7 +533,6 @@ export default function BookingDetailsPage() {
           >
             <div className={styles.invoiceContent}>
               <h3 className={styles.invoiceTitle}>Dane do faktury VAT</h3>
-
               <div
                 className={`${styles.inputGroup} ${styles.fadeIn}`}
                 style={{ animationDelay: "0.05s" }}
@@ -418,7 +551,6 @@ export default function BookingDetailsPage() {
                   <span className={styles.errorText}>{errors.companyName}</span>
                 )}
               </div>
-
               <div
                 className={`${styles.inputGroup} ${styles.fadeIn}`}
                 style={{ animationDelay: "0.1s" }}
@@ -437,7 +569,6 @@ export default function BookingDetailsPage() {
                   <span className={styles.errorText}>{errors.nip}</span>
                 )}
               </div>
-
               <div
                 className={`${styles.inputGroup} ${styles.fadeIn}`}
                 style={{ animationDelay: "0.15s" }}
@@ -458,7 +589,6 @@ export default function BookingDetailsPage() {
                   </span>
                 )}
               </div>
-
               <div
                 className={`${styles.grid} ${styles.fadeIn}`}
                 style={{ animationDelay: "0.2s" }}
@@ -480,7 +610,6 @@ export default function BookingDetailsPage() {
                     </span>
                   )}
                 </div>
-
                 <div className={styles.inputGroup}>
                   <label htmlFor="invoice.city">Miejscowość *</label>
                   <input

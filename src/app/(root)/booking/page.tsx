@@ -22,7 +22,6 @@ export default async function BookingPage({
   const end = resolvedSearchParams.end || null
   const adults = resolvedSearchParams.adults ? parseInt(resolvedSearchParams.adults, 10) : 2
   const children = resolvedSearchParams.children ? parseInt(resolvedSearchParams.children, 10) : 0
-
   const totalGuests = adults + children
 
   const [maxCapacityResult, bookingConfig, blockedDates] = await Promise.all([
@@ -41,9 +40,8 @@ export default async function BookingPage({
   }
 
   const maxCapacity = maxCapacityResult
-
+  
   let searchResults: SearchResults | null = null
-
   if (start && end && totalGuests > 0) {
     try {
       searchResults = await searchAction({
@@ -59,6 +57,12 @@ export default async function BookingPage({
       searchResults = null
     }
   }
+
+  const safeSearchResults = searchResults ? JSON.parse(JSON.stringify(searchResults)) : null
+  const safeBlockedDates = JSON.parse(JSON.stringify(blockedDates))
+  const safeBookingConfig = JSON.parse(JSON.stringify(bookingConfig))
+  const safeMaxCapacity = JSON.parse(JSON.stringify(maxCapacity))
+
   return (
     <>
       <BookingClient
@@ -66,13 +70,13 @@ export default async function BookingPage({
         initialEnd={end}
         initialAdults={adults}
         initialChildren={children}
-        maxAdults={maxCapacity.maxAdults}
-        maxChildren={maxCapacity.maxChildren}
-        minBookingDays={bookingConfig.minBookingDays}
-        maxBookingDays={bookingConfig.maxBookingDays}
-        childrenFreeAgeLimit={bookingConfig.childrenFreeAgeLimit}
-        blockedDates={blockedDates}
-        searchResults={searchResults}
+        maxAdults={safeMaxCapacity.maxAdults}
+        maxChildren={safeMaxCapacity.maxChildren}
+        minBookingDays={safeBookingConfig.minBookingDays}
+        maxBookingDays={safeBookingConfig.maxBookingDays}
+        childrenFreeAgeLimit={safeBookingConfig.childrenFreeAgeLimit}
+        blockedDates={safeBlockedDates}
+        searchResults={safeSearchResults}
       />
     </>
   )

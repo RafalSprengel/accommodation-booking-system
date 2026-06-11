@@ -24,6 +24,9 @@ import QuantityPicker from "../../_components/QuantityPicker/QuantityPicker";
 import AllPropertiesCard from "./AllPropertiesCard";
 import styles from "./page.module.css";
 import ResultCard from "./ResultCard";
+import { isRangeAvailable } from '@/actions/availabilityActions'
+import Modal from '@/app/_components/Modal/Modal'
+import { toast } from 'react-hot-toast'
 
 interface BookingDates {
   start: string | null;
@@ -129,6 +132,18 @@ export default function BookingClient({
     null,
   );
   const [isSeasonPriceListOpen, setIsSeasonPriceListOpen] = useState(false);
+  const [unavailableModal, setUnavailableModal] = useState<{
+    isOpen: boolean
+    title: string
+    occupiedNames: string[]
+    context: 'draft' | 'single' | 'multi'
+  }>({ isOpen: false, title: '', occupiedNames: [], context: 'draft' });
+  const [networkModal, setNetworkModal] = useState<{
+    isOpen: boolean
+    title: string
+    message?: string
+    onRetry?: () => Promise<void>
+  }>({ isOpen: false, title: '' });
 
   const guestsRef = useRef<HTMLDivElement>(null);
   const datesRef = useRef<HTMLDivElement>(null);
@@ -283,7 +298,49 @@ export default function BookingClient({
     router.push("/booking/details");
   };
 
-  const handleSingleSelect = (option: SearchOption) => {
+  const handleSingleSelect = async (option: SearchOption) => {
+    if (!bookingDates.start || !bookingDates.end) return;
+    try {
+      const result = await isRangeAvailable(bookingDates.start, bookingDates.end, [option.propertyId]);
+      if (!result.available) {
+        const occupied = result.occupiedPropertyIds || [];
+        const occupiedNames = occupied.includes(option.propertyId) ? [option.displayName] : [];
+         setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames: [...occupiedNames], context: 'single' });
+        return;
+      }
+    } catch (err) {
+      console.error('Błąd sprawdzania dostępności:', err);
+      setNetworkModal({ isOpen: true, title: 'Błąd sieci', message: 'Nie udało się sprawdzić dostępności. Spróbuj ponownie.', onRetry: async () => {
+        try {
+          const r = await isRangeAvailable(bookingDates.start!, bookingDates.end!, [option.propertyId]);
+          if (!r.available) {
+            const occupied = r.occupiedPropertyIds || [];
+            const occupiedNames = occupied.includes(option.propertyId) ? [option.displayName] : [];
+            setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames: [...occupiedNames], context: 'single' });
+          } else {
+            const extraBeds = extraBedsMap[option.displayName] || 0;
+            const totalPrice = option.totalPrice + extraBeds * option.extraBedPrice;
+            handleConfirmBooking([
+              {
+                propertyId: option.propertyId,
+                displayName: option.displayName,
+                guests: totalGuests,
+                adults,
+                children,
+                extraBeds,
+                price: totalPrice,
+              },
+            ]);
+          }
+        } catch (retryErr) {
+          console.error('Retry failed:', retryErr);
+        } finally {
+          setNetworkModal({ isOpen: false, title: '' });
+        }
+      } });
+      return;
+    }
+
     const extraBeds = extraBedsMap[option.displayName] || 0;
     const totalPrice = option.totalPrice + extraBeds * option.extraBedPrice;
 
@@ -300,7 +357,51 @@ export default function BookingClient({
     ]);
   };
 
-  const handleAllSelect = (selectedOrders: CombinedOrderSelection[]) => {
+  const handleAllSelect = async (selectedOrders: CombinedOrderSelection[]) => {
+    if (!bookingDates.start || !bookingDates.end) return;
+    const propertyIds = selectedOrders.map(o => o.propertyId);
+    try {
+      const result = await isRangeAvailable(bookingDates.start, bookingDates.end, propertyIds);
+      if (!result.available) {
+        const occupied = result.occupiedPropertyIds || [];
+        const occupiedNames = selectedOrders
+          .filter(o => occupied.includes(o.propertyId))
+          .map(o => o.displayName);
+        setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames: [...occupiedNames], context: 'multi' });
+        return;
+      }
+    } catch (err) {
+      console.error('Błąd sprawdzania dostępności:', err);
+      setNetworkModal({ isOpen: true, title: 'Błąd sieci', message: 'Nie udało się sprawdzić dostępności. Spróbuj ponownie.', onRetry: async () => {
+        try {
+          const r = await isRangeAvailable(bookingDates.start!, bookingDates.end!, propertyIds);
+          if (!r.available) {
+            const occupied = r.occupiedPropertyIds || [];
+            const occupiedNames = selectedOrders
+              .filter(o => occupied.includes(o.propertyId))
+              .map(o => o.displayName);
+            setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames, context: 'multi' });
+          } else {
+            const orders: BookingOrderItem[] = selectedOrders.map((order) => ({
+              propertyId: order.propertyId,
+              displayName: order.displayName,
+              guests: order.guests,
+              adults: order.adults,
+              children: order.children,
+              extraBeds: order.extraBeds,
+              price: order.price,
+            }));
+            handleConfirmBooking(orders);
+          }
+        } catch (retryErr) {
+          console.error('Retry failed:', retryErr);
+        } finally {
+          setNetworkModal({ isOpen: false, title: '' });
+        }
+      } });
+      return;
+    }
+
     const orders: BookingOrderItem[] = selectedOrders.map((order) => ({
       propertyId: order.propertyId,
       displayName: order.displayName,
@@ -345,7 +446,8 @@ export default function BookingClient({
   return (
     <div className={styles.container}>
       {hasDraft && (
-        <div className={styles.draftLinkContainer}>
+        <>
+          <div className={styles.draftLinkContainer}>
           <button
             className={styles.draftClearBtn}
             onClick={() => {
@@ -356,14 +458,120 @@ export default function BookingClient({
           >
             ✕
           </button>
-          <Link href="/booking/details" className={styles.draftLink}>
+          <button
+            className={styles.draftLink}
+            onClick={async () => {
+              const draftRaw = localStorage.getItem(STORAGE_KEY);
+              if (!draftRaw) {
+                toast.error('Brak szkicu rezerwacji');
+                setHasDraft(false);
+                return;
+              }
+              try {
+                const draft = JSON.parse(draftRaw) as BookingDraft;
+                if (!draft.startDate || !draft.endDate || !Array.isArray(draft.orders) || draft.orders.length === 0) {
+                  localStorage.removeItem(STORAGE_KEY);
+                  setHasDraft(false);
+                  router.push('/booking');
+                  return;
+                }
+
+                const ids = draft.orders.map(o => o.propertyId);
+                const result = await isRangeAvailable(draft.startDate, draft.endDate, ids);
+                if (!result.available) {
+                  const occupied = result.occupiedPropertyIds || [];
+                  const occupiedNames = draft.orders
+                    .filter(o => occupied.includes(o.propertyId))
+                    .map(o => o.displayName);
+            setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames: [...occupiedNames], context: 'draft' });
+                  return;
+                }
+
+                router.push('/booking/details');
+              } catch (err) {
+                console.error(err);
+                setNetworkModal({ isOpen: true, title: 'Błąd', message: 'Błąd podczas weryfikacji szkicu. Spróbuj ponownie.', onRetry: async () => {
+                  try {
+                    const draftRaw2 = localStorage.getItem(STORAGE_KEY);
+                    if (!draftRaw2) {
+                      setHasDraft(false);
+                      return;
+                    }
+                    const draft2 = JSON.parse(draftRaw2) as BookingDraft;
+                    if (!draft2.startDate || !draft2.endDate || !Array.isArray(draft2.orders) || draft2.orders.length === 0) {
+                      localStorage.removeItem(STORAGE_KEY);
+                      setHasDraft(false);
+                      router.push('/booking');
+                      return;
+                    }
+                    const ids2 = draft2.orders.map(o => o.propertyId);
+                    const res = await isRangeAvailable(draft2.startDate, draft2.endDate, ids2);
+                    if (!res.available) {
+                      const occupied = res.occupiedPropertyIds || [];
+                      const occupiedNames = draft2.orders
+                        .filter(o => occupied.includes(o.propertyId))
+                        .map(o => o.displayName);
+                      setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames, context: 'draft' });
+                      return;
+                    }
+                    router.push('/booking/details');
+                  } catch (retryErr) {
+                    console.error('Retry draft check failed', retryErr);
+                  } finally {
+                    setNetworkModal({ isOpen: false, title: '' });
+                  }
+                } });
+              }
+            }}
+          >
             <span>Kliknij aby dokończyć poprzednią rezerwację</span>
             <FontAwesomeIcon
               icon={faArrowRight}
               className={styles.draftArrow}
             />
-          </Link>
+          </button>
         </div>
+          <Modal
+            isOpen={unavailableModal.isOpen}
+            onClose={() => {
+              // Odśwież wyniki
+              setUnavailableModal({ ...unavailableModal, isOpen: false });
+              router.refresh();
+            }}
+            title={unavailableModal.title}
+            confirmText="Wróć do wyboru"
+            cancelText="Odśwież wyniki"
+            confirmVariant="warning"
+            onConfirm={() => {
+              // Wróć do wyboru: jeśli był szkic, wyczyść go
+              if (unavailableModal.context === 'draft') {
+                localStorage.removeItem(STORAGE_KEY);
+                setHasDraft(false);
+              }
+              setUnavailableModal({ ...unavailableModal, isOpen: false });
+              router.push('/booking');
+            }}
+            modalSize="default"
+          >
+            <p>
+              {unavailableModal.occupiedNames.length > 0
+                ? `Niedostępne obiekty: ${unavailableModal.occupiedNames.join(', ')}`
+                : 'Wybrany termin jest już niedostępny.'}
+            </p>
+            <p style={{ marginTop: '0.5rem' }}>Możesz odświeżyć wyniki, aby spróbować ponownie.</p>
+          </Modal>
+          <Modal
+            isOpen={networkModal.isOpen}
+            onClose={() => setNetworkModal({ ...networkModal, isOpen: false })}
+            title={networkModal.title}
+            confirmText="Spróbuj ponownie"
+            cancelText="Anuluj"
+            confirmVariant="warning"
+            onConfirm={async () => { if (networkModal.onRetry) await networkModal.onRetry(); setNetworkModal({ ...networkModal, isOpen: false }); }}
+          >
+            <p>{networkModal.message ?? 'Wystąpił błąd sieciowy.'}</p>
+          </Modal>
+        </>
       )}
 
       <div className={styles.head}>
