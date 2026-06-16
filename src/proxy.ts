@@ -7,13 +7,12 @@ export async function proxy(request: NextRequest) {
         headers: request.headers
     })
 
-    const isAdminRoute = request.nextUrl.pathname.startsWith("/admin")
 
-    if (isAdminRoute && !session) {
+    if (!session) {
         return NextResponse.redirect(new URL("/admin-login", request.url))
     }
 
-    if (isAdminRoute && session?.user?.role !== "admin") {
+    if (session?.user?.role !== "admin") {
         return NextResponse.redirect(new URL("/", request.url))
     }
 
