@@ -136,52 +136,52 @@ export const BookingConfirmation = ({
       <Body style={mainStyle}>
         <Container style={containerStyle}>
           <Heading style={headingStyle}>
-            Potwierdzenie rezerwacji - Wilcze Chatki
+            Booking Confirmation - Wilcze Chatki
           </Heading>
           <Text style={textStyle}>
-            Witaj <strong>{customerName}</strong>,
+            Hello <strong>{customerName}</strong>,
           </Text>
           <Text style={textStyle}>
-            twoja płatność za pobyt w Wilczych Chatkach została pomyślnie przetworzona.
+            your payment for the stay at Wilcze Chatki has been successfully processed.
           </Text>
 
           <Section style={sectionStyle}>
-            <Text style={sectionTextStyle}><strong>Nr zamówienia:</strong> {orderNumber}</Text>
-            {guestPhone && <Text style={sectionTextStyle}><strong>Telefon:</strong> {guestPhone}</Text>}
-            {guestEmail && <Text style={sectionTextStyle}><strong>E-mail:</strong> {guestEmail}</Text>}
-            {guestAddress && <Text style={sectionTextStyle}><strong>Adres:</strong> {guestAddress}</Text>}
-            {propertyName && <Text style={sectionTextStyle}><strong>Obiekt:</strong> {propertyName}</Text>}
-            {(typeof cabinsCount !== 'undefined' && cabinsCount > 1) && <Text style={sectionTextStyle}><strong>Ilość domków:</strong> {cabinsCount}</Text>}
-            {(typeof adults !== 'undefined') && <Text style={sectionTextStyle}><strong>Dorosłych:</strong> {adults}</Text>}
-            {(typeof children !== 'undefined') && <Text style={sectionTextStyle}><strong>Dzieci (bezpłatnie):</strong> {children}</Text>}
-            {(typeof extraBeds !== 'undefined') && <Text style={sectionTextStyle}><strong>Dostawek:</strong> {extraBeds}</Text>}
-            {orderDate && <Text style={sectionTextStyle}><strong>Data zamówienia:</strong> {orderDate}</Text>}
-            <Text style={sectionTextStyle}><strong>Zameldowanie:</strong> {checkIn}</Text>
-            <Text style={sectionTextStyle}><strong>Wymeldowanie:</strong> {checkOut}</Text>
+            <Text style={sectionTextStyle}><strong>Order No:</strong> {orderNumber}</Text>
+            {guestPhone && <Text style={sectionTextStyle}><strong>Phone:</strong> {guestPhone}</Text>}
+            {guestEmail && <Text style={sectionTextStyle}><strong>Email:</strong> {guestEmail}</Text>}
+            {guestAddress && <Text style={sectionTextStyle}><strong>Address:</strong> {guestAddress}</Text>}
+            {propertyName && <Text style={sectionTextStyle}><strong>Property:</strong> {propertyName}</Text>}
+            {(typeof cabinsCount !== 'undefined' && cabinsCount > 1) && <Text style={sectionTextStyle}><strong>Number of cottages:</strong> {cabinsCount}</Text>}
+            {(typeof adults !== 'undefined') && <Text style={sectionTextStyle}><strong>Adults:</strong> {adults}</Text>}
+            {(typeof children !== 'undefined') && <Text style={sectionTextStyle}><strong>Children (free):</strong> {children}</Text>}
+            {(typeof extraBeds !== 'undefined') && <Text style={sectionTextStyle}><strong>Extra beds:</strong> {extraBeds}</Text>}
+            {orderDate && <Text style={sectionTextStyle}><strong>Order date:</strong> {orderDate}</Text>}
+            <Text style={sectionTextStyle}><strong>Check-in:</strong> {checkIn}</Text>
+            <Text style={sectionTextStyle}><strong>Check-out:</strong> {checkOut}</Text>
             {invoiceRequested && (<>
-              <Text style={sectionTextStyle}><strong>Faktura VAT:</strong></Text>
+              <Text style={sectionTextStyle}><strong>VAT Invoice:</strong></Text>
               <Section style={{ padding: '10px', backgroundColor: '#fff' }}>
-                {companyName && <Text style={sectionTextStyle}><strong>Nazwa firmy:</strong> {companyName}</Text>}
-                {nip && <Text style={sectionTextStyle}><strong>NIP:</strong> {nip}</Text>}
-                {street && <Text style={sectionTextStyle}><strong>Ulica:</strong> {street}</Text>}
-                {postalCode && <Text style={sectionTextStyle}><strong>Kod pocztowy:</strong> {postalCode}</Text>}
-                {city && <Text style={sectionTextStyle}><strong>Miasto:</strong> {city}</Text>}
+                {companyName && <Text style={sectionTextStyle}><strong>Company name:</strong> {companyName}</Text>}
+                {nip && <Text style={sectionTextStyle}><strong>Tax ID (NIP):</strong> {nip}</Text>}
+                {street && <Text style={sectionTextStyle}><strong>Street:</strong> {street}</Text>}
+                {postalCode && <Text style={sectionTextStyle}><strong>Postal code:</strong> {postalCode}</Text>}
+                {city && <Text style={sectionTextStyle}><strong>City:</strong> {city}</Text>}
               </Section>
             </>
             )}
             <Hr style={hrStyle} />
             {typeof paidAmount === 'number' && paidAmount !== totalPrice ? (
               <>
-                <Text style={sumStyle}>Wpłacono: {Number(paidAmount).toFixed(2)} zł</Text>
-                <Text style={sectionTextStyle}>Pozostało do zapłaty: {Number(totalPrice - paidAmount).toFixed(2)} zł</Text>
+                <Text style={sumStyle}>Paid: {Number(paidAmount).toFixed(2)} zł</Text>
+                <Text style={sectionTextStyle}>Remaining to pay: {Number(totalPrice - paidAmount).toFixed(2)} zł</Text>
               </>
             ) : (
-              <Text style={sumStyle}>Kwota: {Number(totalPrice).toFixed(2)} PLN</Text>
+              <Text style={sumStyle}>Amount: {Number(totalPrice).toFixed(2)} PLN</Text>
             )}
           </Section>
 
           <Text style={textStyle}>
-            W razie pytań prosimy o kontakt na {siteSettings.email} lub telefonicznie pod numerem {siteSettings.phone}.
+            If you have any questions, please contact us at {siteSettings.email} or by phone at {siteSettings.phone}.
           </Text>
           <Hr style={hrStyle} />
           <Hr style={footerHrStyle} />

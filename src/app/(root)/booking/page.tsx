@@ -33,7 +33,7 @@ export default async function BookingPage({
   if (maxCapacityResult instanceof Error) {
     return (
       <div className={styles.errorState}>
-        <h2>Rezerwacja niedostępna</h2>
+        <h2>Booking unavailable</h2>
         <p>{maxCapacityResult.message}</p>
       </div>
     )

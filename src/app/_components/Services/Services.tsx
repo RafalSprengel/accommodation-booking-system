@@ -1,4 +1,3 @@
-
 import { SlideLeft, SlideRight } from '@components/UI/Motions/Motions';
 import ServicesClient from "./ServicesClient";
 import styles from './Services.module.css';
@@ -27,20 +26,20 @@ interface BasicPricesData {
 
 function formatGuestsLabel(minGuests: number, maxGuests: number): string {
     if (minGuests === maxGuests) {
-        if (minGuests === 1) return '1 osoba';
+        if (minGuests === 1) return '1 person';
         const lastDigit = minGuests % 10;
         const lastTwoDigits = minGuests % 100;
         if (lastDigit >= 2 && lastDigit <= 4 && (lastTwoDigits < 10 || lastTwoDigits > 20)) {
-            return `${minGuests} osoby`;
+            return `${minGuests} persons`;
         }
-        return `${minGuests} osób`;
+        return `${minGuests} persons`;
     } else {
         const lastDigitMax = maxGuests % 10;
         const lastTwoDigitsMax = maxGuests % 100;
         if (lastDigitMax >= 2 && lastDigitMax <= 4 && (lastTwoDigitsMax < 10 || lastTwoDigitsMax > 20)) {
-            return `${minGuests}-${maxGuests} osoby`;
+            return `${minGuests}-${maxGuests} persons`;
         }
-        return `${minGuests}-${maxGuests} osób`;
+        return `${minGuests}-${maxGuests} persons`;
     }
 }
 
@@ -57,17 +56,17 @@ export default async function Services() {
 
     let childrenFreeAge: number | null = 13;
     const defaultWeekdayRates: PriceItem[] = [
-        { description: '2-3 osoby', amount: 'Kontakt' },
-        { description: '4-5 osób', amount: 'Kontakt' },
-        { description: '6 osób', amount: 'Kontakt' },
-        { description: 'Dostawka', amount: 'Kontakt' }
+        { description: '2-3 people', amount: 'Contact' },
+        { description: '4-5 people', amount: 'Contact' },
+        { description: '6 people', amount: 'Contact' },
+        { description: 'Extra bed', amount: 'Contact' }
     ];
 
     const defaultWeekendRates: PriceItem[] = [
-        { description: '2-3 osoby', amount: 'Kontakt' },
-        { description: '4-5 osób', amount: 'Kontakt' },
-        { description: '6 osób', amount: 'Kontakt' },
-        { description: 'Dostawka', amount: 'Kontakt' }
+        { description: '2-3 people', amount: 'Contact' },
+        { description: '4-5 people', amount: 'Contact' },
+        { description: '6 people', amount: 'Contact' },
+        { description: 'Extra bed', amount: 'Contact' }
     ];
 
     let basicPricesData: BasicPricesData | null = null;
@@ -93,7 +92,7 @@ export default async function Services() {
         ? [
             ...mapTiersToPriceItems(basicPricesData.weekdayPrices ?? []),
             {
-                description: 'Dostawka',
+                description: 'Extra bed',
                 amount: basicPricesData.weekdayExtraBedPrice != null ? `+${basicPricesData.weekdayExtraBedPrice} zł` : '—',
             },
         ]
@@ -103,7 +102,7 @@ export default async function Services() {
         ? [
             ...mapTiersToPriceItems(basicPricesData.weekendPrices ?? []),
             {
-                description: 'Dostawka',
+                description: 'Extra bed',
                 amount: basicPricesData.weekendExtraBedPrice != null ? `+${basicPricesData.weekendExtraBedPrice} zł` : '—',
             },
         ]
@@ -114,21 +113,21 @@ export default async function Services() {
             <div className={styles.container}>
                 <header className={styles.header}>
                     <SlideRight>
-                        <h1 className={styles.title}>Nasza oferta</h1>
+                        <h1 className={styles.title}>Our offer</h1>
                     </SlideRight>
                 </header>
                 <SlideLeft>
                     <div className={styles.description}>
                         <p>
-                            Oferujemy dwa przytulne domki o powierzchni 35 m² każdy. Każdy domek komfortowo mieści 6 osób
-                            (z możliwością 2 dodatkowych dostawek). Częścią wspólną dla obu obiektów jest zamknięta altana,
-                            wyposażona w 4-5 osobową saunę infrared oraz jacuzzi ogrzewane drewnem (drewno wliczone w cenę), wraz z dwoma dużymi biesiadnymi stołami.
+                            We offer two cozy cottages of 35 m² each. Each cottage comfortably accommodates 6 people
+                            (with the possibility of 2 extra beds). The shared area for both properties is a closed pavilion,
+                            equipped with a 4-5 person infrared sauna and a wood-fired jacuzzi (wood included in the price), along with two large dining tables.
                         </p>
                         <p>
-                            Na tarasie każdego domku znajduje się grill oraz stół. Do dyspozycji gości oddajemy również
-                            plac zabaw dla dzieci wyposażony w huśtawkę, trampolinę, zjeżdżalnię oraz hamaki.
-                            Wnętrze każdego domku obejmuje aneks kuchenny, łazienkę oraz dwa pokoje na poddaszu:
-                            jeden z łóżkiem małżeńskim, drugi z dwoma łóżkami pojedynczymi.
+                            On the terrace of each cottage there is a BBQ and a table. We also provide our guests with
+                            a children's playground equipped with a swing, trampoline, slide, and hammocks.
+                            The interior of each cottage includes a kitchenette, bathroom, and two rooms in the attic:
+                            one with a double bed, the other with two single beds.
                         </p>
 
                     </div>

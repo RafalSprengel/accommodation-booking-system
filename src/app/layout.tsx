@@ -27,8 +27,8 @@ const mulish = Mulish({
 });
 
 export const metadata: Metadata = {
-    title: 'Wilcze Chatki - Domki na Kaszubach',
-    description: 'Komfortowe domki z sauną i jacuzzi w Szumlesiu Królewskim',
+    title: 'Wilcze Chatki - Cottages in Kashubia',
+    description: 'Comfortable cottages with sauna and jacuzzi in Szumlesie Królewski',
 };
 
 export default function RootLayout({
@@ -37,7 +37,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="pl">
+        <html lang="en">
             <body className={`${sansita.variable} ${ptSerif.variable} ${mulish.variable}`}>
                 {children}
                 <SpeedInsights />

@@ -137,7 +137,7 @@ export default function AllPropertiesCard({
       const price = priceMap[option.displayName]
 
       if (price === undefined) {
-        throw new Error(`Brak ceny dla domku: ${option.displayName}`)
+        throw new Error(`Missing price for cottage: ${option.displayName}`)
       }
 
       return {
@@ -156,7 +156,7 @@ export default function AllPropertiesCard({
 
   return (
     <div>
-      <h2 className={styles.resultsTitle}>Rozdziel liczbę gości na poszczególne domki:</h2>
+      <h2 className={styles.resultsTitle}>Distribute guests to individual cottages:</h2>
       <div className={`${styles.resultsGrid} ${styles.allPropertiesGridCard}`}>
         {searchResults.propertiesAvailable.map((option: any) => {
           const extraBeds = extraBedsMap[option.displayName] || 0
@@ -168,7 +168,7 @@ export default function AllPropertiesCard({
             <div key={option.propertyId} className={`${styles.resultCard} ${styles.allPropertiesResultCard}`}>
               <div className={styles.cardHeader}>
                 <span className={`${styles.cardBadge} ${styles.badgeCabin}`}>
-                  REZERWACJA ŁĄCZONA
+                  COMBINED BOOKING
                 </span>
               </div>
 
@@ -178,17 +178,17 @@ export default function AllPropertiesCard({
 
 
               {/* <div className={styles.cardDetails}>
-                <span>Max. dorosłych: {option.maxAdults}</span>
+                <span>Max. adults: {option.maxAdults}</span>
                 <span className={styles.separator}> • </span>
-                <span>Max. dzieci (bezpłatnie): {option.maxChildren}</span>
+                <span>Max. children (free): {option.maxChildren}</span>
                 <span className={styles.separator}> • </span>
-                <span>Max. dostawek: {option.maxExtraBeds}</span>
+                <span>Max. extra beds: {option.maxExtraBeds}</span>
               </div> */}
 
               <div className={styles.extraBedsSection}>
                 <div className={styles.extraBedsHeader}>
                   <FontAwesomeIcon icon={faUser} className={styles.bedIcon} />
-                  <span className={styles.extraBedsLabel}>Dorośli i dzieci od {childrenFreeAgeLimit} lat:</span>
+                  <span className={styles.extraBedsLabel}>Adults and children over {childrenFreeAgeLimit} years old:</span>
                 </div>
                 <QuantityPicker
                   value={guests}
@@ -203,7 +203,7 @@ export default function AllPropertiesCard({
               <div className={styles.extraBedsSection}>
                 <div className={styles.extraBedsHeader}>
                   <FontAwesomeIcon icon={faUser} className={styles.bedIcon} />
-                  <span className={styles.extraBedsLabel}>Dzieci do {childrenFreeAgeLimit} lat:</span>
+                  <span className={styles.extraBedsLabel}>Children up to {childrenFreeAgeLimit} years old:</span>
                 </div>
                 <QuantityPicker
                   value={childrenForOption}
@@ -218,7 +218,7 @@ export default function AllPropertiesCard({
               <div className={styles.extraBedsSection}>
                 <div className={styles.extraBedsHeader}>
                   <FontAwesomeIcon icon={faBed} className={styles.bedIcon} />
-                  <span className={styles.extraBedsLabel}>Ilość dostawek:</span>
+                  <span className={styles.extraBedsLabel}>Number of extra beds:</span>
                 </div>
                 <QuantityPicker
                   value={extraBeds}
@@ -234,24 +234,24 @@ export default function AllPropertiesCard({
         })}
 
         <div className={`${styles.cardPrice} ${styles.allPropertiesTotalPrice}`}>
-          <span className={styles.priceLabel}>Cena całkowita:</span>
+          <span className={styles.priceLabel}>Total price:</span>
           <span className={styles.priceValue}>{combinedTotalPrice} zł</span>
         </div>
 
         <div className={styles.allocationSummary}>
           <div className={`${styles.extraBedsNote} ${showGuestsValidation && totalAssignedGuests !== totalGuestsLimit ? styles.extraBedsNoteError : ''}`}>
-            Przydzielono dorosłych: <strong>{totalAssignedGuests}</strong> / {totalGuestsLimit}
+            Adults allocated: <strong>{totalAssignedGuests}</strong> / {totalGuestsLimit}
           </div>
 
           <div className={styles.extraBedsNote}>
-            Przydzielono dzieci: <strong>{totalAssignedChildren}</strong> / {totalChildrenLimit}
+            Children allocated: <strong>{totalAssignedChildren}</strong> / {totalChildrenLimit}
           </div>
 
           {showGuestsValidation && totalAssignedGuests !== totalGuestsLimit && (
-            <div className={styles.allocationErrorText}>Najpierw rozdziel wszystkich dorosłych</div>
+            <div className={styles.allocationErrorText}>First distribute all adults</div>
           )}
           {showGuestsValidation && totalAssignedGuests === totalGuestsLimit && totalAssignedChildren !== totalChildrenLimit && (
-            <div className={styles.allocationErrorText}>Najpierw rozdziel wszystkie dzieci</div>
+            <div className={styles.allocationErrorText}>First distribute all children</div>
           )}
         </div>
 
@@ -261,7 +261,7 @@ export default function AllPropertiesCard({
           onClick={handleSelectAllClick}
           aria-disabled={!canSelectAll}
         >
-          Wybieram tę opcję
+          I choose this option
         </Button>
       </div>
     </div>

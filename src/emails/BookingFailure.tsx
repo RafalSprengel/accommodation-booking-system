@@ -96,21 +96,21 @@ export const BookingFailure = ({
       <Body style={mainStyle}>
         <Container style={containerStyle}>
           <Heading style={headingStyle}>
-            Nieudana płatność za rezerwację
+            Failed payment for booking
           </Heading>
           <Text style={textStyle}>
-            Witaj <strong>{customerName}</strong>,
+            Hello <strong>{customerName}</strong>,
           </Text>
           <Text style={textStyle}>
-            Niestety, Twoja płatność nie powiodła się. Rezerwacja została anulowana.
+            Unfortunately, your payment failed. The booking has been cancelled.
           </Text>
           <Section style={sectionStyle}>
-            <Text style={sectionTextStyle}><strong>Nr zamówienia:</strong> {orderNumber}</Text>
-            <Text style={sectionTextStyle}><strong>Zameldowanie:</strong> {checkIn}</Text>
-            <Text style={sectionTextStyle}><strong>Wymeldowanie:</strong> {checkOut}</Text>
+            <Text style={sectionTextStyle}><strong>Order No:</strong> {orderNumber}</Text>
+            <Text style={sectionTextStyle}><strong>Check-in:</strong> {checkIn}</Text>
+            <Text style={sectionTextStyle}><strong>Check-out:</strong> {checkOut}</Text>
           </Section>
           <Text style={textStyle}>
-            W razie pytań prosimy o kontakt na {siteSettings.email} lub telefonicznie pod numerem {siteSettings.phone}.
+            If you have any questions, please contact us at {siteSettings.email} or by phone at {siteSettings.phone}.
           </Text>
           <Hr style={footerHrStyle} />
           <Link href="https://rafalsprengel.com" style={footerLinkStyle}>

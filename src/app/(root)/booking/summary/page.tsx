@@ -37,7 +37,7 @@ export default function BookingSummaryPage() {
       
       setUnavailableModal({ 
         isOpen: true, 
-        title: 'Termin w procesie rezerwacji, prosimy sprawdzic za 15 minut.', 
+        title: 'Dates are being reserved, please check again in 15 minutes.', 
         occupiedNames 
       });
       
@@ -57,10 +57,10 @@ export default function BookingSummaryPage() {
       }
       setIsValidating(false);
     } catch (err) {
-      console.error('Błąd sprawdzania dostępności przy wejściu:', err);
+      console.error('Error checking availability on entry:', err);
       if (!isMounted) return;
 
-      toast.error('Wystąpił problem z połączeniem sieciowym. Nie udało się zweryfikować dostępności terminu.');
+      toast.error('A network problem occurred. Could not verify the availability of the date.');
     }
   };
 
@@ -116,13 +116,13 @@ export default function BookingSummaryPage() {
       if (result?.url) {
         window.location.href = result.url;
       } else {
-        throw new Error("Nie można uzyskać URL sesji płatności");
+        throw new Error("Could not obtain payment session URL");
       }
     } catch (error) {
-      console.error("Błąd podczas weryfikacji lub płatności:", error);
+      console.error("Error during verification or payment:", error);
       setIsProcessing(false);
       
-      toast.error("Problem z połączeniem internetowym. Nie udało się przetworzyć płatności. Spróbuj ponownie.");
+      toast.error("Network problem. Payment could not be processed. Please try again.");
     }
   };
 
@@ -132,7 +132,7 @@ export default function BookingSummaryPage() {
         <FloatingBackButton />
         <div className={styles.loadingState}>
           <div className={styles.spinner} />
-          <p>{isValidating ? 'Weryfikacja dostępności...' : 'Ładowanie podsumowania...'}</p>
+          <p>{isValidating ? 'Verifying availability...' : 'Loading summary...'}</p>
         </div>
       </div>
     );
@@ -145,7 +145,7 @@ export default function BookingSummaryPage() {
   const orderDisplayName =
     orders.length === 1
       ? orders[0].displayName
-      : `${orders.length} obiekty: ${orders.map((item) => item.displayName).join(", ")}`;
+      : `${orders.length} properties: ${orders.map((item) => item.displayName).join(", ")}`;
   
   const hasInvoiceData = Boolean(
     invoiceData.companyName ||
@@ -169,8 +169,8 @@ export default function BookingSummaryPage() {
           setUnavailableModal({ ...unavailableModal, isOpen: false }); 
         }}
         title={unavailableModal.title}
-        confirmText="Wróć wyszukiwarki rezerwacji"
-        cancelText="Odśwież wyniki"
+        confirmText="Back to search"
+        cancelText="Refresh results"
         confirmVariant="warning"
         onConfirm={() => {
           localStorage.removeItem(STORAGE_KEY);
@@ -180,59 +180,59 @@ export default function BookingSummaryPage() {
       >
         <p>
           {unavailableModal.occupiedNames.length > 0
-            ? `Niedostępne obiekty: ${unavailableModal.occupiedNames.join(', ')}`
-            : 'Wybrany termin jest już niedostępny.'}
+            ? `Unavailable properties: ${unavailableModal.occupiedNames.join(', ')}`
+            : 'The selected dates are no longer available.'}
         </p>
       </Modal>
 
       <header className={styles.header}>
-        <h1>Podsumowanie rezerwacji</h1>
-        <p>Sprawdź dane przed potwierdzeniem.</p>
+        <h1>Booking summary</h1>
+        <p>Review your details before confirming.</p>
       </header>
 
       <div className={styles.summaryCard}>
-        <h2 className={styles.summaryTitle}>Dane pobytu</h2>
+        <h2 className={styles.summaryTitle}>Stay details</h2>
         <div className={styles.summaryGrid}>
           <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Termin:</span>
+            <span className={styles.summaryLabel}>Dates:</span>
             <span className={styles.summaryValue}>
               {formatDisplayDate(startDate)} — {formatDisplayDate(endDate)} (
-              {nights} nocy)
+              {nights} nights)
             </span>
           </div>
           <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Obiekt:</span>
+            <span className={styles.summaryLabel}>Property:</span>
             <span className={styles.summaryValue}>{orderDisplayName}</span>
           </div>
           <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Goście:</span>
+            <span className={styles.summaryLabel}>Guests:</span>
             <span className={styles.summaryValue}>
-              {totalGuests} osób
-              {totalExtraBeds > 0 && ` + ${totalExtraBeds} dostawki`}
+              {totalGuests} guests
+              {totalExtraBeds > 0 && ` + ${totalExtraBeds} extra beds`}
             </span>
           </div>
         </div>
       </div>
 
       <div className={styles.summaryCard}>
-        <h2 className={styles.summaryTitle}>Dane kontaktowe</h2>
+        <h2 className={styles.summaryTitle}>Contact details</h2>
         <div className={styles.summaryGrid}>
           <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Imię i nazwisko:</span>
+            <span className={styles.summaryLabel}>Full name:</span>
             <span className={styles.summaryValue}>
               {clientData.firstName} {clientData.lastName}
             </span>
           </div>
           <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Adres:</span>
+            <span className={styles.summaryLabel}>Address:</span>
             <span className={styles.summaryValue}>{clientData.address}</span>
           </div>
           <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>E-mail:</span>
+            <span className={styles.summaryLabel}>Email:</span>
             <span className={styles.summaryValue}>{clientData.email}</span>
           </div>
           <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Telefon:</span>
+            <span className={styles.summaryLabel}>Phone:</span>
             <span className={styles.summaryValue}>{clientData.phone}</span>
           </div>
         </div>
@@ -240,20 +240,20 @@ export default function BookingSummaryPage() {
 
       {hasInvoiceData && (
         <div className={styles.summaryCard}>
-          <h2 className={styles.summaryTitle}>Dane faktury VAT</h2>
+          <h2 className={styles.summaryTitle}>VAT invoice details</h2>
           <div className={styles.summaryGrid}>
             <div className={styles.summaryItem}>
-              <span className={styles.summaryLabel}>Nazwa firmy:</span>
+              <span className={styles.summaryLabel}>Company name:</span>
               <span className={styles.summaryValue}>
                 {invoiceData.companyName}
               </span>
             </div>
             <div className={styles.summaryItem}>
-              <span className={styles.summaryLabel}>NIP:</span>
+              <span className={styles.summaryLabel}>Tax ID (NIP):</span>
               <span className={styles.summaryValue}>{invoiceData.nip}</span>
             </div>
             <div className={styles.summaryItem}>
-              <span className={styles.summaryLabel}>Adres:</span>
+              <span className={styles.summaryLabel}>Address:</span>
               <span className={styles.summaryValue}>
                 {invoiceData.street}, {invoiceData.postalCode}{" "}
                 {invoiceData.city}
@@ -265,19 +265,19 @@ export default function BookingSummaryPage() {
 
       <div className={styles.priceCard}>
         <div className={styles.priceRow}>
-          <span className={styles.priceLabel}>Cena całkowita:</span>
+          <span className={styles.priceLabel}>Total price:</span>
           <span className={styles.priceValue}>{totalPrice} zł</span>
         </div>
       </div>
 
       <div className={styles.actions}>
         <Button href="/booking/details" variant="secondary">
-          ← Edytuj dane
+          ← Edit details
         </Button>
         <Button onClick={handleStripePayment} disabled={isProcessing}>
           {isProcessing
-            ? "Przekierowywanie do płatności..."
-            : "Przejdź do płatności →"}
+            ? "Redirecting to payment..."
+            : "Go to payment →"}
         </Button>
       </div>
     </div>

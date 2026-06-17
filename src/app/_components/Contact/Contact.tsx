@@ -18,16 +18,16 @@ export default function Contact({ siteSettings }: { siteSettings: Partial<ISiteS
     <section id="contact" className={styles.section}>
       <div className={styles.container}>
         <SlideRight>
-          <h1 className={styles.title}>Kontakt</h1>
+          <h1 className={styles.title}>Contact</h1>
         </SlideRight>
         <div className={styles.flexWrapper}>
           <div className={styles.infoColumn}>
             <SlideLeft>
               <div className={styles.details}>
               <div className={styles.companyName}>Wilcze Chatki</div>
-             
+              
                 <div>83-424 Szumleś Królewski 9A</div>
-                <div>Kaszuby, woj. pomorskie</div>
+                <div>Kashubia, Pomeranian Voivodeship</div>
                  <a 
                 href={mapsUrl}
                 target="_blank" 
@@ -36,7 +36,7 @@ export default function Contact({ siteSettings }: { siteSettings: Partial<ISiteS
               >
                 <div className={styles.mapHintWrapper}>
                   <FontAwesomeIcon icon={faMapMarkerAlt} className={styles.mapIcon} />
-                  <span className={styles.mapHint}>Kliknij, aby otworzyć mapę</span>
+                  <span className={styles.mapHint}>Click to open the map</span>
                 </div>
               </a>
 
@@ -54,8 +54,8 @@ export default function Contact({ siteSettings }: { siteSettings: Partial<ISiteS
 
             <SlideLeft delay={0.12}>
               <div className={styles.payment}>
-                <div className={styles.paymentTitle} >Dane do przelewu:</div>
-                <div>Numer konta PKO BP</div>
+                <div className={styles.paymentTitle} >Bank transfer details:</div>
+                <div>PKO BP account number</div>
                 <div className={styles.bankAccountNumber}>{siteSettings.bankAccountNumber}</div>
               </div>
             </SlideLeft>

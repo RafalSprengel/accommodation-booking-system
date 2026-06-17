@@ -27,13 +27,13 @@ export default function ContactForm() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const errors = {
-    name: formData.name.length < 3 ? "Proszę podać imię i nazwisko." : "",
+    name: formData.name.length < 3 ? "Please enter your full name." : "",
     email: !emailRegex.test(formData.email)
-      ? "Proszę podać poprawny adres e-mail."
+      ? "Please enter a valid email address."
       : "",
     message:
       formData.message.length < 10
-        ? "Wiadomość powinna mieć min. 10 znaków."
+        ? "The message must be at least 10 characters long."
         : "",
   };
 
@@ -78,7 +78,7 @@ export default function ContactForm() {
 
       if (!response.ok) {
         if (!result.message) {
-          throw new Error("Nie udało się wysłać wiadomości.");
+          throw new Error("Failed to send the message.");
         }
 
         throw new Error(result.message);
@@ -91,7 +91,7 @@ export default function ContactForm() {
       const message =
         error instanceof Error
           ? error.message
-          : "Nie udało się wysłać wiadomości.";
+          : "Failed to send the message.";
       setSubmitError(message);
     } finally {
       setIsSubmitting(false);
@@ -101,7 +101,7 @@ export default function ContactForm() {
   if (isSubmitted) {
     return (
       <div className={styles.successContainer}>
-        <p className={styles.successMessage}>Wiadomość została wysłana!</p>
+        <p className={styles.successMessage}>Message sent successfully!</p>
         <Button
           onClick={() => {
             setIsSubmitted(false);
@@ -109,7 +109,7 @@ export default function ContactForm() {
           }}
           type="button"
         >
-          Wyślij kolejną wiadomość
+          Send another message
         </Button>
       </div>
     );
@@ -119,7 +119,7 @@ export default function ContactForm() {
     <div className={styles.formContainer}>
       <form onSubmit={handleSubmit}>
         <div className={styles.group}>
-          <label htmlFor="name">Imię i Nazwisko</label>
+          <label htmlFor="name">Full name</label>
           <input
             type="text"
             id="name"
@@ -135,7 +135,7 @@ export default function ContactForm() {
         </div>
 
         <div className={styles.group}>
-          <label htmlFor="email">Adres e-mail</label>
+          <label htmlFor="email">Email address</label>
           <input
             id="email"
             name="email"
@@ -151,7 +151,7 @@ export default function ContactForm() {
         </div>
 
         <div className={styles.group}>
-          <label htmlFor="message">Wiadomość</label>
+          <label htmlFor="message">Message</label>
           <textarea
             id="message"
             name="message"
@@ -173,10 +173,10 @@ export default function ContactForm() {
           {isSubmitting ? (
             <span className={styles.loadingContent}>
               <span className={styles.spinner} aria-hidden="true" />
-              <span>Loading...</span>
+              <span>Sending...</span>
             </span>
           ) : (
-            "Wyślij wiadomość"
+            "Send message"
           )}
         </Button>
       </form>

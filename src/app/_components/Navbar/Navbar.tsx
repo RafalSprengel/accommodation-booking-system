@@ -65,13 +65,13 @@ export default function Navbar({isSmaller, isTransparent}: {isSmaller: boolean; 
                 <div className={styles.mobileMenuOuter + ' ' + (isMenuOpen ? styles.showMobileMenu : '')}>
                     <div className={styles.mobileMenuInner} ref={mobileMenuRef}>
                         <ul className={styles.navLinks}>
-                            <li onClick={closeMobileMenu}><Link href="/">Strona główna</Link></li>
-                            <li onClick={closeMobileMenu}><Link href="/#services">Oferta</Link></li>
-                             <li onClick={closeMobileMenu}><Link href="/#pricing">Cennik</Link></li>
-                            <li onClick={closeMobileMenu}><Link href="/gallery">Galeria</Link></li>
-                            <li onClick={closeMobileMenu}><Link href="/#attractions">Kaszuby</Link></li>
-                            <li onClick={closeMobileMenu}><Link href="/#contact">Kontakt</Link></li>
-                            <li onClick={closeMobileMenu}><Link href="/booking">Rezerwacje</Link></li>
+                            <li onClick={closeMobileMenu}><Link href="/">Home</Link></li>
+                            <li onClick={closeMobileMenu}><Link href="/#services">Offer</Link></li>
+                             <li onClick={closeMobileMenu}><Link href="/#pricing">Pricing</Link></li>
+                            <li onClick={closeMobileMenu}><Link href="/gallery">Gallery</Link></li>
+                            <li onClick={closeMobileMenu}><Link href="/#attractions">Kashubia</Link></li>
+                            <li onClick={closeMobileMenu}><Link href="/#contact">Contact</Link></li>
+                            <li onClick={closeMobileMenu}><Link href="/booking">Bookings</Link></li>
                         </ul>
                     </div>
                 </div>

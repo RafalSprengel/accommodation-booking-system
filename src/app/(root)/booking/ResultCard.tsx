@@ -29,7 +29,7 @@ export default function ResultCard({
     <div className={styles.resultCard}>
       <div className={styles.cardHeader}>
         <span className={`${styles.cardBadge} ${styles.badgeCabin}`}>
-          POJEDYNCZY DOMEK
+          SINGLE COTTAGE
         </span>
       </div>
 
@@ -39,18 +39,18 @@ export default function ResultCard({
 
 
       {/* <div className={styles.cardDetails}>
-        <span>Max. dorosłych: {option.maxAdults}</span>
+        <span>Max. adults: {option.maxAdults}</span>
         <span className={styles.separator}> • </span>
-        <span>Max. dzieci (bezpłatnie): {option.maxChildren}</span>
+        <span>Max. children (free): {option.maxChildren}</span>
         <span className={styles.separator}> • </span>
-        <span>Max. dostawek: {option.maxExtraBeds}</span>
+        <span>Max. extra beds: {option.maxExtraBeds}</span>
       </div> */}
 
       {option.maxExtraBeds > 0 && (
         <div className={styles.extraBedsSection}>
           <div className={styles.extraBedsHeader}>
             <FontAwesomeIcon icon={faBed} className={styles.bedIcon} />
-            <span className={styles.extraBedsLabel}>Ilość dostawek:</span>
+            <span className={styles.extraBedsLabel}>Number of extra beds:</span>
           </div>
           <QuantityPicker
             value={extraBeds}
@@ -64,7 +64,7 @@ export default function ResultCard({
       )}
 
       <div className={styles.cardPrice}>
-        <span className={styles.priceLabel}>Cena całkowita:</span>
+        <span className={styles.priceLabel}>Total price:</span>
         <span className={styles.priceValue}>{totalPriceWithExtraBeds} zł</span>
       </div>
 
@@ -72,7 +72,7 @@ export default function ResultCard({
         className={styles.btnSelect}
         onClick={() => onSelect(option)}
       >
-        Wybieram tę opcję
+        I choose this option
       </Button>
     </div>
   )

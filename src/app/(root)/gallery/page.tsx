@@ -41,7 +41,7 @@ export default function Gallery() {
     return (
         <div className={styles.gallerySection_container}>
             <div className={styles.gallerySection_title}>
-                <h2>Galeria zdjęć</h2>
+                <h2>Photo gallery</h2>
             </div>
             <div className={styles.gallerySection_galleryWrap}>
                 <LightBoxGallery images={images} />
@@ -49,7 +49,7 @@ export default function Gallery() {
 
             <div className={styles.backButton_wrapper}>
                 <Link href="/#gallery-section" className={styles.backButton}>
-                   <span className={styles.icon}>&laquo;</span> Powrót
+                    <span className={styles.icon}>&laquo;</span> Back
                 </Link>
             </div>
         </div>

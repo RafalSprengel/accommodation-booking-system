@@ -135,77 +135,77 @@ export default function BookingConfirmationToAdmin({
       <Head />
       <Body style={mainStyle}>
         <Container style={containerStyle}>
-          <Text style={badgeStyle}>Nowa rezerwacja online</Text>
+          <Text style={badgeStyle}>New online booking</Text>
           <Heading style={headingStyle}>
-            Wilcze Chatki — panel administracyjny
+            Wilcze Chatki — admin panel
           </Heading>
           <Text style={textStyle}>
-            Zarejestrowano nową rezerwację, która została pomyślnie opłacona online.
+            A new booking has been registered and successfully paid online.
           </Text>
 
           <Section style={sectionStyle}>
-            <Text style={sectionTextStyle}><strong>Gość:</strong> {customerName}</Text>
+            <Text style={sectionTextStyle}><strong>Guest:</strong> {customerName}</Text>
             {guestPhone && (
-              <Text style={sectionTextStyle}><strong>Telefon gościa:</strong> {guestPhone}</Text>
+              <Text style={sectionTextStyle}><strong>Guest phone:</strong> {guestPhone}</Text>
             )}
             {guestEmail && (
-              <Text style={sectionTextStyle}><strong>E-mail gościa:</strong> {guestEmail}</Text>
+              <Text style={sectionTextStyle}><strong>Guest email:</strong> {guestEmail}</Text>
             )}
             {guestAddress && (
-              <Text style={sectionTextStyle}><strong>Adres gościa:</strong> {guestAddress}</Text>
+              <Text style={sectionTextStyle}><strong>Guest address:</strong> {guestAddress}</Text>
             )}
             {propertyName && (
-              <Text style={sectionTextStyle}><strong>Obiekt:</strong> {propertyName}</Text>
+              <Text style={sectionTextStyle}><strong>Property:</strong> {propertyName}</Text>
             )}
             {(typeof cabinsCount !== 'undefined' && cabinsCount > 1) && (
-              <Text style={sectionTextStyle}><strong>Ilość domków:</strong> {cabinsCount}</Text>
+              <Text style={sectionTextStyle}><strong>Number of cottages:</strong> {cabinsCount}</Text>
             )}
             {(typeof adults !== 'undefined') && (
-              <Text style={sectionTextStyle}><strong>Dorosłych:</strong> {adults}</Text>
+              <Text style={sectionTextStyle}><strong>Adults:</strong> {adults}</Text>
             )}
             {(typeof children !== 'undefined') && (
-              <Text style={sectionTextStyle}><strong>Dzieci (bezpłatnie):</strong> {children}</Text>
+              <Text style={sectionTextStyle}><strong>Children (free):</strong> {children}</Text>
             )}
             {(typeof extraBeds !== 'undefined') && (
-              <Text style={sectionTextStyle}><strong>Dostawek:</strong> {extraBeds}</Text>
+              <Text style={sectionTextStyle}><strong>Extra beds:</strong> {extraBeds}</Text>
             )}
             {orderDate && (
-              <Text style={sectionTextStyle}><strong>Data zamówienia:</strong> {orderDate}</Text>
+              <Text style={sectionTextStyle}><strong>Order date:</strong> {orderDate}</Text>
             )}
-            <Text style={sectionTextStyle}><strong>Nr zamówienia:</strong> {orderNumber}</Text>
+            <Text style={sectionTextStyle}><strong>Order No:</strong> {orderNumber}</Text>
 
-            <Text style={sectionTextStyle}><strong>Zameldowanie:</strong> {checkIn}</Text>
-            <Text style={sectionTextStyle}><strong>Wymeldowanie:</strong> {checkOut}</Text>
+            <Text style={sectionTextStyle}><strong>Check-in:</strong> {checkIn}</Text>
+            <Text style={sectionTextStyle}><strong>Check-out:</strong> {checkOut}</Text>
             {adminNotes && (
-              <Text style={sectionTextStyle}><strong>Uwagi wewnętrzne:</strong> {adminNotes}</Text>
+              <Text style={sectionTextStyle}><strong>Internal notes:</strong> {adminNotes}</Text>
             )}
 
-            <Text style={sectionTextStyle}><strong>Faktura VAT:</strong>{!invoiceRequested && ' Nie'}</Text>
+            <Text style={sectionTextStyle}><strong>VAT Invoice:</strong>{!invoiceRequested && ' No'}</Text>
             {invoiceRequested && (<>
               <Section style={{ padding: '10px', backgroundColor: '#fff' }}>
-                {companyName && <Text style={sectionTextStyle}><strong>Nazwa firmy:</strong> {companyName}</Text>}
-                {nip && <Text style={sectionTextStyle}><strong>NIP:</strong> {nip}</Text>}
-                {street && <Text style={sectionTextStyle}><strong>Ulica:</strong> {street}</Text>}
-                {postalCode && <Text style={sectionTextStyle}><strong>Kod pocztowy:</strong> {postalCode}</Text>}
-                {city && <Text style={sectionTextStyle}><strong>Miasto:</strong> {city}</Text>}
+                {companyName && <Text style={sectionTextStyle}><strong>Company name:</strong> {companyName}</Text>}
+                {nip && <Text style={sectionTextStyle}><strong>Tax ID (NIP):</strong> {nip}</Text>}
+                {street && <Text style={sectionTextStyle}><strong>Street:</strong> {street}</Text>}
+                {postalCode && <Text style={sectionTextStyle}><strong>Postal code:</strong> {postalCode}</Text>}
+                {city && <Text style={sectionTextStyle}><strong>City:</strong> {city}</Text>}
               </Section>
             </>)}
 
             <Hr style={hrStyle} />
             {typeof paidAmount === 'number' && paidAmount !== totalPrice ? (
               <>
-                <Text style={sumStyle}>Wpłacono: {Number(paidAmount).toFixed(2)} zł</Text>
-                <Text style={sectionTextStyle}>Pozostało do zapłaty: {Number(totalPrice - paidAmount).toFixed(2)} zł</Text>
+                <Text style={sumStyle}>Paid: {Number(paidAmount).toFixed(2)} zł</Text>
+                <Text style={sectionTextStyle}>Remaining to pay: {Number(totalPrice - paidAmount).toFixed(2)} zł</Text>
               </>
             ) : (
-              <Text style={sumStyle}>Kwota: {Number(totalPrice).toFixed(2)} PLN</Text>
+              <Text style={sumStyle}>Amount: {Number(totalPrice).toFixed(2)} PLN</Text>
             )}
 
             <Hr style={hrStyle} />
           </Section>
 
           <Text style={footerTextStyle}>
-            Ta wiadomość została wygenerowana automatycznie przez system rezerwacji Wilcze Chatki.
+            This message was automatically generated by the Wilcze Chatki booking system.
           </Text>
         </Container>
       </Body>

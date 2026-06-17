@@ -28,36 +28,36 @@ const items: SliderItem[] = [
   {
     id: 1,
     title: 'Wilcze Chatki',
-    topic: 'Kaszubska cisza',
-    description: 'Dwa przytulne domki w Szumlesiu Królewskim, idealne na odpoczynek od miejskiego zgiełku.',
+    topic: 'Kashubian silence',
+    description: 'Two cozy cottages in Szumlesie Królewski, perfect for escaping the hustle and bustle of the city.',
     image: '/images/img1.jpeg'
   },
   {
     id: 2,
-    title: 'Strefa relaksu',
-    topic: 'Sauna i jacuzzi',
-    description: 'Całoroczna strefa relaksu w zamkniętej altanie z sauną infrared i jacuzzi ogrzewanym drewnem.',
+    title: 'Relaxation zone',
+    topic: 'Sauna and jacuzzi',
+    description: 'Year-round relaxation zone in a closed pavilion with an infrared sauna and wood-fired jacuzzi.',
     image: '/images/img2.jpeg'
   },
   {
     id: 3,
-    title: 'Natura na wyciągnięcie ręki',
-    topic: 'Serce Kaszub',
-    description: 'Bliskość Kaszubskiego Parku Krajobrazowego, Wieżycy i malowniczych jezior.',
+    title: 'Nature at your fingertips',
+    topic: 'The heart of Kashubia',
+    description: 'Close to the Kashubian Landscape Park, Wieżyca hill, and picturesque lakes.',
     image: '/images/img3.jpeg'
   },
   {
     id: 4,
-    title: 'Rodzinny wypoczynek',
-    topic: 'Plac zabaw i grill',
-    description: 'Prywatny taras z grillem oraz plac zabaw z trampoliną i huśtawkami dla najmłodszych.',
+    title: 'Family getaway',
+    topic: 'Playground and BBQ',
+    description: 'Private terrace with a BBQ and a playground with a trampoline and swings for the little ones.',
     image: '/images/img4.jpeg'
   },
   {
     id: 5,
-    title: 'Komfortowe domki',
-    topic: 'Pełne wyposażenie',
-    description: 'Klimatyzowane wnętrza, aneks kuchenny i przytulne sypialnie na poddaszu dla 6-8 osób.',
+    title: 'Comfortable cottages',
+    topic: 'Fully equipped',
+    description: 'Air-conditioned interiors, kitchenette, and cozy attic bedrooms for 6-8 people.',
     image: '/images/img5.jpeg'
   },
 ];
@@ -143,8 +143,8 @@ export default function HeroSlider() {
                 <h2 className={styles.slideTopic}>{item.topic}</h2>
                 <p className={styles.slideDesc}>{item.description}</p>
                 <div className={styles.slideActions}>
-                  <Link href="/booking" className={styles.btnPrimary}>Rezerwacje</Link>
-                  <Link href="/gallery" className={styles.btnOutline}>Galeria</Link>
+                  <Link href="/booking" className={styles.btnPrimary}>Bookings</Link>
+                  <Link href="/gallery" className={styles.btnOutline}>Gallery</Link>
                 </div>
               </div>
             </div>

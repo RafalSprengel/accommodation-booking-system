@@ -14,13 +14,13 @@ export default async function Footer() {
         <div className={styles.info}>
           <Image
             src="/assets/logo-round.png"
-            alt="Logo Wilcze Chatki"
+            alt="Wilcze Chatki Logo"
             width={100}
             height={100}
           />
           <h3>Wilcze Chatki</h3>
           <p>83-424 Szumleś Królewski 9A</p>
-          <p>Kaszuby, woj. pomorskie</p>
+          <p>Kashubia, Pomeranian Voivodeship</p>
 
           <div className={styles.contact}>
             <p>
@@ -49,9 +49,9 @@ export default async function Footer() {
 
       <div className={styles.copyright}>
         <p><a href='admin' className={styles.creatorLink}>Admin</a></p>
-        <p>&copy; {new Date().getFullYear()} Wilcze Chatki. Wszelkie prawa zastrzeżone.</p>
+        <p>&copy; {new Date().getFullYear()} Wilcze Chatki. All rights reserved.</p>
         <div className={styles.creator}>
-          Realizacja strony: &nbsp;
+          Website by: &nbsp;
           <a
             href="https://rafalsprengel.com"
             target="_blank"

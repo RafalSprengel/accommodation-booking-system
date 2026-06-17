@@ -34,21 +34,21 @@ export default function ServicesClient({ childrenFreeAge, weekdayRates, weekendR
                 viewport={{ once: true, amount: 0.25 }}
                 className={styles.equipment + ' ' + styles.gridFirstRow}
             >
-                <h3>Wyposażenie każdego domku:</h3>
+                <h3>Equipment in each cottage:</h3>
                 <ul className={styles.equipmentList}>
-                    <li>Kuchenka indukcyjna z piekarnikiem</li>
-                    <li>Lodówka</li>
-                    <li>Zmywarka</li>
-                    <li>Zastawa kuchenna, garnki, patelnie, toster</li>
-                    <li>Pralka</li>
-                    <li>TV i WiFi</li>
-                    <li>Stół dla 6 osób i rozkładana 2-osobowa kanapa w salonie</li>
-                    <li>Klimatyzacja</li>
-                    <li>Suszarka do włosów i ubrań</li>
-                    <li>Ręczniki</li>
-                    <li>Kosmetyki i środki higieniczne</li>
-                    <li>Odkurzacz</li>
-                    <li>Kawa i herbata</li>
+                    <li>Induction hob with oven</li>
+                    <li>Refrigerator</li>
+                    <li>Dishwasher</li>
+                    <li>Kitchenware, pots, pans, toaster</li>
+                    <li>Washing machine</li>
+                    <li>TV and WiFi</li>
+                    <li>Table for 6 people and a fold-out 2-seater sofa in the living room</li>
+                    <li>Air conditioning</li>
+                    <li>Hair dryer and clothes drying rack</li>
+                    <li>Towels</li>
+                    <li>Toiletries and hygiene products</li>
+                    <li>Vacuum cleaner</li>
+                    <li>Coffee and tea</li>
                 </ul>
             </motion.div>
             <motion.div
@@ -58,9 +58,9 @@ export default function ServicesClient({ childrenFreeAge, weekdayRates, weekendR
                 viewport={{ once: true, amount: 0.25 }}
                 id="pricing" className={`${styles.card} ${styles.pricingCard}`}
             >
-                <h3>Cennik za dobę:</h3>
+                <h3>Price per night:</h3>
                 <div className={styles.priceGroup}>
-                    <h4>W tygodniu</h4>
+                    <h4>Weekdays</h4>
                     {weekdayRates.map((rate, index) => (
                         <div key={index} className={styles.priceRow}>
                             <span>{rate.description}</span>
@@ -69,7 +69,7 @@ export default function ServicesClient({ childrenFreeAge, weekdayRates, weekendR
                     ))}
                 </div>
                 <div className={styles.priceGroup}>
-                    <h4>Weekendy</h4>
+                    <h4>Weekends</h4>
                     {weekendRates.map((rate, index) => (
                         <div key={index} className={styles.priceRow}>
                             <span>{rate.description}</span>
@@ -78,12 +78,12 @@ export default function ServicesClient({ childrenFreeAge, weekdayRates, weekendR
                     ))}
                 </div>
                 {childrenFreeAge !== null &&
-                    <div className={styles.note}>* Dzieci do {childrenFreeAge} roku życia bezpłatnie.</div>
+                    <div className={styles.note}>* Children up to {childrenFreeAge} years old stay free of charge.</div>
                 }
-                <div className={styles.note}>** Cennik obowiązuje poza sezonem wysokim.</div>
+                <div className={styles.note}>** Pricing applies outside the high season.</div>
                 <div className={styles.note}>
                     <a href="/terms-and-conditions" className={styles.link}>
-                        Regulamin obiektu &raquo;
+                        Terms and conditions &raquo;
                     </a>
                 </div>
             </motion.div>
@@ -94,18 +94,18 @@ export default function ServicesClient({ childrenFreeAge, weekdayRates, weekendR
                 viewport={{ once: true, amount: 0.25 }}
                 className={`${styles.card} ${styles.featuresCard}`}
             >
-                <h3>Główne atrakcje:</h3>
+                <h3>Main features:</h3>
                 <ul className={styles.features}>
-                    <li>Chata biesiadna z sauną i jacuzzi oraz dwoma dużymi stołami</li>
-                    <li>Sauna 4-5 osobowa Infrared</li>
-                    <li>Jacuzzi ogrzewane drewnem (w cenie)</li>
-                    <li>Pełne wyposażenie i klimatyzacja</li>
-                    <li>Hamaki i strefa relaksu</li>
-                    <li>Grill do dyspozycji</li>
-                    <li>Plac zabaw dla dzieci</li>
-                    <li>Trampolina</li>
-                    <li>Miejsce na ognisko</li>
-                    <li>Teren ogrodzony</li>
+                    <li>Pavilion with sauna, jacuzzi, and two large tables</li>
+                    <li>4-5 person infrared sauna</li>
+                    <li>Wood-fired jacuzzi (included in the price)</li>
+                    <li>Full equipment and air conditioning</li>
+                    <li>Hammocks and relaxation zone</li>
+                    <li>BBQ available</li>
+                    <li>Children's playground</li>
+                    <li>Trampoline</li>
+                    <li>Campfire area</li>
+                    <li>Fenced area</li>
                 </ul>
             </motion.div>
         </div>

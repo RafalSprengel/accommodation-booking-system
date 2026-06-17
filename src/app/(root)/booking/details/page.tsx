@@ -86,8 +86,8 @@ export default function BookingDetailsPage() {
         return;
       }
     } catch (err) {
-      console.error('Błąd sprawdzania dostępności:', err);
-      toast.error('Wystąpił problem z połączeniem sieciowym. Nie udało się zweryfikować dostępności terminu.');
+      console.error('Error checking availability:', err);
+      toast.error('A network problem occurred. Could not verify the availability of the date.');
     } finally {
       setIsValidating(false);
     }
@@ -138,47 +138,47 @@ export default function BookingDetailsPage() {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.firstName.trim()) newErrors.firstName = "Imię jest wymagane";
+    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
     if (!formData.lastName.trim())
-      newErrors.lastName = "Nazwisko jest wymagane";
-    if (!formData.address.trim()) newErrors.address = "Adres jest wymagany";
+      newErrors.lastName = "Last name is required";
+    if (!formData.address.trim()) newErrors.address = "Address is required";
 
     if (!formData.email.trim()) {
-      newErrors.email = "E-mail jest wymagany";
+      newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Nieprawidłowy format e-mail";
+      newErrors.email = "Invalid email format";
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = "Telefon jest wymagany";
+      newErrors.phone = "Phone number is required";
     } else if (!/^[\d\s+\-()]+$/.test(formData.phone)) {
-      newErrors.phone = "Nieprawidłowy format telefonu";
+      newErrors.phone = "Invalid phone number format";
     }
 
     if (formData.invoice) {
       if (!formData.invoiceData?.companyName.trim()) {
-        newErrors.companyName = "Nazwa firmy jest wymagana dla faktury VAT";
+        newErrors.companyName = "Company name is required for VAT invoice";
       }
       if (!formData.invoiceData?.nip.trim()) {
-        newErrors.nip = "NIP jest wymagany dla faktury VAT";
+        newErrors.nip = "NIP is required for VAT invoice";
       } else if (
         !/^[\d-]{10,13}$/.test(formData.invoiceData.nip.replace(/-/g, ""))
       ) {
-        newErrors.nip = "Nieprawidłowy format NIP";
+        newErrors.nip = "Invalid NIP format";
       }
       if (!formData.invoiceData?.street.trim()) {
-        newErrors.invoiceStreet = "Ulica jest wymagana dla faktury VAT";
+        newErrors.invoiceStreet = "Street is required for VAT invoice";
       }
       if (!formData.invoiceData?.city.trim()) {
-        newErrors.invoiceCity = "Miejscowość jest wymagana dla faktury VAT";
+        newErrors.invoiceCity = "City is required for VAT invoice";
       }
       if (!formData.invoiceData?.postalCode.trim()) {
-        newErrors.postalCode = "Kod pocztowy jest wymagany dla faktury VAT";
+        newErrors.postalCode = "Postal code is required for VAT invoice";
       }
     }
 
     if (!formData.termsAccepted)
-      newErrors.termsAccepted = "Musisz zaakceptować regulamin";
+      newErrors.termsAccepted = "You must accept the terms and conditions";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -279,13 +279,13 @@ export default function BookingDetailsPage() {
         const { available, occupiedNames } = await checkBookingAvailability(bookingSummary);
         console.log(available, occupiedNames)
         if (!available) {
-          setUnavailableModal({ isOpen: true, title: 'Termin niedostępny lub w procesie rezerwacji, prosimy spróbować ponownie za 15 minut. ', occupiedNames });
+          setUnavailableModal({ isOpen: true, title: 'Dates are no longer available or are being reserved. Please try again in 15 minutes.', occupiedNames });
           setIsSubmitting(false);
           return;
         }
       } catch (err) {
-        console.error('Błąd walidacji dostępności przed submit:', err);
-        toast.error('Wystąpił problem z połączeniem internetowym. Dane formularza są bezpieczne. Spróbuj kliknąć przycisk jeszcze raz.');
+        console.error('Availability validation error before submit:', err);
+        toast.error('A network problem occurred. Your form data is safe. Please try clicking the button again.');
         setIsSubmitting(false);
         return;
       }
@@ -300,7 +300,7 @@ export default function BookingDetailsPage() {
         <FloatingBackButton />
         <div className={styles.loadingState}>
           <div className={styles.spinner}></div>
-          <p>Ładowanie danych rezerwacji...</p>
+          <p>Loading booking data...</p>
         </div>
       </div>
     );
@@ -314,7 +314,7 @@ export default function BookingDetailsPage() {
   const orderDisplayName =
     orders.length === 1
       ? orders[0].displayName
-      : `${orders.length} obiekty: ${orders.map((item) => item.displayName).join(", ")}`;
+      : `${orders.length} properties: ${orders.map((item) => item.displayName).join(", ")}`;
 
   const nights = Math.ceil(
     (new Date(endDate).getTime() - new Date(startDate).getTime()) /
@@ -329,8 +329,8 @@ export default function BookingDetailsPage() {
         isOpen={unavailableModal.isOpen}
         onClose={() => { setUnavailableModal({ ...unavailableModal, isOpen: false }); router.refresh(); }}
         title={unavailableModal.title}
-        confirmText="Wróć do wyboru"
-        cancelText="Odśwież wyniki"
+        confirmText="Back to selection"
+        cancelText="Refresh results"
         confirmVariant="warning"
         onConfirm={() => {
           localStorage.removeItem(STORAGE_KEY);
@@ -340,40 +340,40 @@ export default function BookingDetailsPage() {
       >
         <p>
           {unavailableModal.occupiedNames.length > 0
-            ? `Niedostępne obiekty: ${unavailableModal.occupiedNames.join(', ')}`
-            : 'Wybrany termin jest już niedostępny.'}
+            ? `Unavailable properties: ${unavailableModal.occupiedNames.join(', ')}`
+            : 'The selected dates are no longer available.'}
         </p>
       </Modal>
 
       <header className={styles.header}>
-        <h1>Dane gości</h1>
-        <p>Wypełnij formularz, aby kontynuować rezerwację.</p>
+        <h1>Guest details</h1>
+        <p>Fill in the form to continue with your booking.</p>
       </header>
 
       <div className={styles.summaryCard}>
-        <h2 className={styles.summaryTitle}>Dane rezerwacji</h2>
+        <h2 className={styles.summaryTitle}>Booking details</h2>
         <div className={styles.summaryGrid}>
           <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Obiekt:</span>
+            <span className={styles.summaryLabel}>Property:</span>
             <span className={styles.summaryValue}>{orderDisplayName}</span>
           </div>
           <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Termin:</span>
+            <span className={styles.summaryLabel}>Dates:</span>
             <span className={styles.summaryValue}>
               {formatDisplayDate(startDate)} — {formatDisplayDate(endDate)} (
-              {nights} nocy)
+              {nights} nights)
             </span>
           </div>
           <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Goście:</span>
+            <span className={styles.summaryLabel}>Guests:</span>
             <span className={styles.summaryValue}>
-              {totalGuests} osób
+              {totalGuests} guests
               {totalExtraBeds > 0 &&
-                ` + ${totalExtraBeds} dostawka${totalExtraBeds > 1 ? "i" : ""}`}
+                ` + ${totalExtraBeds} extra bed${totalExtraBeds > 1 ? "s" : ""}`}
             </span>
           </div>
           <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Cena całkowita:</span>
+            <span className={styles.summaryLabel}>Total price:</span>
             <span className={styles.summaryPrice}>{totalPrice} zł</span>
           </div>
         </div>
@@ -381,10 +381,10 @@ export default function BookingDetailsPage() {
 
       <form onSubmit={handleSubmit} className={styles.formCard}>
         <div className={styles.formSection}>
-          <h2 className={styles.sectionTitle}>Dane osobowe</h2>
+          <h2 className={styles.sectionTitle}>Personal details</h2>
           <div className={styles.grid}>
             <div className={styles.inputGroup}>
-              <label htmlFor="firstName">Imię *</label>
+              <label htmlFor="firstName">First name *</label>
               <input
                 id="firstName"
                 name="firstName"
@@ -399,7 +399,7 @@ export default function BookingDetailsPage() {
               )}
             </div>
             <div className={styles.inputGroup}>
-              <label htmlFor="lastName">Nazwisko *</label>
+              <label htmlFor="lastName">Last name *</label>
               <input
                 id="lastName"
                 name="lastName"
@@ -415,14 +415,14 @@ export default function BookingDetailsPage() {
             </div>
           </div>
           <div className={styles.inputGroup}>
-            <label htmlFor="address">Adres *</label>
+            <label htmlFor="address">Address *</label>
             <input
               id="address"
               name="address"
               type="text"
               value={formData.address}
               onChange={handleChange}
-              placeholder="Ulica, numer, kod pocztowy, miejscowość"
+              placeholder="Street, number, postal code, city"
               className={errors.address ? styles.inputError : ""}
               autoComplete="street-address"
             />
@@ -433,10 +433,10 @@ export default function BookingDetailsPage() {
         </div>
 
         <div className={styles.formSection}>
-          <h2 className={styles.sectionTitle}>Dane kontaktowe</h2>
+          <h2 className={styles.sectionTitle}>Contact details</h2>
           <div className={styles.grid}>
             <div className={styles.inputGroup}>
-              <label htmlFor="email">E-mail *</label>
+              <label htmlFor="email">Email *</label>
               <input
                 id="email"
                 name="email"
@@ -451,7 +451,7 @@ export default function BookingDetailsPage() {
               )}
             </div>
             <div className={styles.inputGroup}>
-              <label htmlFor="phone">Telefon *</label>
+              <label htmlFor="phone">Phone *</label>
               <input
                 id="phone"
                 name="phone"
@@ -470,7 +470,7 @@ export default function BookingDetailsPage() {
         </div>
 
         <div className={styles.formSection}>
-          <h2 className={styles.sectionTitle}>Dodatkowe opcje</h2>
+          <h2 className={styles.sectionTitle}>Additional options</h2>
           <label className={styles.checkboxLabel}>
             <input
               type="checkbox"
@@ -478,19 +478,19 @@ export default function BookingDetailsPage() {
               checked={formData.invoice}
               onChange={handleChange}
             />
-            <span>Chcę otrzymać fakturę VAT</span>
+            <span>I would like to receive a VAT invoice</span>
           </label>
 
           <div
             className={`${styles.invoiceWrapper} ${formData.invoice ? styles.expanded : ""}`}
           >
             <div className={styles.invoiceContent}>
-              <h3 className={styles.invoiceTitle}>Dane do faktury VAT</h3>
+              <h3 className={styles.invoiceTitle}>VAT invoice details</h3>
               <div
                 className={`${styles.inputGroup} ${styles.fadeIn}`}
                 style={{ animationDelay: "0.05s" }}
               >
-                <label htmlFor="invoice.companyName">Nazwa firmy *</label>
+                <label htmlFor="invoice.companyName">Company name *</label>
                 <input
                   id="invoice.companyName"
                   name="invoice.companyName"
@@ -498,7 +498,7 @@ export default function BookingDetailsPage() {
                   value={formData.invoiceData.companyName}
                   onChange={handleChange}
                   className={errors.companyName ? styles.inputError : ""}
-                  placeholder="Pełna nazwa firmy"
+                  placeholder="Full company name"
                 />
                 {errors.companyName && (
                   <span className={styles.errorText}>{errors.companyName}</span>
@@ -508,7 +508,7 @@ export default function BookingDetailsPage() {
                 className={`${styles.inputGroup} ${styles.fadeIn}`}
                 style={{ animationDelay: "0.1s" }}
               >
-                <label htmlFor="invoice.nip">NIP *</label>
+                <label htmlFor="invoice.nip">Tax ID (NIP) *</label>
                 <input
                   id="invoice.nip"
                   name="invoice.nip"
@@ -526,7 +526,7 @@ export default function BookingDetailsPage() {
                 className={`${styles.inputGroup} ${styles.fadeIn}`}
                 style={{ animationDelay: "0.15s" }}
               >
-                <label htmlFor="invoice.street">Ulica i numer *</label>
+                <label htmlFor="invoice.street">Street and number *</label>
                 <input
                   id="invoice.street"
                   name="invoice.street"
@@ -534,7 +534,7 @@ export default function BookingDetailsPage() {
                   value={formData.invoiceData.street}
                   onChange={handleChange}
                   className={errors.invoiceStreet ? styles.inputError : ""}
-                  placeholder="ul. Przykładowa 123"
+                  placeholder="123 Example Street"
                 />
                 {errors.invoiceStreet && (
                   <span className={styles.errorText}>
@@ -547,7 +547,7 @@ export default function BookingDetailsPage() {
                 style={{ animationDelay: "0.2s" }}
               >
                 <div className={styles.inputGroup}>
-                  <label htmlFor="invoice.postalCode">Kod pocztowy *</label>
+                  <label htmlFor="invoice.postalCode">Postal code *</label>
                   <input
                     id="invoice.postalCode"
                     name="invoice.postalCode"
@@ -564,7 +564,7 @@ export default function BookingDetailsPage() {
                   )}
                 </div>
                 <div className={styles.inputGroup}>
-                  <label htmlFor="invoice.city">Miejscowość *</label>
+                  <label htmlFor="invoice.city">City *</label>
                   <input
                     id="invoice.city"
                     name="invoice.city"
@@ -572,7 +572,7 @@ export default function BookingDetailsPage() {
                     value={formData.invoiceData.city}
                     onChange={handleChange}
                     className={errors.invoiceCity ? styles.inputError : ""}
-                    placeholder="Miejscowość"
+                    placeholder="City"
                   />
                   {errors.invoiceCity && (
                     <span className={styles.errorText}>
@@ -586,7 +586,7 @@ export default function BookingDetailsPage() {
         </div>
 
         <div className={styles.formSection}>
-          <h2 className={styles.sectionTitle}>Akceptacja regulaminu</h2>
+          <h2 className={styles.sectionTitle}>Acceptance of terms</h2>
           <label className={styles.checkboxLabel}>
             <input
               type="checkbox"
@@ -595,13 +595,13 @@ export default function BookingDetailsPage() {
               onChange={handleChange}
             />
             <span>
-              Zapoznałem/am się i akceptuję{" "}
+              I have read and accept the{" "}
               <button
                 type="button"
                 onClick={handleTermAndConditionsClick}
                 className={styles.linkButton}
               >
-                regulamin obiektu
+                terms and conditions
               </button>{" "}
               *
             </span>
@@ -613,10 +613,10 @@ export default function BookingDetailsPage() {
 
         <div className={styles.formActions}>
           <Button href="/booking" variant="secondary">
-            ← Wstecz
+            ← Back
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Zapisywanie..." : "Dalej →"}
+            {isSubmitting ? "Saving..." : "Next →"}
           </Button>
         </div>
       </form>

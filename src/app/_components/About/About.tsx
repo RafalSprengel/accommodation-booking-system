@@ -8,49 +8,47 @@ export default function About() {
       <div className={styles.container}>
         <SlideRight>
           <h1 className={styles.title}>
-            Serdecznie witamy w Wilczych Chatkach!
+            A warm welcome to Wilcze Chatki!
           </h1>
         </SlideRight>
         <SlideLeft delay={0.2}>
           <div className={styles.content}>
             <p>
-              Szukasz miejsca, gdzie odpoczniesz od miejskiego zgiełku, nacieszysz
-              się ciszą i spokojem, a jednocześnie będziesz blisko największych
-              atrakcji Pomorza? Nasze dwa przytulne domki w{" "}
-              <strong>Szumlesiu Królewskim</strong>, malowniczej wsi położonej
-              między <strong>Gdańskiem a Kościerzyną</strong>, to idealne miejsce
-              na rodzinny wypoczynek, urlop w gronie przyjaciół czy romantyczny
-              weekend we dwoje.
+              Are you looking for a place to escape the hustle and bustle of the city, enjoy peace and quiet, and yet be close to the greatest attractions of Pomerania? Our two cozy cottages in{" "}
+              <strong>Szumlesie Królewski</strong>, a picturesque village located
+              between <strong>Gdańsk and Kościerzyna</strong>, are the perfect place
+              for a family getaway, a holiday with friends, or a romantic
+              weekend for two.
             </p>
 
             <p>
-              Nasz obiekt położony jest w spokojnej, zielonej okolicy, która
-              gwarantuje wytchnienie od codziennego pośpiechu i bliski kontakt z
-              naturą. Jest to fantastyczne miejsce dla rodzin z dziećmi,
-              miłośników wycieczek rowerowych, spacerowiczów oraz każdego, kto
-              pragnie naładować baterie w otoczeniu kaszubskich lasów i jezior.
+              Our property is located in a peaceful, green area that
+              guarantees a respite from the daily rush and close contact with
+              nature. It is a fantastic place for families with children,
+              cycling enthusiasts, walkers, and anyone who
+              wishes to recharge their batteries surrounded by Kashubian forests and lakes.
             </p>
 
             <p>
-              Obiekt zlokalizowany jest w miejscowości Szumleś Królewski. Dzięki
-              tej lokalizacji nasi Goście mogą cieszyć się absolutną ciszą i
-              prywatnością, mając jednocześnie szybki dostęp do regionalnych
-              perełek, takich jak Kaszubski Park Krajobrazowy, szczyt Wieżyca czy
-              słynny dom do góry nogami w Szymbarku.
+              The property is located in the village of Szumleś Królewski. Thanks to
+              this location, our guests can enjoy absolute peace and
+              privacy, while having quick access to regional
+              gems such as the Kashubian Landscape Park, Wieżyca peak, or
+              the famous upside-down house in Szymbark.
             </p>
 
             <p>
-              Po dniu pełnym wrażeń, do Państwa dyspozycji oddajemy strefę relaksu
-              z<strong> sauną infrared</strong> oraz klimatycznym{" "}
-              <strong>jacuzzi ogrzewanym drewnem</strong>. W przypadku pytań
-              prosimy o kontakt mailowy, telefoniczny lub poprzez formularz.
+              After a day full of impressions, we offer a relaxation zone
+              with an <strong>infrared sauna</strong> and an atmospheric{" "}
+              <strong>wood-fired jacuzzi</strong>. If you have any questions,
+              please contact us via email, telephone, or through the contact form.
             </p>
           </div>
         </SlideLeft>
 
         <div className={styles.links}>
           <Link href="/#attractions" className={styles.link}>
-            Przeczytaj więcej o atrakcjach w regionie &raquo;
+            Read more about regional attractions &raquo;
           </Link>
         </div>
       </div>

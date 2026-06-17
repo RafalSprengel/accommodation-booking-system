@@ -20,7 +20,7 @@ export default function GallerySection() {
         <section id='gallery-section'>
             <div className={styles.title}>
                 <SlideRight>
-                    <h1>Galeria zdjęć</h1>
+                    <h1>Photo gallery</h1>
                 </SlideRight>
             </div >
             <SlideLeft>
@@ -28,7 +28,7 @@ export default function GallerySection() {
                     <LightBoxGallery images={images} />
                 </div>
             </SlideLeft>
-            <a href="/gallery" className={styles.link}>Zobacz więcej &raquo;</a>
+            <a href="/gallery" className={styles.link}>See more &raquo;</a>
         </section >
     );
 }

@@ -90,7 +90,7 @@ export default function BookingSuccessClient({
               throw new Error(data.error);
             }
 
-            throw new Error("Błąd odpowiedzi API weryfikacji płatności.");
+            throw new Error("Payment verification API response error.");
           }
 
           if (data.status === "complete") {
@@ -147,13 +147,13 @@ export default function BookingSuccessClient({
             <div className={styles.loaderWrapper}>
               <span className={styles.spinner} />
             </div>
-            <h1 className={styles.title}>Weryfikujemy płatność...</h1>
-            <p className={styles.message}>Prosimy nie odświeżać strony.</p>
+            <h1 className={styles.title}>Verifying payment...</h1>
+            <p className={styles.message}>Please do not refresh the page.</p>
             <p className={styles.details}>
-              Trwa potwierdzanie płatności w Stripe.
+              Confirming payment via Stripe.
             </p>
             <p className={styles.details}>
-              Próba {attempts}/{MAX_ATTEMPTS}
+              Attempt {attempts}/{MAX_ATTEMPTS}
             </p>
           </>
         )}
@@ -163,34 +163,34 @@ export default function BookingSuccessClient({
             <div className={styles.iconWrapper}>
               <span className={styles.successIcon}>✓</span>
             </div>
-            <h1 className={styles.title}>Płatność potwierdzona!</h1>
-            <p className={styles.message}>Dziękujemy za rezerwację.</p>
+            <h1 className={styles.title}>Payment confirmed!</h1>
+            <p className={styles.message}>Thank you for your booking.</p>
             <p className={styles.details}>
-              Płatność została pomyślnie przetworzona przez Stripe.
+              Payment has been successfully processed via Stripe.
             </p>
 
             {isMultiBooking && (
               <p className={styles.details}>
-                Utworzono <strong>{bookingsCount}</strong> rezerwacje (po jednej
-                dla każdego wybranego domku).
+                <strong>{bookingsCount}</strong> bookings created (one for each
+                selected cottage).
               </p>
             )}
 
             <p className={styles.details}>
-              Szczegóły Twojej rezerwacji zostały wysłane na adres e-mail:
+              Your booking details have been sent to:
               {customerEmail ? (
                 <strong> {customerEmail}</strong>
               ) : (
-                " podany w formularzu."
+                " the email address you provided."
               )}
             </p>
 
             <div className={styles.infoBox}>
               <p className={styles.infoText}>
-                Sprawdź skrzynkę odbiorczą (oraz folder SPAM).
+                Please check your inbox (and SPAM folder).
               </p>
               <p className={styles.infoText}>
-                W razie pytań:{" "}
+                If you have any questions:{" "}
                 <a
                   href={`tel:${siteSettings.phone}`}
                   className={styles.phoneLink}
@@ -207,14 +207,14 @@ export default function BookingSuccessClient({
             <div className={styles.errorIconWrapper}>
               <span className={styles.errorIcon}>!</span>
             </div>
-            <h1 className={styles.title}>Wystąpił problem z płatnością.</h1>
-              <p className={styles.message}>Prosimy o kontakt z obsługą pod numerem <a href={`tel:${siteSettings.phone}`} className={styles.phoneLink}>{siteSettings.phone}</a>.</p>
+            <h1 className={styles.title}>There was a problem with the payment.</h1>
+              <p className={styles.message}>Please contact us at <a href={`tel:${siteSettings.phone}`} className={styles.phoneLink}>{siteSettings.phone}</a>.</p>
           </>
         )}
 
         <div className={styles.actions}>
           <Button href="/" variant="primary" size="large">
-            Wróć do strony głównej
+            Back to home page
           </Button>
         </div>
       </div>

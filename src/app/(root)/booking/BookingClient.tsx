@@ -305,20 +305,20 @@ export default function BookingClient({
       if (!result.available) {
         const occupied = result.occupiedPropertyIds || [];
         const occupiedNames = occupied.includes(option.propertyId) ? [option.displayName] : [];
-        console.log('termin niedostępny');
-        setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames: [...occupiedNames], context: 'single' });
+        console.log('date unavailable');
+        setUnavailableModal({ isOpen: true, title: 'Date unavailable', occupiedNames: [...occupiedNames], context: 'single' });
         return;
       }
     } catch (err) {
-      console.error('Błąd sprawdzania dostępności:', err);
+      console.error('Error checking availability:', err);
       setNetworkModal({
-        isOpen: true, title: 'Błąd sieci', message: 'Nie udało się sprawdzić dostępności. Spróbuj ponownie.', onRetry: async () => {
+        isOpen: true, title: 'Network error', message: 'Failed to check availability. Please try again.', onRetry: async () => {
           try {
             const r = await isRangeAvailable(bookingDates.start!, bookingDates.end!, [option.propertyId]);
             if (!r.available) {
               const occupied = r.occupiedPropertyIds || [];
               const occupiedNames = occupied.includes(option.propertyId) ? [option.displayName] : [];
-              setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames: [...occupiedNames], context: 'single' });
+              setUnavailableModal({ isOpen: true, title: 'Date unavailable', occupiedNames: [...occupiedNames], context: 'single' });
             } else {
               const extraBeds = extraBedsMap[option.displayName] || 0;
               const totalPrice = option.totalPrice + extraBeds * option.extraBedPrice;
@@ -370,13 +370,13 @@ export default function BookingClient({
         const occupiedNames = selectedOrders
           .filter(o => occupied.includes(o.propertyId))
           .map(o => o.displayName);
-        setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames: [...occupiedNames], context: 'multi' });
+        setUnavailableModal({ isOpen: true, title: 'Date unavailable', occupiedNames: [...occupiedNames], context: 'multi' });
         return;
       }
     } catch (err) {
-      console.error('Błąd sprawdzania dostępności:', err);
+      console.error('Error checking availability:', err);
       setNetworkModal({
-        isOpen: true, title: 'Błąd sieci', message: 'Nie udało się sprawdzić dostępności. Spróbuj ponownie.', onRetry: async () => {
+        isOpen: true, title: 'Network error', message: 'Failed to check availability. Please try again.', onRetry: async () => {
           try {
             const r = await isRangeAvailable(bookingDates.start!, bookingDates.end!, propertyIds);
             if (!r.available) {
@@ -384,7 +384,7 @@ export default function BookingClient({
               const occupiedNames = selectedOrders
                 .filter(o => occupied.includes(o.propertyId))
                 .map(o => o.displayName);
-              setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames, context: 'multi' });
+              setUnavailableModal({ isOpen: true, title: 'Date unavailable', occupiedNames, context: 'multi' });
             } else {
               const orders: BookingOrderItem[] = selectedOrders.map((order) => ({
                 propertyId: order.propertyId,
@@ -421,14 +421,14 @@ export default function BookingClient({
   };
 
   const renderGuestsText = () => {
-    if (totalGuests === 0) return "Wybierz ilość osób";
-    const adultsText = adults === 1 ? "1 dorosły" : `${adults} dorosłych`;
+    if (totalGuests === 0) return "Select number of guests";
+    const adultsText = adults === 1 ? "1 adult" : `${adults} adults`;
     const childrenText =
       children === 0
         ? ""
         : children === 1
-          ? ", 1 dziecko"
-          : `, ${children} dzieci`;
+          ? ", 1 child"
+          : `, ${children} children`;
     return `${adultsText}${childrenText}`;
   };
 
@@ -459,7 +459,7 @@ export default function BookingClient({
                 localStorage.removeItem(STORAGE_KEY);
                 setHasDraft(false);
               }}
-              aria-label="Usuń szkic rezerwacji"
+              aria-label="Remove booking draft"
             >
               ✕
             </button>
@@ -468,7 +468,7 @@ export default function BookingClient({
               onClick={async () => {
                 const draftRaw = localStorage.getItem(STORAGE_KEY);
                 if (!draftRaw) {
-                  toast.error('Brak szkicu rezerwacji');
+                  toast.error('No booking draft found');
                   setHasDraft(false);
                   return;
                 }
@@ -488,7 +488,7 @@ export default function BookingClient({
                     const occupiedNames = draft.orders
                       .filter(o => occupied.includes(o.propertyId))
                       .map(o => o.displayName);
-                    setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames: [...occupiedNames], context: 'draft' });
+                    setUnavailableModal({ isOpen: true, title: 'Date unavailable', occupiedNames: [...occupiedNames], context: 'draft' });
                     return;
                   }
 
@@ -496,7 +496,7 @@ export default function BookingClient({
                 } catch (err) {
                   console.error(err);
                   setNetworkModal({
-                    isOpen: true, title: 'Błąd', message: 'Błąd podczas weryfikacji szkicu. Spróbuj ponownie.', onRetry: async () => {
+                    isOpen: true, title: 'Error', message: 'Error verifying draft. Please try again.', onRetry: async () => {
                       try {
                         const draftRaw2 = localStorage.getItem(STORAGE_KEY);
                         if (!draftRaw2) {
@@ -517,7 +517,7 @@ export default function BookingClient({
                           const occupiedNames = draft2.orders
                             .filter(o => occupied.includes(o.propertyId))
                             .map(o => o.displayName);
-                          setUnavailableModal({ isOpen: true, title: 'Termin niedostępny', occupiedNames, context: 'draft' });
+                          setUnavailableModal({ isOpen: true, title: 'Date unavailable', occupiedNames, context: 'draft' });
                           return;
                         }
                         router.push('/booking/details');
@@ -531,7 +531,7 @@ export default function BookingClient({
                 }
               }}
             >
-              <span>Kliknij aby dokończyć poprzednią rezerwację</span>
+              <span>Click to continue your previous booking</span>
               <FontAwesomeIcon
                 icon={faArrowRight}
                 className={styles.draftArrow}
@@ -543,7 +543,7 @@ export default function BookingClient({
       )}
 
       <div className={styles.head}>
-        <h2>Znajdź swój termin</h2>
+        <h2>Find your dates</h2>
       </div>
 
       <div className={styles.searchBox}>
@@ -561,7 +561,7 @@ export default function BookingClient({
             className={`${styles.setGests} ${activeBox === "guests" ? styles.expandedGests : ""}`}
           >
             <div className={styles.pickerWrap}>
-              <span className={styles.label}>Dorośli i dzieci od {childrenFreeAgeLimit} lat:</span>
+              <span className={styles.label}>Adults and children over {childrenFreeAgeLimit}:</span>
               <QuantityPicker
                 onIncrement={() => setAdults(adults + 1)}
                 onDecrement={() => setAdults(adults > 1 ? adults - 1 : 1)}
@@ -572,7 +572,7 @@ export default function BookingClient({
               />
             </div>
             <div className={styles.pickerWrap}>
-              <span className={styles.label}>Dzieci do {childrenFreeAgeLimit} lat:</span>
+              <span className={styles.label}>Children up to {childrenFreeAgeLimit} years old:</span>
               <QuantityPicker
                 onIncrement={() => setChildren(children + 1)}
                 onDecrement={() => setChildren(children > 0 ? children - 1 : 0)}
@@ -582,14 +582,13 @@ export default function BookingClient({
               />
             </div>
             <span className={styles.info}>
-              * Dzieci do {childrenFreeAgeLimit} roku życia bezpłatnie.
+              * Children up to {childrenFreeAgeLimit} years old stay free of charge.
             </span>
             <span className={styles.info}>
-              ** Istnieje możliwość zakwaterowania dodatkowych osób na
-              dostawkach na dalszym etapie rezerwacji.
+              ** It is possible to accommodate additional guests on extra beds at a later stage of the booking.
             </span>
             <Button variant="secondary" onClick={closeAllBoxes}>
-              Gotowe
+              Done
             </Button>
           </div>
         </div>
@@ -606,8 +605,8 @@ export default function BookingClient({
             >
               <span>
                 {bookingDates.start && bookingDates.end
-                  ? `${formatDisplayDate(bookingDates.start)} — ${formatDisplayDate(bookingDates.end)} (nocy: ${bookingDates.count})`
-                  : "Wybierz daty"}
+                  ? `${formatDisplayDate(bookingDates.start)} — ${formatDisplayDate(bookingDates.end)} (nights: ${bookingDates.count})`
+                  : "Select dates"}
               </span>
               <span style={{ fontSize: "0.8rem", color: "#aaa" }}>&#9662;</span>
             </div>
@@ -624,7 +623,7 @@ export default function BookingClient({
               maxBookingDays={maxBookingDays}
             />
             <Button variant="secondary" onClick={closeAllBoxes}>
-              Gotowe
+              Done
             </Button>
           </div>
         </div>
@@ -633,7 +632,7 @@ export default function BookingClient({
           disabled={isSearchDisabled || isSearching}
           onClick={handleSearch}
         >
-          {isSearching ? <FontAwesomeIcon icon={faSpinner} spin /> : "Szukaj"}
+          {isSearching ? <FontAwesomeIcon icon={faSpinner} spin /> : "Search"}
         </Button>
       </div>
 
@@ -645,7 +644,7 @@ export default function BookingClient({
               spin
               className={styles.spinIcon}
             />
-            <p>Sprawdzam dostępność domków...</p>
+            <p>Checking cottage availability...</p>
           </div>
         )}
 
@@ -657,13 +656,13 @@ export default function BookingClient({
           searchResults.propertiesAvailable && (
             <div className={styles.emptyState}>
               {(adults !== initialAdults || children !== initialChildren) && (
-                <p>Zmieniłeś liczbę osób.</p>
+                <p>You have changed the number of guests.</p>
               )}
               {(bookingDates.start !== initialStart ||
                 bookingDates.end !== initialEnd) && (
-                  <p>Zmieniłeś wyszukiwane daty.</p>
+                  <p>You have changed the search dates.</p>
                 )}
-              <p>Kliknij "Szukaj" ponownie, aby odświeżyć wyniki.</p>
+              <p>Click "Search" again to refresh the results.</p>
             </div>
           )}
 
@@ -683,8 +682,8 @@ export default function BookingClient({
                       role="status"
                       aria-live="polite"
                     >
-                      <strong>Uwaga!</strong> Twoja rezerwacja obejmuje dni w
-                      sezonie wysokim:
+                      <strong>Attention!</strong> Your booking includes dates
+                      in the high season:
                       <br></br>{" "}
                       {overlappingSeasons.map((season, index) => {
                         const seasonRange = `${formatSeasonMonthDay(season.startDate)} - ${formatSeasonMonthDay(season.endDate)}`;
@@ -699,8 +698,8 @@ export default function BookingClient({
                           </React.Fragment>
                         );
                       })}
-                      Ceny w tym okresie mogą być wyższe niż w okresie poza
-                      sezonem.
+                      Prices during this period may be higher than outside the
+                      season.
                       <div className={styles.seasonAlertAction}>
                         <button
                           type="button"
@@ -710,9 +709,9 @@ export default function BookingClient({
                           }
                           aria-expanded={isSeasonPriceListOpen}
                         >
-                          Kliknij tutaj,
+                          Click here
                         </button>
-                        <span>aby zobaczyć ceny w sezonie wysokim.</span>
+                        <span>to see high season prices.</span>
                       </div>
                     </div>
 
@@ -731,8 +730,8 @@ export default function BookingClient({
 
                             {season.prices.length === 0 && (
                               <p className={styles.seasonNoPrices}>
-                                Brak zdefiniowanego cennika sezonowego dla
-                                dostępnych domków.
+                                No seasonal price list defined for the
+                                available cottages.
                               </p>
                             )}
 
@@ -745,12 +744,12 @@ export default function BookingClient({
                                   {price.displayName}
                                 </h5>
                                 <div className={styles.seasonTableTitle}>
-                                  Cennik za dobę:
+                                  Price per night:
                                 </div>
 
                                 <div className={styles.seasonTableBlock}>
                                   <div className={styles.seasonTableHeader}>
-                                    W tygodniu
+                                    Weekdays
                                   </div>
                                   {price.weekdayPrices.map((tier) => (
                                     <div
@@ -758,13 +757,13 @@ export default function BookingClient({
                                       className={styles.seasonRow}
                                     >
                                       <span>
-                                        {tier.minGuests}-{tier.maxGuests} osób
+                                        {tier.minGuests}-{tier.maxGuests} persons
                                       </span>
                                       <span>{tier.price} zł</span>
                                     </div>
                                   ))}
                                   <div className={styles.seasonRow}>
-                                    <span>Dostawka</span>
+                                    <span>Extra bed</span>
                                     <span>
                                       +{price.weekdayExtraBedPrice} zł
                                     </span>
@@ -773,7 +772,7 @@ export default function BookingClient({
 
                                 <div className={styles.seasonTableBlock}>
                                   <div className={styles.seasonTableHeader}>
-                                    Weekendy
+                                    Weekends
                                   </div>
                                   {price.weekendPrices.map((tier) => (
                                     <div
@@ -781,13 +780,13 @@ export default function BookingClient({
                                       className={styles.seasonRow}
                                     >
                                       <span>
-                                        {tier.minGuests}-{tier.maxGuests} osób
+                                        {tier.minGuests}-{tier.maxGuests} persons
                                       </span>
                                       <span>{tier.price} zł</span>
                                     </div>
                                   ))}
                                   <div className={styles.seasonRow}>
-                                    <span>Dostawka</span>
+                                    <span>Extra bed</span>
                                     <span>
                                       +{price.weekendExtraBedPrice} zł
                                     </span>
@@ -809,26 +808,26 @@ export default function BookingClient({
                         icon={faExclamationCircle}
                         className={styles.emptyIcon}
                       />
-                      <h3>Brak wolnych terminów</h3>
+                      <h3>No available dates</h3>
                       <p>
-                        Niestety dla wybranej liczby gości i dat nie mamy
-                        dostępnych domków.
+                        Unfortunately, there are no cottages available for the
+                        selected number of guests and dates.
                       </p>
-                      <p>Spróbuj zmienić daty lub zmniejszyć liczbę osób.</p>
+                      <p>Try changing the dates or reducing the number of guests.</p>
                     </div>
                   );
                 }
                 return (
                   <div className={styles.resultsGrid}>
                     <h3 className={styles.resultsTitle}>
-                      Dostępne opcje ({searchResults.propertiesAvailable.length}
+                      Available options ({searchResults.propertiesAvailable.length}
                       )
                     </h3>
                     {showModeSelector && (
                       <div
                         className={styles.modeSelector}
                         role="radiogroup"
-                        aria-label="Tryb rezerwacji"
+                        aria-label="Booking mode"
                       >
                         <label
                           className={`${styles.modeOption} ${bookingMode === "single" ? styles.modeOptionActive : ""} ${singleDisabled ? styles.modeOptionDisabled : ""}`}
@@ -840,7 +839,7 @@ export default function BookingClient({
                             disabled={singleDisabled}
                             onChange={() => setBookingMode("single")}
                           />
-                          <span className={styles.modeLabel}>Jeden domek</span>
+                          <span className={styles.modeLabel}>One cottage</span>
                           <span
                             className={styles.modeIconSingle}
                             aria-hidden="true"
@@ -872,7 +871,7 @@ export default function BookingClient({
                               });
                             }}
                           />
-                          <span className={styles.modeLabel}>Dwa domki</span>
+                          <span className={styles.modeLabel}>Both cottages</span>
                           <span
                             className={styles.modeIconDouble}
                             aria-hidden="true"
@@ -934,7 +933,6 @@ export default function BookingClient({
         }}
         title={unavailableModal.title}
         confirmText="Ok"
-        // cancelText="Odśwież wyniki"
         confirmVariant="warning"
         onConfirm={() => {
           if (unavailableModal.context === 'draft') {
@@ -946,18 +944,18 @@ export default function BookingClient({
         }}
         modalSize="default"
       >
-        <p>Proszę wybrać inny termin lub spróbować później.</p>
+        <p>Please choose a different date or try again later.</p>
       </Modal>
       <Modal
         isOpen={networkModal.isOpen}
         onClose={() => setNetworkModal({ ...networkModal, isOpen: false })}
         title={networkModal.title}
-        confirmText="Spróbuj ponownie"
-        cancelText="Anuluj"
+        confirmText="Try again"
+        cancelText="Cancel"
         confirmVariant="warning"
         onConfirm={async () => { if (networkModal.onRetry) await networkModal.onRetry(); setNetworkModal({ ...networkModal, isOpen: false }); }}
       >
-        <p>{networkModal.message ?? 'Wystąpił błąd sieciowy.'}</p>
+        <p>{networkModal.message ?? 'A network error has occurred.'}</p>
       </Modal>
     </div>
   );
