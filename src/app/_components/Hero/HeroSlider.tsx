@@ -30,35 +30,35 @@ const items: SliderItem[] = [
     title: 'Wilcze Chatki',
     topic: 'Kashubian silence',
     description: 'Two cozy cottages in Szumlesie Królewski, perfect for escaping the hustle and bustle of the city.',
-    image: '/images/img1.jpeg'
+    image: '/images/img1.webp'
   },
   {
     id: 2,
     title: 'Relaxation zone',
     topic: 'Sauna and jacuzzi',
     description: 'Year-round relaxation zone in a closed pavilion with an infrared sauna and wood-fired jacuzzi.',
-    image: '/images/img2.jpeg'
+    image: '/images/img2.webp'
   },
   {
     id: 3,
     title: 'Nature at your fingertips',
     topic: 'The heart of Kashubia',
     description: 'Close to the Kashubian Landscape Park, Wieżyca hill, and picturesque lakes.',
-    image: '/images/img3.jpeg'
+    image: '/images/img3.webp'
   },
   {
     id: 4,
     title: 'Family getaway',
     topic: 'Playground and BBQ',
     description: 'Private terrace with a BBQ and a playground with a trampoline and swings for the little ones.',
-    image: '/images/img4.jpeg'
+    image: '/images/img4.webp'
   },
   {
     id: 5,
     title: 'Comfortable cottages',
     topic: 'Fully equipped',
     description: 'Air-conditioned interiors, kitchenette, and cozy attic bedrooms for 6-8 people.',
-    image: '/images/img5.jpeg'
+    image: '/images/img5.webp'
   },
 ];
 
