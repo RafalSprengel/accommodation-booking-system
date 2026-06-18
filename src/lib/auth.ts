@@ -12,10 +12,10 @@ import { Db } from "mongodb";
 function createAuth(db: Db) {
     return betterAuth({
         database: mongodbAdapter(db),
-        session: {                        // zamiast odpytywac baze przy kazdym przejsciu pomiedzy url chronionym zapisz sesje w ciasteczku, a baza bedzie odpytywana tylko co 5 minut (lub po zmianie sesji)
+        session: {                        // instead of querying the database on every protected route transition, store the session in a cookie; the database will only be queried every 5 minutes (or when the session changes)
             cookieCache: {
                 enabled: true,
-                maxAge: 60 * 5  // 5 minut
+                maxAge: 60 * 5  // 5 minutes
             }
         },
         emailAndPassword: {
@@ -25,7 +25,7 @@ function createAuth(db: Db) {
                 const siteSettings = await getSiteSettings();
                 await sendEmail({
                     to: user.email,
-                    subject: "Reset hasła - Wilcze Chatki",
+                subject: "Password Reset - Wilcze Chatki",
                     react: PasswordReset({ url, siteSettings })
                 });
             }
@@ -59,11 +59,11 @@ function createAuth(db: Db) {
                 try {
                     await sendEmail({
                         to: user.email,
-                        subject: "Potwierdź nowy adres e-mail - Wilcze Chatki",
+                subject: "Confirm New Email Address - Wilcze Chatki",
                         react: EmailVerification({ url })
                     });
                 } catch (err) {
-                    console.error('[auth] sendVerificationEmail: błąd wysyłki:', err);
+                    console.error('[auth] sendVerificationEmail: send error:', err);
                 }
             }
         },
@@ -85,7 +85,7 @@ export async function getAuth(): Promise<AppAuth> {
     await dbConnect();
 
     const db = mongoose.connection.db;
-    if (!db) throw new Error("MongoDB connection.db nie jest dostępne po dbConnect()");
+    if (!db) throw new Error("MongoDB connection.db is not available after dbConnect()");
 
     _auth = createAuth(db);
 

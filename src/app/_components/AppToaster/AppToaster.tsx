@@ -25,7 +25,7 @@ export default function AppToaster() {
               <button
                 type="button"
                 onClick={() => toast.dismiss(t.id)}
-                aria-label="Zamknij powiadomienie"
+                aria-label="Close notification"
                 style={{
                   marginLeft: '8px',
                   border: 'none',

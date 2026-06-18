@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const sessionId = searchParams.get('session_id');
 
   if (!sessionId) {
-    return NextResponse.json({ error: 'Brak parametru session_id.' }, { status: 400 });
+    return NextResponse.json({ error: 'Missing session_id parameter.' }, { status: 400 });
   }
 
   try {
@@ -23,7 +23,7 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Nie udalo sie pobrac statusu sesji Stripe.';
+    const message = error instanceof Error ? error.message : 'Failed to retrieve Stripe session status.';
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

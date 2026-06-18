@@ -8,9 +8,9 @@ import { sendEmail } from "@/lib/sendEmail";
 export const runtime = "nodejs";
 
 const contactRequestSchema = z.object({
-  name: z.string().trim().min(3, "Proszę podać imię i nazwisko."),
-  email: z.string().trim().email("Proszę podać poprawny adres e-mail."),
-  message: z.string().trim().min(10, "Wiadomość powinna mieć min. 10 znaków."),
+  name: z.string().trim().min(3, "Please provide your full name."),
+  email: z.string().trim().email("Please provide a valid email address."),
+  message: z.string().trim().min(10, "The message must be at least 10 characters long."),
 });
 
 export async function POST(request: Request) {
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       const validationError = parsedBody.error.issues[0]?.message;
 
       if (!validationError) {
-        throw new Error("Nie udało się zwalidować formularza kontaktowego.");
+        throw new Error("Failed to validate the contact form.");
       }
 
       return NextResponse.json({ message: validationError }, { status: 400 });
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
 
     await sendEmail({
       to: siteSettings.email || '',
-      subject: `Formularz kontaktowy: ${name}`,
+      subject: `Contact form: ${name}`,
       react: ContactAdminNotification({
         senderName: name,
         senderEmail: email,
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
     await sendEmail({
       to: email,
-      subject: "Potwierdzenie otrzymania wiadomości - Wilcze Chatki",
+      subject: "Message received confirmation - Wilcze Chatki",
       react: ContactAutoReply({
         customerName: name,
         message,
@@ -55,15 +55,15 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(
-      { message: "Wiadomość została wysłana." },
+      { message: "Your message has been sent." },
       { status: 200 },
     );
   } catch (error) {
     const message =
       error instanceof Error
         ? error.message
-        : "Nie udało się wysłać wiadomości.";
-    console.error("[CONTACT] Błąd wysyłki formularza kontaktowego:", error);
+        : "Failed to send the message.";
+    console.error("[CONTACT] Contact form send error:", error);
     return NextResponse.json({ message }, { status: 500 });
   }
 }

@@ -179,7 +179,7 @@ export async function calculateDynamicPrice(
 
   const property = await Property.findById(propertyId);
   if (!property) {
-    throw new Error('Nieruchomość nie została znaleziona w bazie danych.');
+    throw new Error('Property not found in the database.');
   }
 
   const seasons = await Season.find({ isActive: true });
@@ -226,7 +226,7 @@ export async function calculateDynamicPrice(
       const tier = findPriceTier(tiers as IPriceTier[], totalGuests);
 
       if (!tier) {
-        throw new Error(`Brak przedziału cenowego dla ${totalGuests} gości w cenie custom`);
+      throw new Error(`No price tier for ${totalGuests} guests in custom price`);
       }
 
       nightPrice = tier.price;
@@ -252,7 +252,7 @@ export async function calculateDynamicPrice(
         const tier = findPriceTier(tiers as IPriceTier[], totalGuests);
 
         if (!tier) {
-          throw new Error(`Brak przedziału dla ${totalGuests} gości w sezonie "${activeSeason!.name}"`);
+        throw new Error(`No price tier for ${totalGuests} guests in season "${activeSeason!.name}"`);
         }
 
         nightPrice = tier.price;
@@ -263,7 +263,7 @@ export async function calculateDynamicPrice(
         source = 'season';
       } else {
         if (!basicPrices) {
-          throw new Error(`Brak cen podstawowych dla domku "${property.name}"`);
+        throw new Error(`No basic price list for cottage "${property.name}"`);
         }
 
         const tiers = isWeekend
@@ -272,7 +272,7 @@ export async function calculateDynamicPrice(
         const tier = findPriceTier(tiers as IPriceTier[], totalGuests);
 
         if (!tier) {
-          throw new Error(`Brak przedziału dla ${totalGuests} gości w cenach podstawowych`);
+        throw new Error(`No price tier for ${totalGuests} guests in basic prices`);
         }
 
         nightPrice = tier.price;
@@ -299,7 +299,7 @@ export async function calculateDynamicPrice(
     nightlyPrices,
     totalPrice,
     extraBedsTotal: totalExtraBedPrice,
-    summary: `${getNightsCount(start, end)} noclegów, ${totalGuests} gości, ${extraBedsCount} dostawek`,
+    summary: `${getNightsCount(start, end)} nights, ${totalGuests} guests, ${extraBedsCount} extra beds`,
   };
 }
 

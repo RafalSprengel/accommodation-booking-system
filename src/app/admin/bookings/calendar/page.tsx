@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState, useMemo, useRef } from 'react'
 import dayjs from 'dayjs'
-import 'dayjs/locale/pl'
 import isBetween from 'dayjs/plugin/isBetween'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { getCalendarData, CalendarDay, BookingDetails } from '@/actions/getCalendarData'
@@ -11,11 +10,10 @@ import AdminShell from '../../_components/AdminShell/AdminShell'
 
 dayjs.extend(isBetween)
 dayjs.extend(customParseFormat)
-dayjs.locale('pl')
 
 const MONTH_NAMES = [
-  'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
-  'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
 ]
 
 const TooltipWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -98,11 +96,11 @@ const BookingTooltip = ({ details }: { details: BookingDetails }) => {
     return (
       <div className={styles.tooltip}>
         <div className={styles.tooltipHeader}>
-          <h4 className={styles.guestNameText}>Zabl. przez admina</h4>
-          <span className={`${styles.badge} ${styles.badgeBlocked}`}>ZABLOKOWANY</span>
+          <h4 className={styles.guestNameText}>Blocked by admin</h4>
+          <span className={`${styles.badge} ${styles.badgeBlocked}`}>BLOCKED</span>
         </div>
         <div className={styles.tooltipRow}>
-          <span className={styles.label}>🗓️ Termin:</span>
+          <span className={styles.label}>🗓️ Dates:</span>
           <span className={styles.valueText}>{(() => {
             const s = dayjs(details.startDate, 'DD.MM.YYYY')
             let e = dayjs(details.endDate, 'DD.MM.YYYY')
@@ -115,7 +113,7 @@ const BookingTooltip = ({ details }: { details: BookingDetails }) => {
           })()}</span>
         </div>
         <div className={styles.tooltipRow}>
-          <span className={styles.label}>📝 Notatka:</span>
+          <span className={styles.label}>📝 Note:</span>
           <span className={styles.valueText}>{details.adminNotes?.trim() || '-'}</span>
         </div>
       </div>
@@ -126,12 +124,12 @@ const BookingTooltip = ({ details }: { details: BookingDetails }) => {
   const isDeposit = details.paidAmount > 0 && !isPaid
   const paymentClass = isPaid ? styles.paymentPaid : isDeposit ? styles.paymentDeposit : styles.paymentUnpaid
   const paymentLabel = isPaid
-    ? 'Opłacone'
+    ? 'Paid'
     : isDeposit
-      ? `Zaliczka (${details.paidAmount.toFixed(2)} PLN)`
-      : 'Nieopłacone'
-  const statusBadgeText = details.status === 'confirmed' ? 'POTWIERDZONY' : details.status === 'pending' ? 'Klient jest w trakcie rezerwacji' : 'ZABLOKOWANY'
-  const extraBedsText = details.extraBeds && details.extraBeds > 0 ? `${details.extraBeds} dostawka` : '0'
+      ? `Deposit (${details.paidAmount.toFixed(2)} PLN)`
+      : 'Unpaid'
+  const statusBadgeText = details.status === 'confirmed' ? 'CONFIRMED' : details.status === 'pending' ? 'Customer is booking' : 'BLOCKED'
+  const extraBedsText = details.extraBeds && details.extraBeds > 0 ? `${details.extraBeds} extra bed` : '0'
 
   return (
     <div className={styles.tooltip}>
@@ -140,11 +138,11 @@ const BookingTooltip = ({ details }: { details: BookingDetails }) => {
         <span className={`${styles.badge} ${details.status === 'pending' ? styles.badgePending : ''}`}>{statusBadgeText}</span>
       </div>
       <div className={styles.tooltipRow}>
-        <span className={styles.label}>🧾 Zamówienie nr:</span>
+        <span className={styles.label}>🧾 Order no.:</span>
         <span className={styles.valueText}>{details.orderId ? details.orderId : '-'}</span>
       </div>
       <div className={styles.tooltipRow}>
-        <span className={styles.label}>🗓️ Termin:</span>
+        <span className={styles.label}>🗓️ Dates:</span>
         <span className={styles.valueText}>{(() => {
           const s = dayjs(details.startDate, 'DD.MM.YYYY')
           let e = dayjs(details.endDate, 'DD.MM.YYYY')
@@ -155,36 +153,36 @@ const BookingTooltip = ({ details }: { details: BookingDetails }) => {
         })()}</span>
       </div>
       <div className={styles.tooltipRow}>
-        <span className={styles.label}>🌙 Ilość nocy:</span>
+        <span className={styles.label}>🌙 Nights:</span>
         <span className={styles.valueText}>{details.durationDays}</span>
       </div>
       <div className={styles.tooltipRow}>
-        <span className={styles.label}>👨‍👩‍👧 Dorośli:</span>
+        <span className={styles.label}>👨‍👩‍👧 Adults:</span>
         <span className={styles.valueText}>{details.adults}</span>
       </div>
       <div className={styles.tooltipRow}>
-        <span className={styles.label}>🧒 Dzieci (bezpłatnie):</span>
+        <span className={styles.label}>🧒 Children (free):</span>
         <span className={styles.valueText}>{details.children}</span>
       </div>
       <div className={styles.tooltipRow}>
-        <span className={styles.label}>🛏️ Dostawki:</span>
+        <span className={styles.label}>🛏️ Extra beds:</span>
         <span className={styles.valueText}>{extraBedsText}</span>
       </div>
       <div className={styles.tooltipRow}>
-        <span className={styles.label}>💳 Płatność:</span>
+        <span className={styles.label}>💳 Payment:</span>
         <span className={`${styles.valueText} ${paymentClass}`}>{paymentLabel}</span>
       </div>
       <div className={styles.tooltipRow}>
-        <span className={styles.label}>💰 Cena całkowita:</span>
+        <span className={styles.label}>💰 Total price:</span>
         <span className={`${styles.valueText} ${styles.priceValue}`}>{details.totalPrice.toFixed(2)} PLN</span>
       </div>
       <div className={styles.tooltipSection}>
         <div className={styles.tooltipRow}>
-          <span className={styles.label}>📧 E-mail:</span>
+          <span className={styles.label}>📧 Email:</span>
           <span className={styles.valueText}>{details.guestEmail}</span>
         </div>
         <div className={styles.tooltipRow}>
-          <span className={styles.label}>📞 Telefon:</span>
+          <span className={styles.label}>📞 Phone:</span>
           <span className={styles.valueText}>{details.guestPhone}</span>
         </div>
       </div>
@@ -219,7 +217,7 @@ export default function Calendar() {
   }, [currentView])
 
   return (
-    <AdminShell title="Kalendarz">
+    <AdminShell title="Calendar">
 
       <div className={styles.headerControls}>
         <button onClick={() => setCurrentView(prev => prev.subtract(1, 'month'))} className={styles.navButton}>&#8249;</button>
@@ -236,7 +234,7 @@ export default function Calendar() {
         <table className={styles.calendarTable}>
           <thead>
             <tr>
-              <th className={styles.stickyCol}>Data</th>
+              <th className={styles.stickyCol}>Date</th>
               {cabinNames.map(c => <th key={c.id}>{c.name}</th>)}
             </tr>
           </thead>
@@ -246,7 +244,7 @@ export default function Calendar() {
                 <td colSpan={Math.max(2, cabinNames.length + 1)} className={styles.loadingStateCell}>
                   <div className={styles.loadingState}>
                     <span className={styles.loadingSpinner} aria-hidden="true"></span>
-                    <span>Wczytywanie...</span>
+                    <span>Loading...</span>
                   </div>
                 </td>
               </tr>
@@ -265,13 +263,13 @@ export default function Calendar() {
                   {cabinNames.map(cabin => {
                     const cell = row.cabins[cabin.id]
                     if (!cell || cell.status === 'free') {
-                      return <td key={cabin.id} className={styles.free}><span className={styles.statusText}>Wolny</span></td>
+                      return <td key={cabin.id} className={styles.free}><span className={styles.statusText}>Free</span></td>
                     }
 
                     if (cell.status === 'booked' || cell.status === 'blocked_sys') {
                       return (
                         <td key={cabin.id} className={styles.cell} style={{ backgroundColor: isPast ? '#f5f5f5' : cell.details?.color }}>
-                          <span className={styles.statusText}>{cell.status === 'booked' ? 'Zajęty' : 'Zablokowany'}</span>
+                          <span className={styles.statusText}>{cell.status === 'booked' ? 'Occupied' : 'Blocked'}</span>
                           <TooltipWrapper><BookingTooltip details={cell.details!} /></TooltipWrapper>
                         </td>
                       )
@@ -284,14 +282,14 @@ export default function Calendar() {
                             className={`${styles.half} ${cell.checkoutDetails ? styles.bookedHalf : styles.freeHalf}`}
                             style={{ backgroundColor: (!isPast && cell.checkoutDetails) ? cell.checkoutDetails.color : '' }}
                           >
-                            <span className={styles.halfText}>{cell.checkoutDetails ? 'OUT' : 'Wolny'}</span>
+                            <span className={styles.halfText}>{cell.checkoutDetails ? 'OUT' : 'Free'}</span>
                             {cell.checkoutDetails && <TooltipWrapper><BookingTooltip details={cell.checkoutDetails} /></TooltipWrapper>}
                           </div>
                           <div
                             className={`${styles.half} ${cell.checkinDetails ? styles.bookedHalf : styles.freeHalf}`}
                             style={{ backgroundColor: (!isPast && cell.checkinDetails) ? cell.checkinDetails.color : '' }}
                           >
-                            <span className={styles.halfText}>{cell.checkinDetails ? 'IN' : 'Wolny'}</span>
+                            <span className={styles.halfText}>{cell.checkinDetails ? 'IN' : 'Free'}</span>
                             {cell.checkinDetails && <TooltipWrapper><BookingTooltip details={cell.checkinDetails} /></TooltipWrapper>}
                           </div>
                         </div>

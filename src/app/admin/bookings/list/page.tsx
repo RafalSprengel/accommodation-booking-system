@@ -55,35 +55,35 @@ export default async function BookingsListPage({ searchParams }: BookingsListPag
 
   return (
     <AdminShell
-      title="Lista rezerwacji"
-      description="Przeglądaj, edytuj lub usuwaj istniejące rezerwacje."
+      title="Booking list"
+      description="Browse, edit or delete existing bookings."
     >
 
       <div className={styles.filtersWrap}>
-        <div className={styles.filters} role="navigation" aria-label="Filtr statusu">
+        <div className={styles.filters} role="navigation" aria-label="Status filter">
           <Link
             href={`/admin/bookings/list?status=confirmed${orderQuery ? `&q=${orderQuery}` : ''}`}
             className={`${styles.filterBtn} ${statusFilter === 'confirmed' ? styles.filterBtnConfirmedActive : ''}`}
           >
-            Potwierdzone
+            Confirmed
           </Link>
           <Link
             href={`/admin/bookings/list?status=rejected${orderQuery ? `&q=${orderQuery}` : ''}`}
             className={`${styles.filterBtn} ${statusFilter === 'rejected' ? styles.filterBtnFailedActive : ''}`}
           >
-            Odrzucone
+            Rejected
           </Link>
           <Link
             href={`/admin/bookings/list?status=pending${orderQuery ? `&q=${orderQuery}` : ''}`}
             className={`${styles.filterBtn} ${statusFilter === 'pending' ? styles.filterBtnPendingActive : ''}`}
           >
-            Oczekujące
+            Pending
           </Link>
           <Link
             href={`/admin/bookings/list?status=all${orderQuery ? `&q=${orderQuery}` : ''}`}
             className={`${styles.filterBtn} ${statusFilter === 'all' ? styles.filterBtnActive : ''}`}
           >
-            Wszystkie
+            All
           </Link>
         </div>
 
@@ -92,7 +92,7 @@ export default async function BookingsListPage({ searchParams }: BookingsListPag
 
       {filteredBookings.length === 0 ? (
         <div className={styles.emptyState}>
-          <p>{orderQuery.length > 0 ? 'Brak rezerwacji dla podanej frazy.' : 'Brak rezerwacji w systemie.'}</p>
+          <p>{orderQuery.length > 0 ? 'No bookings matching the search query.' : 'No bookings in the system.'}</p>
         </div>
       ) : (
         <>
@@ -101,7 +101,7 @@ export default async function BookingsListPage({ searchParams }: BookingsListPag
           )}
 
           {upcomingBookings.length > 0 && pastBookings.length > 0 && (
-            <h2 className={styles.pastDivider}>Przeszłe rezerwacje</h2>
+            <h2 className={styles.pastDivider}>Past bookings</h2>
           )}
 
           {pastBookings.length > 0 && (

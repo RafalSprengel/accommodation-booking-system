@@ -20,11 +20,11 @@ export default function BookingDetailsContent({
     setIsDeleting(true);
     try {
       await onDelete();
-      toast.success("Rezerwacja została usunięta.");
+      toast.success("Booking has been deleted.");
       router.push("/admin/bookings/list");
       router.refresh();
     } catch {
-      toast.error("Wystąpił błąd podczas usuwania.");
+      toast.error("An error occurred while deleting.");
       setIsDeleting(false);
     }
   };
@@ -39,18 +39,18 @@ export default function BookingDetailsContent({
     <>
       {/* errors shown via toast */}
       <div className={styles.infoBlock}>
-        <h3 className={styles.cardTitle}>Podsumowanie</h3>
+        <h3 className={styles.cardTitle}>Summary</h3>
         <div className={styles.infoRow}>
           <span className={styles.label}>ID:</span>
           <code className={styles.code}>{booking._id}</code>
         </div>
         <div className={styles.infoRow}>
-          <span className={styles.label}>Utworzono:</span>
+          <span className={styles.label}>Created:</span>
           <span>{new Date(booking.createdAt).toLocaleString("pl-PL")}</span>
         </div>
       </div>
       <div className={styles.actionsBlock}>
-        <h3 className={styles.cardTitle}>Strefa niebezpieczna</h3>
+        <h3 className={styles.cardTitle}>Danger zone</h3>
         <>
           <Button
             type="button"
@@ -58,23 +58,23 @@ export default function BookingDetailsContent({
             onClick={openConfirm}
             disabled={isDeleting}
           >
-            {isDeleting ? "⏳ Usuwanie..." : "🗑️ Usuń Rezerwację"}
+            {isDeleting ? "⏳ Deleting..." : "🗑️ Delete Booking"}
           </Button>
           <Modal
             isOpen={showConfirm}
             onClose={closeConfirm}
             onConfirm={confirmDelete}
-            title={"Usuń rezerwację"}
-            confirmText={"Usuń"}
-            cancelText={"Anuluj"}
+            title={"Delete booking"}
+            confirmText={"Delete"}
+            cancelText={"Cancel"}
             confirmVariant="danger"
             isLoading={isDeleting}
           >
-            <p>Czy na pewno usunąć tę rezerwację? Tej operacji nie można cofnąć.</p>
+            <p>Are you sure you want to delete this booking? This action cannot be undone.</p>
           </Modal>
         </>
         <p className={styles.deleteHint}>
-          Usunięcie rezerwacji zwolni termin w kalendarzu.
+          Deleting a booking will free the date in the calendar.
         </p>
       </div>
     </>

@@ -4,13 +4,13 @@ export default function Loading() {
   return (
     <div className={styles.adminSettingsContainer}>
       <header className={styles.header}>
-        <h1>Ustawienia rezerwacji</h1>
-        <p className={styles.adminSubtitle}>Zarządzaj globalnymi zasadami rezerwacji</p>
+        <h1>Booking Settings</h1>
+        <p className={styles.adminSubtitle}>Manage global booking rules</p>
       </header>
 
       <div className={styles.loadingState} role="status" aria-live="polite">
         <span className={styles.loadingSpinner} aria-hidden="true"></span>
-        <span>Wczytywanie...</span>
+        <span>Loading...</span>
       </div>
     </div>
   )

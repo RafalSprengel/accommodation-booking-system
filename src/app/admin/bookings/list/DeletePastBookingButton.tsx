@@ -15,10 +15,10 @@ export default function DeletePastBookingButton({ bookingId }: { bookingId: stri
     setIsDeleting(true);
     const result = await deleteBookingAction(bookingId);
     if (result.success) {
-      toast.success("Rezerwacja została usunięta.");
+      toast.success("Booking has been deleted.");
       router.refresh();
     } else {
-      toast.error("Błąd: " + (result.message || "Nie udało się usunąć rezerwacji."));
+      toast.error("Error: " + (result.message || "Failed to delete booking."));
       setIsDeleting(false);
     }
     setShowConfirm(false);
@@ -32,19 +32,19 @@ export default function DeletePastBookingButton({ bookingId }: { bookingId: stri
         onClick={() => setShowConfirm(true)}
         disabled={isDeleting}
       >
-        {isDeleting ? "Usuwanie..." : "Usuń"}
+        {isDeleting ? "Deleting..." : "Delete"}
       </Button>
       <Modal
         isOpen={showConfirm}
         onClose={() => setShowConfirm(false)}
         onConfirm={handleDelete}
-        title="Usuń rezerwację"
-        confirmText="Usuń"
-        cancelText="Anuluj"
+        title="Delete booking"
+        confirmText="Delete"
+        cancelText="Cancel"
         confirmVariant="danger"
         isLoading={isDeleting}
       >
-        <p>Czy na pewno usunąć tę rezerwację? Tej operacji nie można cofnąć.</p>
+        <p>Are you sure you want to delete this booking? This action cannot be undone.</p>
       </Modal>
     </>
   );

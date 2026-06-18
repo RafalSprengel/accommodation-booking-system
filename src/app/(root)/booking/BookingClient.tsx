@@ -543,7 +543,7 @@ export default function BookingClient({
       )}
 
       <div className={styles.head}>
-        <h2>Find your dates</h2>
+        <h2>Find dates:</h2>
       </div>
 
       <div className={styles.searchBox}>

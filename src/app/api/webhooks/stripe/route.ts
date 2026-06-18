@@ -16,7 +16,7 @@ async function getBookingObjectIdsFromSession(session: Stripe.Checkout.Session) 
   const bookingIdsMetadata = session.metadata?.bookingIds;
 
   if (!bookingIdsMetadata) {
-    throw new Error("Brak bookingIds w metadata sesji Stripe.");
+    throw new Error("Missing bookingIds in Stripe session metadata.");
   }
 
   const bookingIds = bookingIdsMetadata
@@ -25,13 +25,13 @@ async function getBookingObjectIdsFromSession(session: Stripe.Checkout.Session) 
     .filter((id) => id.length > 0);
 
   if (bookingIds.length === 0) {
-    throw new Error("Niepoprawne bookingIds w metadata sesji Stripe.");
+    throw new Error("Invalid bookingIds in Stripe session metadata.");
   }
 
   const invalidBookingId = bookingIds.find((id) => !Types.ObjectId.isValid(id));
 
   if (invalidBookingId) {
-    throw new Error("Niepoprawne ID rezerwacji w metadata sesji Stripe.");
+    throw new Error("Invalid booking ID in Stripe session metadata.");
   }
 
   return bookingIds.map((id) => new Types.ObjectId(id));
@@ -43,13 +43,13 @@ export async function POST(request: Request) {
   const signature = request.headers.get("stripe-signature");
 
   if (!signature) {
-    return NextResponse.json({ error: "Brak naglowka stripe-signature." }, { status: 400 });
+    return NextResponse.json({ error: "Missing stripe-signature header." }, { status: 400 });
   }
 
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   if (!webhookSecret) {
-    return NextResponse.json({ error: "Brak STRIPE_WEBHOOK_SECRET." }, { status: 500 });
+    return NextResponse.json({ error: "Missing STRIPE_WEBHOOK_SECRET." }, { status: 500 });
   }
 
   const payload = await request.text();
@@ -59,8 +59,8 @@ export async function POST(request: Request) {
   try {
     event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Nieznany blad weryfikacji webhooka.";
-    console.error("[WEBHOOK] Błąd weryfikacji webhooka:", message);
+    const message = error instanceof Error ? error.message : "Unknown webhook verification error.";
+    console.error("[WEBHOOK] Webhook verification error:", message);
     return NextResponse.json({ error: message }, { status: 400 });
   }
 
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
 
       if (updateResult.matchedCount !== objectIds.length) {
         return NextResponse.json(
-          { error: "Nie znaleziono wszystkich rezerwacji do potwierdzenia platnosci." },
+          { error: "Could not find all bookings to confirm payment." },
           { status: 404 }
         );
       }
@@ -136,7 +136,7 @@ export async function POST(request: Request) {
 
           await sendBookingEmail({
             to: primary.guestEmail,
-            subject: "Potwierdzenie rezerwacji w Wilcze Chatki",
+            subject: "Booking Confirmation - Wilcze Chatki",
             react: BookingConfirmationToClient({
               customerName,
               orderNumber,
@@ -167,7 +167,7 @@ export async function POST(request: Request) {
           if (adminNotifEmail) {
             await sendBookingEmail({
               to: adminNotifEmail,
-              subject: `Nowa rezerwacja: ${customerName} (${orderNumber})`,
+              subject: `New booking: ${customerName} (${orderNumber})`,
               react: BookingConfirmationToAdmin({
                 customerName,
                 orderNumber,
@@ -195,10 +195,10 @@ export async function POST(request: Request) {
               }),
             });
           } else {
-            console.warn("[WEBHOOK] Brak adresu email admina – mail do admina nie został wysłany.");
+            console.warn("[WEBHOOK] Missing admin email address – admin notification email was not sent.");
           }
         } catch (mailError) {
-          console.error("Błąd wysyłki maila potwierdzającego rezerwację:", mailError);
+          console.error("Error sending booking confirmation email:", mailError);
         }
       }
 
@@ -222,7 +222,7 @@ export async function POST(request: Request) {
 
     if (cancelResult.matchedCount !== objectIds.length) {
       return NextResponse.json(
-        { error: "Nie znaleziono wszystkich rezerwacji do oznaczenia jako nieudane po nieudanej platnosci." },
+        { error: "Could not find all bookings to mark as failed after unsuccessful payment." },
         { status: 404 }
       );
     }
@@ -234,7 +234,7 @@ export async function POST(request: Request) {
         const siteSettings = await getSiteSettings();
         await sendBookingEmail({
           to: failedBooking.guestEmail,
-          subject: "Nieudana płatność za rezerwację w Wilcze Chatki",
+          subject: "Failed Payment for Booking - Wilcze Chatki",
           react: BookingFailure({
             customerName: `${failedBooking.firstName || ''} ${failedBooking.lastName || ''}`.trim(),
             orderNumber: failedBooking.orderId ?? '',
@@ -244,14 +244,14 @@ export async function POST(request: Request) {
           }),
         });
       } catch (mailError) {
-        console.error("Błąd wysyłki maila o nieudanej płatności:", mailError);
+        console.error("Error sending failed payment email:", mailError);
       }
     }
 
     return NextResponse.json({ received: true }, { status: 200 });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Blad podczas aktualizacji rezerwacji.";
-    console.error("[WEBHOOK] Błąd ogólny:", message, error);
+    const message = error instanceof Error ? error.message : "Error updating booking.";
+    console.error("[WEBHOOK] General error:", message, error);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

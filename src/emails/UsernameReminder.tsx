@@ -70,24 +70,24 @@ export const UsernameReminder = ({
       <Body style={mainStyle}>
         <Container style={containerStyle}>
           <Heading style={headingStyle}>
-            Przypomnienie loginu - Wilcze Chatki
+            Username reminder – Wilcze Chatki
           </Heading>
           <Text style={textStyle}>
-            Witaj,
+            Hello,
           </Text>
           <Text style={textStyle}>
-            otrzymaliśmy prośbę o przypomnienie loginu do panelu administratora.
+            we received a request to remind the login name for the admin panel.
           </Text>
           <Text style={textStyle}>
-            Twój login to: <strong>{username}</strong>
+            Your login is: <strong>{username}</strong>
           </Text>
           <Text style={textStyle}>
-            Jeśli to nie Ty wysłałeś tę prośbę, zignoruj tę wiadomość.
+            If you did not send this request, please ignore this message.
           </Text>
 
           <Hr style={footerHrStyle} />
           <Text style={footerTextStyle}>
-            W razie pytań prosimy o kontakt na {siteSettings.email} lub telefonicznie pod numerem {siteSettings.phone}.
+            If you have any questions, please contact us at {siteSettings.email} or by phone at {siteSettings.phone}.
           </Text>
           <Link href="https://rafalsprengel.com" style={footerLinkStyle}>
             rafalsprengel.com

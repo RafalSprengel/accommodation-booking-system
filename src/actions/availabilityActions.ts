@@ -17,11 +17,11 @@ export async function isRangeAvailable(
   endDate: string,
   propertyIds?: string[]
 ): Promise<AvailabilityCheckResult> {
-  if (!startDate || !endDate) throw new Error('Brak daty rozpoczęcia lub zakończenia')
+  if (!startDate || !endDate) throw new Error('Missing start or end date')
   const start = new Date(startDate)
   const end = new Date(endDate)
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) throw new Error('Nieprawidłowy format daty')
-  if (end <= start) throw new Error('Data zakończenia musi być późniejsza niż data rozpoczęcia')
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) throw new Error('Invalid date format')
+  if (end <= start) throw new Error('End date must be later than start date')
 
   await dbConnect()
 

@@ -46,11 +46,11 @@ export default function SiteSettingsForm() {
     const newErrors: Record<string, string> = {}
 
     if (settings.phone.trim() && !/^\+\d{7,15}$/.test(settings.phone.trim())) {
-      newErrors.phone = 'Numer w formacie +48512345678 (bez spacji).'
+      newErrors.phone = 'Number in format +48512345678 (no spaces).'
     }
 
     if (settings.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(settings.email.trim())) {
-      newErrors.email = 'Podaj prawidłowy adres e-mail.'
+      newErrors.email = 'Provide a valid email address.'
     }
 
     setErrors(newErrors)
@@ -74,7 +74,7 @@ export default function SiteSettingsForm() {
         toast.error(result.message)
       }
     } catch (error) {
-      toast.error('Wystąpił nieoczekiwany błąd.')
+      toast.error('An unexpected error occurred.')
       console.error(error)
     } finally {
       setIsSaving(false)
@@ -93,9 +93,9 @@ export default function SiteSettingsForm() {
 
   return (
     <AdminSection
-      title="Dane firmy / obiektu"
-      badge="Globalne"
-      description="Dane te są wyświetlane na stronie jako informacja dla odwiedzających."
+      title="Company / property data"
+      badge="Global"
+      description="This data is displayed on the site as information for visitors."
     >
       <div className={styles.siteSettings__editHeader}>
         <button
@@ -103,7 +103,7 @@ export default function SiteSettingsForm() {
           className={styles.siteSettings__toggleEdit}
           onClick={handleToggleEdit}
         >
-          {isEditing ? 'Anuluj' : 'Edytuj'}
+          {isEditing ? 'Cancel' : 'Edit'}
         </button>
       </div>
 
@@ -118,7 +118,7 @@ export default function SiteSettingsForm() {
             {/* phoneDisplay removed from form - only phone is editable */}
 
             <div className={styles.siteSettings__inputGroup}>
-              <label htmlFor="site-phone-href">Numer telefonu:</label>
+              <label htmlFor="site-phone-href">Phone number:</label>
               <input
                 id="site-phone"
                 type="text"
@@ -136,7 +136,7 @@ export default function SiteSettingsForm() {
             </div>
 
             <div className={styles.siteSettings__inputGroup}>
-              <label htmlFor="site-email">E-mail kontaktowy:</label>
+              <label htmlFor="site-email">Contact email:</label>
               <input
                 id="site-email"
                 type="email"
@@ -163,7 +163,7 @@ export default function SiteSettingsForm() {
             </div>
 
             <div className={styles.siteSettings__inputGroup}>
-              <label htmlFor="site-bank-account">Numer konta bankowego:</label>
+              <label htmlFor="site-bank-account">Bank account number:</label>
               <input
                 id="site-bank-account"
                 type="text"
@@ -183,7 +183,7 @@ export default function SiteSettingsForm() {
                   onClick={handleSave}
                   disabled={!hasChanges || isSaving}
                 >
-                  {isSaving ? 'Zapisywanie...' : 'Zapisz'}
+                  {isSaving ? 'Saving...' : 'Save'}
                 </button>
               </div>
             )}

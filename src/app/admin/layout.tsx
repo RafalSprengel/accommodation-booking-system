@@ -77,12 +77,12 @@ export default function AdminLayout({
 
         <aside className={`${styles.adminSidebar} ${isMobileMenuOpen ? styles.mobileOpen : ''}`}>
           <div className={styles.sidebarHeader}>
-            <Link href='/admin' onClick={handleMenuLinkClick}><h2>Panel Admina</h2></Link>
+            <Link href='/admin' onClick={handleMenuLinkClick}><h2>Admin Panel</h2></Link>
           </div>
 
           <nav className={styles.sidebarNav}>
             <div>
-              <div className={styles.navGroupTitle}>Zarządzanie</div>
+              <div className={styles.navGroupTitle}>Management</div>
 
               <div>
                 <div
@@ -92,7 +92,7 @@ export default function AdminLayout({
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span className={styles.navIcon}>📅</span>
-                    <span>Rezerwacje</span>
+                    <span>Bookings</span>
                   </div>
                   <span>{isBookingsOpen ? '▲' : '▼'}</span>
                 </div>
@@ -103,28 +103,28 @@ export default function AdminLayout({
                     className={`${styles.subLink} ${pathname === '/admin/bookings/add' ? styles.active : ''}`}
                     onClick={handleMenuLinkClick}
                   >
-                    ➕ Dodaj nową
+                    ➕ Add new
                   </Link>
                   <Link
                     href="/admin/bookings/calendar"
                     className={`${styles.subLink} ${pathname === '/admin/bookings/calendar' ? styles.active : ''}`}
                     onClick={handleMenuLinkClick}
                   >
-                    🗓️ Kalendarz
+                    🗓️ Calendar
                   </Link>
                   <Link
                     href="/admin/bookings/list"
                     className={`${styles.subLink} ${pathname === '/admin/bookings/list' ? styles.active : ''}`}
                     onClick={handleMenuLinkClick}
                   >
-                    📋 Lista rezerwacji
+                    📋 Booking list
                   </Link>
                   <Link
                     href="/admin/bookings/block"
                     className={`${styles.subLink} ${pathname === '/admin/bookings/block' ? styles.active : ''}`}
                     onClick={handleMenuLinkClick}
                   >
-                    🚫 Blokuj terminy
+                    🚫 Block dates
                   </Link>
                 </div>
               </div>
@@ -135,7 +135,7 @@ export default function AdminLayout({
                 onClick={handleMenuLinkClick}
               >
                 <span className={styles.navIcon}>🏠</span>
-                <span>Domki</span>
+                <span>Properties</span>
               </Link>
 
               <Link
@@ -144,7 +144,7 @@ export default function AdminLayout({
                 onClick={handleMenuLinkClick}
               >
                 <span className={styles.navIcon}>💰</span>
-                <span>Ceny</span>
+                <span>Prices</span>
               </Link>
 
               <div>
@@ -155,7 +155,7 @@ export default function AdminLayout({
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span className={styles.navIcon}>💳</span>
-                    <span>Płatności</span>
+                    <span>Payments</span>
                   </div>
                   <span>{isPaymentsOpen ? '▲' : '▼'}</span>
                 </div>
@@ -166,28 +166,28 @@ export default function AdminLayout({
                     className={`${styles.subLink} ${isPaymentsOnlineActive ? styles.active : ''}`}
                     onClick={handleMenuLinkClick}
                   >
-                    💳 Płatności online
+                    💳 Online payments
                   </Link>
                   <Link
                     href="/admin/payments/offline"
                     className={`${styles.subLink} ${isPaymentsOfflineActive ? styles.active : ''}`}
                     onClick={handleMenuLinkClick}
                   >
-                    💵 Gotówka / Przelew
+                    💵 Cash / Transfer
                   </Link>
                 </div>
               </div>
             </div>
 
             <div>
-              <div className={styles.navGroupTitle}>Konfiguracja</div>
+              <div className={styles.navGroupTitle}>Configuration</div>
               <Link
                 href="/admin/settings"
                 className={`${styles.navLink} ${isSettingsActive ? styles.active : ''}`}
                 onClick={handleMenuLinkClick}
               >
                 <span className={styles.navIcon}>⚙️</span>
-                Ustawienia systemu
+                System settings
               </Link>
               <Link
                 href="/admin/settings/booking"
@@ -195,7 +195,7 @@ export default function AdminLayout({
                 onClick={handleMenuLinkClick}
               >
                 <span className={styles.navIcon}>📅</span>
-                Ustawienia rezerwacji
+                Booking settings
               </Link>
             </div>
 
@@ -208,13 +208,13 @@ export default function AdminLayout({
               onClick={handleMenuLinkClick}
             >
               <span className={styles.navIcon}>🌐</span>
-              Wróć na stronę
+              Back to site
             </Link>
             <button className={styles.btnLogout} onClick={async () => {
               await authClient.signOut();
               router.push('/admin-login');
             }}>
-              Wyloguj się
+              Log out
             </button>
           </div>
         </aside>

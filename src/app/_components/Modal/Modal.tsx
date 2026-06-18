@@ -24,9 +24,9 @@ export default function Modal({
   onConfirm,
   title,
   children,
-  confirmText = 'Potwierdź',
+  confirmText = 'Confirm',
   cancelText,
-  loadingText = 'Chwileczkę...',
+  loadingText = 'Please wait...',
   confirmVariant = 'danger',
   isLoading = false,
   modalSize = 'default'

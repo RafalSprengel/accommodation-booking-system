@@ -4,11 +4,11 @@ import styles from './page.module.css';
 
 export default function Loading() {
   return (
-    <AdminShell title="Lista rezerwacji" description="Przeglądaj, edytuj lub usuwaj istniejące rezerwacje.">
+    <AdminShell title="Booking list" description="Browse, edit or delete existing bookings.">
 
       <div className={styles.loadingState} role="status" aria-live="polite">
         <span className={styles.loadingSpinner} aria-hidden="true"></span>
-        <span>Wczytywanie...</span>
+        <span>Loading...</span>
       </div>
     </AdminShell>
   )

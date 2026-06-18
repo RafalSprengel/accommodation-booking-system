@@ -46,10 +46,10 @@ export async function clearAllData() {
       await db.collection('verification').deleteMany({});
     }
 
-    return { success: true, message: 'Wszystkie dane zostały usunięte (w tym użytkownicy)' };
+    return { success: true, message: 'All data has been deleted (including users)' };
   } catch (error) {
-    console.error('Błąd podczas czyszczenia danych:', error);
-    return { success: false, error: 'Nie udało się usunąć danych' };
+    console.error('Error clearing data:', error);
+    return { success: false, error: 'Failed to delete data' };
   }
 }
 
@@ -111,12 +111,12 @@ export async function seedSeasons() {
     revalidatePath('/admin', 'layout');
     return {
       success: true,
-      message: `Utworzono ${created.length} sezonów`,
+      message: `Created ${created.length} seasons`,
       data: created.map(toPlainObject),
     };
   } catch (error) {
-    console.error('Błąd podczas seedowania sezonów:', error);
-    return { success: false, error: 'Nie udało się utworzyć sezonów' };
+    console.error('Error seeding seasons:', error);
+    return { success: false, error: 'Failed to create seasons' };
   }
 }
 
@@ -157,12 +157,12 @@ export async function seedProperties() {
     revalidatePath('/admin', 'layout');
     return {
       success: true,
-      message: `Utworzono ${created.length} domków`,
+      message: `Created ${created.length} cottages`,
       data: created.map(toPlainObject),
     };
   } catch (error) {
-    console.error('Błąd podczas seedowania domków:', error);
-    return { success: false, error: 'Nie udało się utworzyć domków' };
+    console.error('Error seeding cottages:', error);
+    return { success: false, error: 'Failed to create cottages' };
   }
 }
 
@@ -177,7 +177,7 @@ export async function seedPropertyPrices() {
     const properties = await Property.find({}).lean();
 
     if (properties.length === 0) {
-      return { success: false, error: 'Najpierw uruchom seedProperties()' };
+      return { success: false, error: 'First run seedProperties()' };
     }
 
     const pricesToInsert = [
@@ -258,12 +258,12 @@ export async function seedPropertyPrices() {
     revalidatePath('/admin', 'layout');
     return {
       success: true,
-      message: `Utworzono ${created.length} rekordów cen w PropertyPrices`,
+      message: `Created ${created.length} price records in PropertyPrices`,
       data: created.map(toPlainObject),
     };
   } catch (error) {
-    console.error('Błąd podczas seedowania cen:', error);
-    return { success: false, error: 'Nie udało się utworzyć cen' };
+    console.error('Error seeding prices:', error);
+    return { success: false, error: 'Failed to create prices' };
   }
 }
 
@@ -294,12 +294,12 @@ export async function seedPriceConfigDefaults() {
     revalidatePath('/admin', 'layout');
     return {
       success: true,
-      message: 'Domyślna konfiguracja cen została utworzona',
+      message: 'Default price configuration created',
       data: toPlainObject(created),
     };
   } catch (error) {
-    console.error('Błąd podczas seedowania konfiguracji cen:', error);
-    return { success: false, error: 'Nie udało się utworzyć konfiguracji cen' };
+    console.error('Error seeding price configuration:', error);
+    return { success: false, error: 'Failed to create price configuration' };
   }
 }
 
@@ -316,12 +316,12 @@ export async function seedSystemConfig() {
     revalidatePath('/admin', 'layout');
     return {
       success: true,
-      message: 'Konfiguracja systemowa została utworzona',
+      message: 'System configuration created',
       data: toPlainObject(created),
     };
   } catch (error) {
-    console.error('Błąd podczas seedowania konfiguracji systemowej:', error);
-    return { success: false, error: 'Nie udało się utworzyć konfiguracji systemowej' };
+    console.error('Error seeding system configuration:', error);
+    return { success: false, error: 'Failed to create system configuration' };
   }
 }
 
@@ -340,12 +340,12 @@ export async function seedSiteSettings() {
     revalidatePath('/admin', 'layout');
     return {
       success: true,
-      message: 'Ustawienia strony zostały utworzone',
+      message: 'Site settings created',
       data: toPlainObject(created),
     };
   } catch (error) {
-    console.error('Błąd podczas seedowania ustawień strony:', error);
-    return { success: false, error: 'Nie udało się utworzyć ustawień strony' };
+    console.error('Error seeding site settings:', error);
+    return { success: false, error: 'Failed to create site settings' };
   }
 }
 
@@ -368,12 +368,12 @@ export async function seedBookingConfig() {
     revalidatePath('/admin', 'layout');
     return {
       success: true,
-      message: 'Konfiguracja rezerwacji została utworzona',
+      message: 'Booking configuration created',
       data: toPlainObject(created),
     };
   } catch (error) {
-    console.error('Błąd podczas seedowania konfiguracji rezerwacji:', error);
-    return { success: false, error: 'Nie udało się utworzyć konfiguracji rezerwacji' };
+    console.error('Error seeding booking configuration:', error);
+    return { success: false, error: 'Failed to create booking configuration' };
   }
 }
 
@@ -383,7 +383,7 @@ export async function seedBookings() {
 
     const properties = await Property.find({ isActive: true }).lean();
     if (properties.length < 2) {
-      return { success: false, error: 'Najpierw utwórz minimum 2 domki' };
+      return { success: false, error: 'First create at least 2 cottages' };
     }
 
     const today = new Date();
@@ -460,12 +460,12 @@ export async function seedBookings() {
     revalidatePath('/admin', 'layout');
     return {
       success: true,
-      message: `Utworzono ${created.length} rezerwacji`,
+      message: `Created ${created.length} bookings`,
       data: created.map(toPlainObject),
     };
   } catch (error) {
-    console.error('Błąd podczas seedowania rezerwacji:', error);
-    return { success: false, error: 'Nie udało się utworzyć rezerwacji' };
+    console.error('Error seeding bookings:', error);
+    return { success: false, error: 'Failed to create bookings' };
   }
 }
 
@@ -507,13 +507,13 @@ export async function seedAllData() {
     return {
       success: true,
       message:
-        'Wszystkie dane zostały zresetowane. ' +
-        `Sezony: ${seasons.data?.length}, Domki: ${props.data?.length}, ` +
-        `Rekordy cen: ${prices.data?.length}, Rezerwacje: ${bookings.data?.length}`,
+        'All data has been reset. ' +
+        `Seasons: ${seasons.data?.length}, Cottages: ${props.data?.length}, ` +
+        `Price records: ${prices.data?.length}, Bookings: ${bookings.data?.length}`,
     };
   } catch (error) {
-    console.error('Błąd podczas seedowania wszystkich danych:', error);
-    return { success: false, error: 'Nie udało się zresetować danych' };
+    console.error('Error seeding all data:', error);
+    return { success: false, error: 'Failed to reset data' };
   }
 }
 
@@ -533,7 +533,7 @@ export async function seedAdmin() {
     const auth = await getAuth();
 
     const db = mongoose.connection.db;
-    if (!db) throw new Error('Brak połączenia z MongoDB');
+    if (!db) throw new Error('No MongoDB connection');
 
     // Usuwamy istniejących użytkowników o tych samych emailach/username'ach, aby uniknąć konfliktów
     const emails = admins.map(a => a.email);
@@ -572,10 +572,10 @@ export async function seedAdmin() {
 
     return {
       success: true,
-      message: `Utworzono ${createdCount} administratorów za pomocą Better Auth.`,
+      message: `Created ${createdCount} administrators using Better Auth.`,
     };
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Nieznany błąd';
+    const message = error instanceof Error ? error.message : 'Unknown error';
     console.error('seedAdmin error:', error);
     return { success: false, error: message };
   }
@@ -585,7 +585,7 @@ export async function seedExactBetterAuthUser() {
   try {
     await dbConnect();
     const db = mongoose.connection.db;
-    if (!db) throw new Error('Brak polaczenia z MongoDB');
+    if (!db) throw new Error('No MongoDB connection');
 
     const userId = new Types.ObjectId('69fddb9a2e82f94116ef90c4');
     const accountId = new Types.ObjectId('69fddb9a2e82f94116ef90c5');
@@ -617,10 +617,10 @@ export async function seedExactBetterAuthUser() {
 
     return {
       success: true,
-      message: 'Utworzono rekordy better-auth user i account.',
+      message: 'Created better-auth user and account records.',
     };
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Nieznany blad';
+    const message = error instanceof Error ? error.message : 'Unknown error';
     console.error('seedExactBetterAuthUser error:', error);
     return {
       success: false,

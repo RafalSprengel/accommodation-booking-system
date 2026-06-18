@@ -15,7 +15,7 @@ import { buildBookingOverlapFilter } from "@/utils/bookingOverlap";
 import { resolveOccupiedPropertyIdsFromBookings } from "@/utils/lazyAvailabilityCleanup";
 
 export async function createCheckoutSession(bookingData: BookingData) {
-  if (!bookingData) throw new Error("Brak danych rezerwacji.");
+  if (!bookingData) throw new Error("Missing booking data.");
 
   const { startDate, endDate, adults, children, clientData, invoice, invoiceData, orders } = bookingData;
 
@@ -32,42 +32,42 @@ export async function createCheckoutSession(bookingData: BookingData) {
     !Array.isArray(orders) ||
     orders.length === 0
   ) {
-    throw new Error("Niekompletne dane rezerwacji.");
+    throw new Error("Incomplete booking data.");
   }
 
   await dbConnect();
 
   for (const order of orders) {
     if (!order.propertyId || !Types.ObjectId.isValid(order.propertyId)) {
-      throw new Error("Nieprawidłowe ID obiektu w zamówieniu.");
+      throw new Error("Invalid property ID in order.");
     }
 
     if (!order.displayName || order.displayName.trim().length === 0) {
-      throw new Error("Brak nazwy obiektu w zamówieniu.");
+      throw new Error("Missing property name in order.");
     }
 
     if (!Number.isFinite(order.price) || order.price <= 0) {
-      throw new Error("Nieprawidłowa cena w zamówieniu.");
+      throw new Error("Invalid price in order.");
     }
 
     if (!Number.isInteger(order.guests) || order.guests <= 0) {
-      throw new Error("Nieprawidłowa liczba gości w zamówieniu.");
+      throw new Error("Invalid number of guests in order.");
     }
 
     if (!Number.isInteger(order.adults) || order.adults < 1) {
-      throw new Error("Nieprawidłowa liczba płatnych gości w zamówieniu.");
+      throw new Error("Invalid number of paying guests in order.");
     }
 
     if (!Number.isInteger(order.children) || order.children < 0) {
-      throw new Error("Nieprawidłowa liczba dzieci w zamówieniu.");
+      throw new Error("Invalid number of children in order.");
     }
 
     if (order.adults + order.children !== order.guests) {
-      throw new Error("Niespójne dane gości w zamówieniu.");
+      throw new Error("Inconsistent guest data in order.");
     }
 
     if (!Number.isInteger(order.extraBeds) || order.extraBeds < 0) {
-      throw new Error("Nieprawidłowa liczba dostawek w zamówieniu.");
+      throw new Error("Invalid number of extra beds in order.");
     }
   }
 
@@ -90,7 +90,7 @@ export async function createCheckoutSession(bookingData: BookingData) {
 
   for (const order of orders) {
     if (occupiedPropertyIds.has(order.propertyId)) {
-      throw new Error(`Obiekt "${order.displayName}" jest niedostępny w wybranym terminie.`);
+      throw new Error(`Property "${order.displayName}" is not available for the selected dates.`);
     }
 
     const property = await Property.findOne({ _id: order.propertyId, isActive: true })
@@ -98,15 +98,15 @@ export async function createCheckoutSession(bookingData: BookingData) {
       .lean();
 
     if (!property) {
-      throw new Error(`Obiekt "${order.displayName}" nie istnieje lub jest nieaktywny.`);
+      throw new Error(`Property "${order.displayName}" does not exist or is inactive.`);
     }
 
     if (order.adults > property.maxAdults) {
-      throw new Error(`Liczba dorosłych (${order.adults}) przekracza pojemność obiektu "${order.displayName}" (max ${property.maxAdults}).`);
+      throw new Error(`Number of adults (${order.adults}) exceeds the capacity of "${order.displayName}" (max ${property.maxAdults}).`);
     }
 
     if (order.extraBeds > property.maxExtraBeds) {
-      throw new Error(`Liczba dostawek (${order.extraBeds}) przekracza pojemność obiektu "${order.displayName}" (max ${property.maxExtraBeds}).`);
+      throw new Error(`Number of extra beds (${order.extraBeds}) exceeds the capacity of "${order.displayName}" (max ${property.maxExtraBeds}).`);
     }
 
     const recalculatedPrice = await calculateTotalPrice({
@@ -118,7 +118,7 @@ export async function createCheckoutSession(bookingData: BookingData) {
     });
 
     if (recalculatedPrice <= 0) {
-      throw new Error(`Nie udało się wyliczyć ceny dla obiektu "${order.displayName}".`);
+      throw new Error(`Could not calculate price for property "${order.displayName}".`);
     }
 
     totalAdults += order.adults;
@@ -128,7 +128,7 @@ export async function createCheckoutSession(bookingData: BookingData) {
   }
 
   if (totalAdults !== adults || totalChildren !== children) {
-    throw new Error("Niespójne dane liczby dorosłych i dzieci w rezerwacji.");
+    throw new Error("Inconsistent adult and child count in booking.");
   }
 
   const amount = verifiedOrders.reduce((sum, item) => sum + item.price, 0);
@@ -136,20 +136,20 @@ export async function createCheckoutSession(bookingData: BookingData) {
   const propertyIds = verifiedOrders.map((order) => order.propertyId).join(",");
   const orderDisplayName = verifiedOrders.length === 1
     ? verifiedOrders[0].displayName
-    : `${verifiedOrders.length} obiekty`;
+    : `${verifiedOrders.length} properties`;
   const totalGuests = verifiedOrders.reduce((sum, item) => sum + item.guests, 0);
   const totalExtraBeds = verifiedOrders.reduce((sum, item) => sum + item.extraBeds, 0);
 
   if (amount <= 0) {
-    console.error("Błąd: Nieprawidłowa kwota rezerwacji:", amount);
-    throw new Error("Nieprawidłowa kwota rezerwacji. Proszę spróbować ponownie.");
+    console.error("Error: Invalid booking amount:", amount);
+    throw new Error("Invalid booking amount. Please try again.");
   }
 
   const headerList = await headers();
   const origin = headerList.get("origin");
 
   if (!origin) {
-    throw new Error("Brak nagłówka origin potrzebnego do utworzenia sesji Stripe.");
+    throw new Error("Missing origin header needed to create Stripe session.");
   }
 
   const orderId = await generateOrderId();
@@ -189,8 +189,8 @@ export async function createCheckoutSession(bookingData: BookingData) {
           price_data: {
             currency: "pln",
             product_data: {
-              name: `Rezerwacja: ${orderDisplayName}`,
-              description: `Pobyt od ${formatDisplayDate(startDate)} do ${formatDisplayDate(endDate)}`,
+              name: `Booking: ${orderDisplayName}`,
+              description: `Stay from ${formatDisplayDate(startDate)} to ${formatDisplayDate(endDate)}`,
             },
             unit_amount: Math.round(amount * 100),
           },
@@ -233,7 +233,7 @@ export async function createCheckoutSession(bookingData: BookingData) {
     );
 
     if (updatedBookings.matchedCount !== bookingObjectIds.length) {
-      throw new Error('Nie udało się przypisać identyfikatora sesji Stripe do wszystkich rezerwacji.');
+      throw new Error('Failed to assign Stripe session ID to all bookings.');
     }
 
 
@@ -241,7 +241,7 @@ export async function createCheckoutSession(bookingData: BookingData) {
     return { url: session.url };
   } catch (error) {
     await Booking.deleteMany({ _id: { $in: bookingObjectIds } });
-    console.error("Błąd podczas tworzenia sesji checkout:", error);
-    throw new Error("Wystąpił błąd podczas inicjowania płatności Stripe.");
+    console.error("Error creating checkout session:", error);
+    throw new Error("An error occurred while initialising Stripe payment.");
   }
 }

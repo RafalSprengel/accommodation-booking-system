@@ -31,32 +31,32 @@ export default function BookingCancelClient({
           <span className={styles.cancelIcon}>✗</span>
         </div>
 
-        <h1 className={styles.title}>Płatność anulowana</h1>
+        <h1 className={styles.title}>Payment cancelled</h1>
 
         <p className={styles.message}>
-          Nie dokonano płatności. Twoja rezerwacja nie została potwierdzona.
+          No payment was made. Your booking has not been confirmed.
         </p>
 
         <p className={styles.details}>
-          Możesz wrócić do płatności lub edytować dane rezerwacji.
+          You can return to payment or edit your booking details.
         </p>
 
         <div className={styles.infoBox}>
           <p className={styles.infoText}>
-            📞 W razie pytań:{" "}
+            📞 If you have any questions:{" "}
             <a href={`tel:${siteSettings.phone}`} className={styles.phoneLink}>{siteSettings.phone}</a>
           </p>
         </div>
 
         <div className={styles.actions}>
           <Button onClick={handleRetry} variant="danger" disabled={isRetrying}>
-            {isRetrying ? "Przekierowywanie..." : "Wróć do płatności"}
+            {isRetrying ? "Redirecting..." : "Return to payment"}
           </Button>
           <Button href="/booking/summary" variant="secondary">
-            Edytuj dane
+            Edit details
           </Button>
           <Button href="/" variant="tertiary">
-            Wróć na stronę główną
+            Back to home page
           </Button>
         </div>
       </div>

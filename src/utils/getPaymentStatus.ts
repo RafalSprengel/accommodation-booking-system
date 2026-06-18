@@ -8,11 +8,11 @@ export function calculatePaymentStatus(totalPrice: number, paidAmount: number): 
 
 export function getPaymentStatusLabel(status: PaymentStatus): string {
   switch (status) {
-    case 'paid': return 'Opłacone';
-    case 'partial_paid': return 'Częściowo opłacone';
-    case 'refunded': return 'Zwrócone';
-    case 'unpaid': return 'Nieopłacone';
-    default: return 'Nieznany';
+    case 'paid': return 'Paid';
+    case 'partial_paid': return 'Partially paid';
+    case 'refunded': return 'Refunded';
+    case 'unpaid': return 'Unpaid';
+    default: return 'Unknown';
   }
 }
 

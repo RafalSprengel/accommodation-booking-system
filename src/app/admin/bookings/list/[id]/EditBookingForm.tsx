@@ -107,7 +107,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
     for (const field of requiredNumeric) {
       const val = form[field as keyof FormData];
       if (val === "" || val === null || Number.isNaN(val)) {
-        toast.error("Wszystkie pola numeryczne muszą być wypełnione.");
+        toast.error("All numeric fields must be filled.");
         setIsSaving(false);
         return;
       }
@@ -142,22 +142,22 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
     const result = await updateBookingAction(null, formData);
 
     if (result.success) {
-      toast.success("Zapisano zmiany pomyślnie!");
+      toast.success("Changes saved successfully!");
       setOriginalData({ ...form });
       setIsSaved(true);
       setIsEditing(false);
       router.refresh();
     } else {
-      toast.error(result.message || "Wystąpił błąd.");
+      toast.error(result.message || "An error occurred.");
     }
 
     setIsSaving(false);
   };
 
   const getButtonText = () => {
-    if (isSaving) return "⏳ Zapisuję...";
-    if (isSaved && !hasChanges()) return "✅ Zapisano";
-    return "💾 Zapisz";
+    if (isSaving) return "⏳ Saving...";
+    if (isSaved && !hasChanges()) return "✅ Saved";
+    return "💾 Save";
   };
 
   return (
@@ -166,9 +166,9 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
 
       <div className={styles.formHeader}>
         <div className={styles.formTitleWrap}>
-          <h2 className={styles.formTitle}>Dane rezerwacji</h2>
+          <h2 className={styles.formTitle}>Booking data</h2>
           <span className={styles.orderIdBadge}>
-            {orderId.length > 0 ? orderId : "Brak numeru zamówienia"}
+            {orderId.length > 0 ? orderId : "No order number"}
           </span>
         </div>
         <Button
@@ -177,13 +177,13 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           onClick={handleEditToggle}
           disabled={isSaving}
         >
-          {isEditing ? "❌ Anuluj" : "✏️ Edytuj"}
+          {isEditing ? "❌ Cancel" : "✏️ Edit"}
         </Button>
       </div>
 
       <div className={styles.formGrid}>
         <div className={styles.inputGroup}>
-          <label>Imię</label>
+          <label>First name</label>
           <input
             name="firstName"
             value={form.firstName}
@@ -194,7 +194,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           />
         </div>
         <div className={styles.inputGroup}>
-          <label>Nazwisko</label>
+          <label>Last name</label>
           <input
             name="lastName"
             value={form.lastName}
@@ -205,7 +205,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           />
         </div>
         <div className={styles.inputGroup}>
-          <label>E-mail</label>
+          <label>Email</label>
           <input
             name="guestEmail"
             type="email"
@@ -217,7 +217,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           />
         </div>
         <div className={styles.inputGroup}>
-          <label>Telefon</label>
+          <label>Phone</label>
           <input
             name="guestPhone"
             type="tel"
@@ -229,7 +229,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           />
         </div>
         <div className={styles.inputGroup}>
-          <label>Dorośli</label>
+          <label>Adults</label>
           <input
             name="adults"
             type="number"
@@ -241,7 +241,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           />
         </div>
         <div className={styles.inputGroup}>
-          <label>Dzieci (bezpłatnie)</label>
+          <label>Children (free)</label>
           <input
             name="children"
             type="number"
@@ -253,7 +253,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           />
         </div>
         <div className={styles.inputGroup}>
-          <label>Dostawki</label>
+          <label>Extra beds</label>
           <input
             name="extraBedsCount"
             type="number"
@@ -265,7 +265,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           />
         </div>
         <div className={styles.inputGroup}>
-          <label>Data przyjazdu</label>
+          <label>Check-in date</label>
           <input
             name="startDate"
             type="date"
@@ -277,7 +277,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           />
         </div>
         <div className={styles.inputGroup}>
-          <label>Data wyjazdu</label>
+          <label>Check-out date</label>
           <input
             name="endDate"
             type="date"
@@ -289,7 +289,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           />
         </div>
         <div className={styles.inputGroup}>
-          <label>Cena całkowita (PLN)</label>
+          <label>Total price (PLN)</label>
           <input
             name="totalPrice"
             type="number"
@@ -302,7 +302,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           />
         </div>
         <div className={styles.inputGroup}>
-          <label>Wpłacona kwota (PLN)</label>
+          <label>Paid amount (PLN)</label>
           <input
             name="paidAmount"
             type="number"
@@ -323,14 +323,14 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
             disabled={!isEditing}
             className={!isEditing ? styles.readOnly : ""}
           >
-            <option value="pending" disabled>Oczekująca</option>
-            <option value="confirmed">Potwierdzona</option>
-            <option value="cancelled">Anulowana</option>
-            <option value="failed" disabled>Odrzucona (failed)</option>
+            <option value="pending" disabled>Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="failed" disabled>Rejected (failed)</option>
           </select>
         </div>
         <div className={styles.inputGroup}>
-          <label>Uwagi wewnętrzne</label>
+          <label>Internal notes</label>
           <textarea
             name="internalNotes"
             rows={3}

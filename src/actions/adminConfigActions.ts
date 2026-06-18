@@ -77,10 +77,10 @@ export async function updateSystemConfigSetting(
     return {
       success: true,
       currentValue: config[settingKey as keyof typeof config],
-      message: value ? "Włączono." : "Wyłączono."
+      message: value ? "Enabled." : "Disabled."
     };
   } catch (error) {
     console.error(error);
-    return { success: false, message: "Błąd zapisu." };
+    return { success: false, message: "Save error." };
   }
 }

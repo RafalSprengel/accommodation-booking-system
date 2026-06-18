@@ -51,7 +51,7 @@ async function setUnknownWithNotesBySessionId(stripeSessionId: string, reason: s
 
   for (const booking of bookings) {
     if (!booking._id) {
-      throw new Error('Brak identyfikatora rezerwacji podczas aktualizacji statusu unknown.');
+      throw new Error('Missing booking ID when updating status to unknown.');
     }
 
     const nextAdminNotes = buildNextAdminNotes(booking.adminNotes, reason);
@@ -192,7 +192,7 @@ export async function resolveOccupiedPropertyIdsFromBookings(
       decisionBySession.set(stripeSessionId, 'unknown');
       occupiedPropertyIds.add(propertyId);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Nieznany błąd Stripe.';
+      const errorMessage = error instanceof Error ? error.message : 'Unknown Stripe error.';
       await setUnknownWithNotesBySessionId(stripeSessionId, errorMessage);
       didMutateBookings = true;
       decisionBySession.set(stripeSessionId, 'unknown');

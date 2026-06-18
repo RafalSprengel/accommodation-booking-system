@@ -12,25 +12,23 @@ import styles from "./page.module.css";
 export default async function PropertiesPage() {
   const properties = await getAllProperties();
 
-
-
   return (
     <AdminShell
-      title="Zarządzanie obiektami"
-      description="Dodaj, edytuj lub dezaktywuj obiekty w systemie."
+      title="Property Management"
+      description="Add, edit, or deactivate properties in the system."
     >
 
       <div className={styles.controls}> 
         <Button href="/admin/properties/add" variant='secondary' className={styles.btnAdd}>
-          ➕ Dodaj nowy obiekt
+          ➕ Add new property
         </Button>
       </div>
 
       {properties.length === 0 ? (
         <div className={styles.emptyState}>
-          <p>Brak obiektów w systemie.</p>
+          <p>No properties found in the system.</p>
           <Button href="/admin/properties/add" variant='secondary' className={styles.btnAdd}>
-            Dodaj pierwszy obiekt
+            Add first property
           </Button>
         </div>
       ) : (
@@ -40,7 +38,7 @@ export default async function PropertiesPage() {
               <div className={styles.cardHeader}>
                 <h3 className={styles.propertyName}>{prop.name}</h3>
                 <StatusBadge
-                  text={prop.isActive ? "Aktywny" : "Nieaktywny"}
+                  text={prop.isActive ? "Active" : "Inactive"}
                   variant={prop.isActive ? "active" : "inactive"}
                 />
               </div>
@@ -49,15 +47,15 @@ export default async function PropertiesPage() {
               )}
               <div className={styles.details}>
                 <div className={styles.detailRow}>
-                  <span className={styles.label}>Max. dorosłych:</span>
+                  <span className={styles.label}>Max. adults:</span>
                   <span className={styles.value}>{prop.maxAdults}</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span className={styles.label}>Max. dzieci (bezpłatnie):</span>
+                  <span className={styles.label}>Max. children (free):</span>
                   <span className={styles.value}>{prop.maxChildren}</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span className={styles.label}>Max. dostawek:</span>
+                  <span className={styles.label}>Max. extra beds:</span>
                   <span className={styles.value}>{prop.maxExtraBeds}</span>
                 </div>
                 
@@ -66,7 +64,7 @@ export default async function PropertiesPage() {
                 <TogglePropertyButton id={prop._id} isActive={prop.isActive} />
                 <div className={styles.cardActionsRow}>
                   <Button variant='secondary' href={`/admin/properties/${prop._id}`}>
-                    ✏️ Edytuj
+                    ✏️ Edit
                   </Button>
                   <DeletePropertyButton
                     propertyId={prop._id}

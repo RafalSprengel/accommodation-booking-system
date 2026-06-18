@@ -31,7 +31,7 @@ export default function DevPageClient() {
     name: string,
     actionFn: () => Promise<{ success: boolean; message?: string; error?: string }>,
   ) => {
-    addLog(`Uruchamiam: ${name}...`);
+    addLog(`Running: ${name}...`);
     try {
       const res = await actionFn();
       if (res.success) {
@@ -40,7 +40,7 @@ export default function DevPageClient() {
         addLog(`❌ ERROR: ${res.error || res.message}`);
       }
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Nieznany błąd';
+      const message = error instanceof Error ? error.message : 'Unknown error';
       addLog(`❌ EXCEPTION: ${message}`);
     }
   };
@@ -74,23 +74,23 @@ export default function DevPageClient() {
               <button
                 type="button"
                 className={styles.btnSecondary}
-                onClick={() => runAction('Seed Properties (2 domki)', seedProperties)}
+                onClick={() => runAction('Seed Properties (2 cabins)', seedProperties)}
               >
                 Seed Properties Only
               </button>
               <button
                 type="button"
                 className={styles.btnSecondary}
-                onClick={() => runAction('Seed PropertyPrices (ceny)', seedPropertyPrices)}
+                onClick={() => runAction('Seed PropertyPrices (prices)', seedPropertyPrices)}
               >
-                Seed PropertyPrices (ceny per obiekt)
+                Seed PropertyPrices (prices per property)
               </button>
               <button
                 type="button"
                 className={styles.btnSecondary}
                 onClick={() => runAction('Seed Seasons', seedSeasons)}
               >
-                Seed Seasons (4 sezony)
+                Seed Seasons (4 seasons)
               </button>
               <button
                 type="button"

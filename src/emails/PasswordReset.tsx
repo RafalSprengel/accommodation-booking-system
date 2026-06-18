@@ -86,28 +86,28 @@ export const PasswordReset = ({
       <Body style={mainStyle}>
         <Container style={containerStyle}>
           <Heading style={headingStyle}>
-            Zresetuj swoje hasło - Wilcze Chatki
+            Reset your password – Wilcze Chatki
           </Heading>
           <Text style={textStyle}>
-            Witaj,
+            Hello,
           </Text>
           <Text style={textStyle}>
-            otrzymaliśmy prośbę o zresetowanie hasła dla Twojego konta. Kliknij poniższy przycisk, aby ustawić nowe hasło:
+            we received a request to reset the password for your account. Click the button below to set a new password:
           </Text>
 
           <Section style={{ textAlign: 'center' }}>
             <Button style={buttonStyle} href={url}>
-              Ustaw nowe hasło
+              Set new password
             </Button>
           </Section>
 
           <Text style={textStyle}>
-            Link jest ważny przez ograniczony czas. Jeśli to nie Ty prosiłeś o reset hasła, po prostu zignoruj tę wiadomość.
+            The link is valid for a limited time. If you did not request a password reset, please ignore this message.
           </Text>
 
           <Hr style={footerHrStyle} />
           <Text style={footerTextStyle}>
-            W razie pytań prosimy o kontakt na {siteSettings.email} lub telefonicznie pod numerem {siteSettings.phone}.
+            If you have any questions, please contact us at {siteSettings.email} or by phone at {siteSettings.phone}.
           </Text>
           <Link href="https://rafalsprengel.com" style={footerLinkStyle}>
             rafalsprengel.com

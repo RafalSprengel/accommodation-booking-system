@@ -10,7 +10,7 @@ export default async function AdminPaymentsOnlinePage() {
   const paymentsData = await getAdminPaymentsData()
 
   return (
-    <AdminShell title="Płatności online" description="Przeglądaj płatności zrealizowane online.">
+    <AdminShell title="Online Payments" description="Browse payments made online.">
 
       <PaymentsPanel initialData={paymentsData} mode="online" />
     </AdminShell>

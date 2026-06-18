@@ -5,9 +5,9 @@ import Link from 'next/link';
 import styles from './BookingStepper.module.css';
 
 const steps = [
-  { path: '/booking/details', label: 'Dane gości', number: 1 },
-  { path: '/booking/summary', label: 'Podsumowanie', number: 2 },
-  { path: '/booking/payment', label: 'Płatność', number: 3 },
+  { path: '/booking/details', label: 'Guest details', number: 1 },
+  { path: '/booking/summary', label: 'Summary', number: 2 },
+  { path: '/booking/payment', label: 'Payment', number: 3 },
 ];
 
 export default function BookingStepper() {

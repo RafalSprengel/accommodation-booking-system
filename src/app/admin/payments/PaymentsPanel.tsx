@@ -19,23 +19,23 @@ interface PaymentsPanelProps {
 
 function formatStatus(status: string): string {
   if (status === "confirmed") {
-    return "Potwierdzone";
+    return "Confirmed";
   }
 
   if (status === "failed") {
-    return "Odrzucone (failed)";
+    return "Rejected (failed)";
   }
 
-  return "Oczekujące (pending)";
+  return "Pending";
 }
 
 function formatMethod(method: "" | "online" | "cash" | "transfer"): string {
   if (method === "cash" || method === "transfer") {
-    return "Gotówka / Przelew";
+    return "Cash / Transfer";
   }
 
   if (method === "") {
-    return "Brak";
+    return "None";
   }
 
   return "Online";
@@ -161,7 +161,7 @@ export default function PaymentsPanel({
   return (
     <section className={styles.paymentsPanel}>
       <h2>
-        {mode === "online" ? "Płatności online" : "Gotówka / Przelew"}
+        {mode === "online" ? "Online Payments" : "Cash / Transfer"}
       </h2>
 
       {mode === "online" ? (
@@ -169,7 +169,7 @@ export default function PaymentsPanel({
           <div
             className={styles.paymentsPanelFilters}
             role="radiogroup"
-            aria-label="Filtr statusu"
+            aria-label="Status filter"
           >
             <button
               type="button"
@@ -178,7 +178,7 @@ export default function PaymentsPanel({
               className={`${styles.paymentsPanelFilterBtn} ${statusFilter === "confirmed" ? getActiveFilterClass("confirmed", styles) : ""}`}
               onClick={() => setStatusFilter("confirmed")}
             >
-              Potwierdzone
+              Confirmed
             </button>
             <button
               type="button"
@@ -187,7 +187,7 @@ export default function PaymentsPanel({
               className={`${styles.paymentsPanelFilterBtn} ${statusFilter === "failed" ? getActiveFilterClass("failed", styles) : ""}`}
               onClick={() => setStatusFilter("failed")}
             >
-              Odrzucone
+              Rejected
             </button>
             <button
               type="button"
@@ -196,7 +196,7 @@ export default function PaymentsPanel({
               className={`${styles.paymentsPanelFilterBtn} ${statusFilter === "pending" ? getActiveFilterClass("pending", styles) : ""}`}
               onClick={() => setStatusFilter("pending")}
             >
-              Oczekujące
+              Pending
             </button>
             <button
               type="button"
@@ -205,7 +205,7 @@ export default function PaymentsPanel({
               className={`${styles.paymentsPanelFilterBtn} ${statusFilter === "all" ? getActiveFilterClass("all", styles) : ""}`}
               onClick={() => setStatusFilter("all")}
             >
-              Wszystkie
+              All
             </button>
           </div>
         </div>
@@ -213,14 +213,14 @@ export default function PaymentsPanel({
 
       <div className={styles.paymentsPanelSearchWrap}>
         <label htmlFor="orderSearch" className={styles.paymentsPanelSearchLabel}>
-          Szukaj zamówienia
+          Search orders
         </label>
         <input
           id="orderSearch"
           type="text"
           value={orderSearch}
           onChange={(event) => setOrderSearch(event.target.value)}
-          placeholder="Numer zamówienia lub dane klienta"
+          placeholder="Order number or customer data"
           className={styles.paymentsPanelSearchInput}
         />
       </div>
@@ -237,13 +237,13 @@ export default function PaymentsPanel({
         <table className={styles.paymentsPanelTable}>
           <thead>
             <tr>
-              <th>Numer zamówienia</th>
-              <th>Data płatności</th>
-              <th>Klient</th>
-              <th>Kwota</th>
-              {mode === "online" ? <th>Status</th> : <th>Metoda</th>}
-              {mode === "online" ? <th>Sesja Stripe</th> : null}
-              {mode === "online" ? <th>Akcja</th> : null}
+              <th>Order number</th>
+              <th>Payment date</th>
+              <th>Customer</th>
+              <th>Amount</th>
+              {mode === "online" ? <th>Status</th> : <th>Method</th>}
+              {mode === "online" ? <th>Stripe Session</th> : null}
+              {mode === "online" ? <th>Action</th> : null}
             </tr>
           </thead>
           <tbody>
@@ -253,7 +253,7 @@ export default function PaymentsPanel({
                   colSpan={mode === "online" ? 7 : 5}
                   className={styles.paymentsPanelEmptyRow}
                 >
-                  Brak płatności dla wybranego filtra.
+                  No payments for the selected filter.
                 </td>
               </tr>
             ) : (
@@ -279,10 +279,10 @@ export default function PaymentsPanel({
                     }}
                     className={styles.paymentsPanelClickableRow}
                   >
-                    <td>{row.orderId ? row.orderId : "Brak numeru"}</td>
-                    <td>{createdAt.toLocaleString("pl-PL")}</td>
+                    <td>{row.orderId ? row.orderId : "No number"}</td>
+                    <td>{createdAt.toLocaleString("en-GB")}</td>
                     <td>{`${row.firstName || ''} ${row.lastName || ''}`.trim()}</td>
-                    <td>{row.totalPrice.toFixed(2)} zł</td>
+                    <td>{row.totalPrice.toFixed(2)} GBP</td>
                     {mode === "online" ? (
                       <td>{formatStatus(row.status)}</td>
                     ) : (
@@ -306,7 +306,7 @@ export default function PaymentsPanel({
                               styles.paymentsPanelMissingSession
                             }
                           >
-                            Brak ID sesji
+                            No session ID
                           </span>
                         )}
                       </td>
@@ -333,7 +333,7 @@ export default function PaymentsPanel({
                                 Loading...
                               </span>
                             ) : (
-                              "Synchronizuj"
+                              "Sync"
                             )}
                           </Button>
                         ) : (

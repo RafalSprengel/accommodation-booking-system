@@ -30,7 +30,7 @@ export default function DeletePropertyButton({
     setError("");
     try {
       await deleteProperty(propertyId);
-      alert("Nieruchomość została usunięta.");
+      alert("Property has been deleted.");
       router.push("/admin/properties");
       router.refresh();
     } catch (e: any) {
@@ -48,20 +48,20 @@ export default function DeletePropertyButton({
         onClick={() => setShowConfirm(true)}
         disabled={isDeleting}
       >
-        Usuń Nieruchomość
+        Delete Property
       </Button>
       {showConfirm && (
         <div className={styles.confirmDialog}>
-          <p>Czy na pewno chcesz usunąć tę nieruchomość?</p>
+          <p>Are you sure you want to delete this property?</p>
           <Button variant="danger" onClick={handleDelete} disabled={isDeleting}>
-            {isDeleting ? "Usuwanie..." : "Tak, usuń"}
+            {isDeleting ? "Deleting..." : "Yes, delete"}
           </Button>
           <Button
             variant="secondary"
             onClick={() => setShowConfirm(false)}
             disabled={isDeleting}
           >
-            Anuluj
+            Cancel
           </Button>
           {error && <p className={styles.error}>{error}</p>}
         </div>

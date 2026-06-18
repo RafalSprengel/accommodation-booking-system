@@ -1,18 +1,18 @@
 export function getPaymentBadge(paymentStatus: string, paidAmount: number, totalPrice: number) {
   const isFullyPaidByAmount = totalPrice > 0 && paidAmount >= totalPrice;
   if (paymentStatus === 'paid' || isFullyPaidByAmount) {
-    return { text: 'Opłacone', class: 'paymentPaid' };
+    return { text: 'Paid', class: 'paymentPaid' };
   }
 
   if (paidAmount > 0) {
-    return { text: 'Zaliczka', class: 'paymentDeposit' };
+    return { text: 'Deposit', class: 'paymentDeposit' };
   }
 
-  return { text: 'Nieopłacone', class: 'paymentUnpaid' };
+  return { text: 'Unpaid', class: 'paymentUnpaid' };
 }
 
 export function formatGuestName(name: string) {
-  if (!name) return 'Gość';
+  if (!name) return 'Guest';
   const trimmed = name.trim();
   if (trimmed === trimmed.toUpperCase() || trimmed === trimmed.toLowerCase()) {
     return trimmed
@@ -25,9 +25,9 @@ export function formatGuestName(name: string) {
 }
 
 export function getStatusLabel(status?: string) {
-  if (status === 'confirmed') return 'Potwierdzona';
-  if (status === 'blocked') return 'Zablokowana';
-  if (status === 'cancelled') return 'Anulowana';
-  if (status === 'failed') return 'Odrzucona';
-  return 'Oczekująca';
+  if (status === 'confirmed') return 'Confirmed';
+  if (status === 'blocked') return 'Blocked';
+  if (status === 'cancelled') return 'Cancelled';
+  if (status === 'failed') return 'Rejected';
+  return 'Pending';
 }

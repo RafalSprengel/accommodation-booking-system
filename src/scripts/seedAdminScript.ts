@@ -5,7 +5,7 @@ import { username } from 'better-auth/plugins';
 import type { Db } from 'mongodb';
 
 const MONGODB_URI = process.env.MONGODB_URI;
-if (!MONGODB_URI) throw new Error('Brak MONGODB_URI w .env.local');
+if (!MONGODB_URI) throw new Error('Missing MONGODB_URI in .env.local');
 
 const admins = [
   {
@@ -72,6 +72,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error('Błąd:', err);
+  console.error('Error:', err);
   process.exit(1);
 });

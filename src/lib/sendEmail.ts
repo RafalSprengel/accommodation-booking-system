@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Resend } from "resend";
 
 if (!process.env.RESEND_API_KEY) {
-  throw new Error("Brak klucza API Resend w zmiennych środowiskowych.");
+  throw new Error("Missing Resend API key in environment variables.");
 }
 
 const resend = new Resend(process.env.RESEND_API_KEY);

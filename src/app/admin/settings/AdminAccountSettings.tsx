@@ -30,7 +30,7 @@ export default function AdminAccountSettings() {
       if (u !== undefined && u !== null) {
         setUsername(u)
       } else {
-        throw new Error('Błąd integralności danych: Profil użytkownika nie posiada nazwy użytkownika.')
+        throw new Error('Data integrity error: User profile does not have a username.')
       }
 
       if (user.email !== undefined && user.email !== null) {
@@ -41,7 +41,7 @@ export default function AdminAccountSettings() {
 
   if (sessionPending || username === null || email === null) {
     return (
-      <AdminSection title="Dane administratora" badge="Profil">
+      <AdminSection title="Admin data" badge="Profile">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner} />
         </div>
@@ -50,7 +50,7 @@ export default function AdminAccountSettings() {
   }
 
   if (!session?.user) {
-    throw new Error('Brak aktywnej sesji administratora.')
+    throw new Error('No active admin session.')
   }
 
   const user = session.user as any
@@ -70,7 +70,7 @@ export default function AdminAccountSettings() {
     try {
       if (username !== dbDisplayUsername) {
         if (username.length === 0) {
-          toast.error('Login nie może być pusty.')
+          toast.error('Login cannot be empty.')
           return
         }
 
@@ -88,13 +88,13 @@ export default function AdminAccountSettings() {
 
       if (email !== dbEmail) {
         if (email.length === 0) {
-          toast.error('Email nie może być pusty.')
+          toast.error('Email cannot be empty.')
           return
         }
 
         const result = await changeAdminEmail(email)
         if (!result.success) {
-          toast.error(result.error ?? 'Nie udało się zmienić adresu e-mail.')
+          toast.error(result.error ?? 'Failed to change email address.')
           return
         }
 
@@ -122,17 +122,17 @@ export default function AdminAccountSettings() {
         if (passwordError) {
           const msg = passwordError.message?.toLowerCase() || ''
           if (msg.includes('invalid password') || msg.includes('incorrect') || msg.includes('wrong') || msg.includes('current password')) {
-            setCurrentPasswordError('Aktualne hasło jest nieprawidłowe.')
+            setCurrentPasswordError('Current password is incorrect.')
           } else if (msg.includes('character') || msg.includes('short') || msg.includes('length')) {
-            setNewPasswordError('Nowe hasło musi mieć co najmniej 5 znaków.')
+            setNewPasswordError('New password must be at least 5 characters.')
           } else {
-            setNewPasswordError(passwordError.message || 'Wystąpił błąd podczas zmiany hasła.')
+            setNewPasswordError(passwordError.message || 'An error occurred while changing the password.')
           }
           return
         }
       }
 
-      toast.success('Dane administratora zostały pomyślnie zaktualizowane.')
+      toast.success('Admin data has been successfully updated.')
       setIsEditing(false)
       setPassword('')
       setConfirmPassword('')
@@ -140,8 +140,8 @@ export default function AdminAccountSettings() {
       setCurrentPasswordError('')
       setNewPasswordError('')
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Wystąpił nieoczekiwany błąd podczas zapisywania zmian.'
-      console.error('Błąd podczas aktualizacji danych admina:', error)
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred while saving changes.'
+      console.error('Error updating admin data:', error)
       toast.error(errorMessage)
     } finally {
       setIsSaving(false)
@@ -173,9 +173,9 @@ export default function AdminAccountSettings() {
 
   return (
     <AdminSection
-      title="Dane administratora"
-      badge="Profil"
-      description="Dane te nie są wyświetlane nigdzie na stronie, służą wyłącznie do logowania do panelu admina."
+      title="Admin data"
+      badge="Profile"
+      description="This data is not displayed anywhere on the site; it is only used for logging into the admin panel."
     >
 
       {emailVerificationSentTo && (
@@ -189,7 +189,7 @@ export default function AdminAccountSettings() {
           fontSize: '0.92rem',
           lineHeight: '1.5',
         }}>
-          <strong>Adres e-mail został zmieniony</strong> na <strong>{emailVerificationSentTo}</strong>.
+          <strong>Email address changed</strong> to <strong>{emailVerificationSentTo}</strong>.
         </div>
       )}
 
@@ -199,13 +199,13 @@ export default function AdminAccountSettings() {
           className={styles.accountSettings__toggleEdit}
           onClick={handleToggleEdit}
         >
-          {isEditing ? 'Anuluj' : 'Edytuj'}
+          {isEditing ? 'Cancel' : 'Edit'}
         </button>
       </div>
 
       <div className={styles.accountSettings__form}>
         <div className={styles.accountSettings__inputGroup}>
-          <label htmlFor="admin-username">Login (nazwa użytkownika):</label>
+          <label htmlFor="admin-username">Login (username):</label>
           <input
             id="admin-username"
             type="text"
@@ -213,12 +213,12 @@ export default function AdminAccountSettings() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             disabled={!isEditing}
-            placeholder="Wpisz login"
+            placeholder="Enter login"
           />
         </div>
 
         <div className={styles.accountSettings__inputGroup}>
-          <label htmlFor="admin-email">E-mail:</label>
+          <label htmlFor="admin-email">Email:</label>
           <input
             id="admin-email"
             type="email"
@@ -226,13 +226,13 @@ export default function AdminAccountSettings() {
             value={email || ''}
             onChange={(e) => setEmail(e.target.value)}
             disabled={!isEditing}
-            placeholder="Wpisz e-mail"
+            placeholder="Enter email"
           />
         </div>
 
         {isEditing && (
           <div className={styles.accountSettings__inputGroup}>
-            <label htmlFor="current-password">Aktualne hasło:</label>
+            <label htmlFor="current-password">Current password:</label>
             <input
               id="current-password"
               type="password"
@@ -242,7 +242,7 @@ export default function AdminAccountSettings() {
                 setCurrentPassword(e.target.value)
                 setCurrentPasswordError('')
               }}
-              placeholder="Wpisz aktualne hasło"
+              placeholder="Enter current password"
             />
             {currentPasswordError && (
               <span style={{ color: 'var(--color-danger)', fontSize: '0.8rem' }}>{currentPasswordError}</span>
@@ -251,7 +251,7 @@ export default function AdminAccountSettings() {
         )}
 
         <div className={styles.accountSettings__inputGroup}>
-          <label htmlFor="admin-password">{isEditing ? 'Nowe hasło:' : 'Hasło:'}</label>
+          <label htmlFor="admin-password">{isEditing ? 'New password:' : 'Password:'}</label>
           <input
             id="admin-password"
             type="password"
@@ -262,7 +262,7 @@ export default function AdminAccountSettings() {
               setNewPasswordError('')
             }}
             disabled={!isEditing}
-            placeholder={isEditing ? 'Wpisz nowe hasło' : '••••••••'}
+            placeholder={isEditing ? 'Enter new password' : '••••••••'}
           />
           {newPasswordError && (
             <span style={{ color: 'var(--color-danger)', fontSize: '0.8rem' }}>{newPasswordError}</span>
@@ -271,17 +271,17 @@ export default function AdminAccountSettings() {
 
         {isEditing && (
           <div className={styles.accountSettings__inputGroup}>
-            <label htmlFor="confirm-password">Powtórz nowe hasło:</label>
+            <label htmlFor="confirm-password">Repeat new password:</label>
             <input
               id="confirm-password"
               type="password"
               className={`${styles.accountSettings__input} ${password.length > 0 && confirmPassword.length > 0 && !passwordsMatch ? styles['accountSettings__input--error'] : ''}`}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Wpisz nowe hasło ponownie"
+              placeholder="Enter new password again"
             />
             {password.length > 0 && confirmPassword.length > 0 && !passwordsMatch && (
-              <span style={{ color: 'var(--color-danger)', fontSize: '0.8rem' }}>Hasła nie są identyczne!</span>
+              <span style={{ color: 'var(--color-danger)', fontSize: '0.8rem' }}>Passwords do not match!</span>
             )}
           </div>
         )}
@@ -294,7 +294,7 @@ export default function AdminAccountSettings() {
               onClick={handleSave}
               disabled={!canSave || isSaving}
             >
-              {isSaving ? 'Zapisywanie...' : 'Zapisz'}
+              {isSaving ? 'Saving...' : 'Save'}
             </button>
           </div>
         )}

@@ -30,7 +30,7 @@ export async function getAllProperties(): Promise<PropertyType[]> {
   
   return properties.map((prop: any) => ({
     ...prop,
-    _id: prop._id.toString(), // 🔥 Upewnij się że _id jest stringiem
+    _id: prop._id.toString(), // 🔥 Ensure _id is a string
     createdAt: prop.createdAt?.toISOString(),
     updatedAt: prop.updatedAt?.toISOString(),
   }));
@@ -90,10 +90,10 @@ export async function createProperty(formData: FormData) {
 
     revalidatePath('/admin/properties');
     revalidatePath('/admin/prices');
-    return { success: true, message: 'Obiekt dodany pomyślnie', propertyId: property._id.toString() };
+    return { success: true, message: 'Property added successfully', propertyId: property._id.toString() };
   } catch (error) {
     console.error(error);
-    return { success: false, message: 'Nie udało się dodać domku' };
+    return { success: false, message: 'Failed to add cottage' };
   }
 }
 
@@ -122,10 +122,10 @@ export async function updateProperty(id: string, formData: FormData) {
 
     revalidatePath('/admin/properties');
     revalidatePath(`/admin/properties/${id}`);
-    return { success: true, message: 'Zmiany zapisane' };
+    return { success: true, message: 'Changes saved' };
   } catch (error) {
     console.error(error);
-    return { success: false, message: 'Nie udało się zaktualizować domku' };
+    return { success: false, message: 'Failed to update cottage' };
   }
 }
 
@@ -145,7 +145,7 @@ export async function deleteProperty(id: string) {
   const existingBookings = await Booking.findOne({ propertyId: id });
   
   if (existingBookings) {
-    return { success: false, message: 'Nie można usunąć domku z istniejącymi rezerwacjami' };
+    return { success: false, message: 'Cannot delete cottage with existing bookings' };
   }
 
   await PropertyPrices.deleteMany({ propertyId: id });
@@ -153,5 +153,5 @@ export async function deleteProperty(id: string) {
   await Property.findByIdAndDelete(id);
   revalidatePath('/admin/properties');
   revalidatePath('/admin/prices');
-  return { success: true, message: 'Obiekt usunięty' };
+  return { success: true, message: 'Property deleted' };
 }

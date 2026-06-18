@@ -70,7 +70,7 @@ export default function BookingAccordionList({ bookings, isPast }: BookingAccord
               aria-controls={`booking-panel-${bookingId}`}
             >
               <div className={styles.bookingHeader}>
-                <span className={styles.dateLabel}>Rezerwacja:&nbsp;</span>
+                <span className={styles.dateLabel}>Booking:&nbsp;</span>
                 <span className={styles.dateValue}>
                   {start.toLocaleDateString('pl-PL')} - {end.toLocaleDateString('pl-PL')}
                 </span>
@@ -82,63 +82,63 @@ export default function BookingAccordionList({ bookings, isPast }: BookingAccord
 
             <h3 className={styles.guestName}>{formatGuestName(`${booking.firstName || ''} ${booking.lastName || ''}`)}</h3>
             <div className={styles.guestEmail}>{booking.guestEmail || '-'}</div>
-            <div className={styles.propertyName}>{booking.propertyName || 'Domek'}</div>
+            <div className={styles.propertyName}>{booking.propertyName || 'Cottage'}</div>
 
             <div id={`booking-panel-${bookingId}`} className={`${styles.bookingPanel} ${isExpanded ? styles.bookingPanelOpen : styles.bookingPanelClosed}`}>
               <div className={styles.detailRow}>
-                <span className={styles.label}>Zamówienie nr:</span>
-                <span className={styles.value}>{booking.orderId ? booking.orderId : 'Brak numeru'}</span>
+                <span className={styles.label}>Order no.:</span>
+                <span className={styles.value}>{booking.orderId ? booking.orderId : 'No number'}</span>
               </div>
 
               <div className={styles.detailsGrid}>
                 <div className={styles.detailRow}>
-                  <span className={styles.label}>Ilość nocy:</span>
+                  <span className={styles.label}>Nights:</span>
                   <span className={styles.value}>{nights}</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span className={styles.label}>Dorośli:</span>
+                  <span className={styles.label}>Adults:</span>
                   <span className={styles.value}>{booking.adults}</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span className={styles.label}>Dzieci (bezpłatnie):</span>
+                  <span className={styles.label}>Children (free):</span>
                   <span className={styles.value}>{booking.children}</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span className={styles.label}>Dostawki:</span>
+                  <span className={styles.label}>Extra beds:</span>
                   <span className={styles.value}>{booking.extraBedsCount}</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span className={styles.label}>Uwagi wewnętrzne:</span>
+                  <span className={styles.label}>Internal notes:</span>
                   <span className={styles.value}>{booking.adminNotes ? booking.adminNotes : '-'}</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span className={styles.label}>Cena:</span>
-                  <span className={styles.value}>{totalPrice.toFixed(2)} zł</span>
+                  <span className={styles.label}>Price:</span>
+                  <span className={styles.value}>{totalPrice.toFixed(2)} PLN</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span className={styles.label}>Faktura VAT:</span>
-                  <span className={styles.value}>{booking.invoice ? 'Tak' : 'Nie'}</span>
+                  <span className={styles.label}>VAT invoice:</span>
+                  <span className={styles.value}>{booking.invoice ? 'Yes' : 'No'}</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span className={styles.label}>Rodzaj płatności:</span>
-                  <span className={styles.value}>{booking.paymentMethod === 'online' ? 'Online' : 'Gotówka / Przelew'}</span>
+                  <span className={styles.label}>Payment type:</span>
+                  <span className={styles.value}>{booking.paymentMethod === 'online' ? 'Online' : 'Cash / Transfer'}</span>
                 </div>
                 {isFullyPaid ? (
                   <div className={styles.detailRow}>
-                    <span className={styles.label}>Status płatności:</span>
-                    <span className={`${styles.value} ${styles.paymentPaid}`}>Opłacono</span>
+                    <span className={styles.label}>Payment status:</span>
+                    <span className={`${styles.value} ${styles.paymentPaid}`}>Paid</span>
                   </div>
                 ) : (
                   <> 
                     <div className={styles.detailRow}>
                       <span className={styles.label}></span>
                       <div className={styles.priceBreakdown}>
-                        <span className={styles.pricePaid}>Wpłacono: {paidAmount.toFixed(2)} zł</span>
-                        <span className={styles.priceDue}>Do zapłaty: {remainingAmount.toFixed(2)} zł</span>
+                        <span className={styles.pricePaid}>Paid: {paidAmount.toFixed(2)} PLN</span>
+                        <span className={styles.priceDue}>Due: {remainingAmount.toFixed(2)} PLN</span>
                       </div>
                     </div>
                     <div className={styles.detailRow}>
-                      <span className={styles.label}>Status płatności:</span>
+                      <span className={styles.label}>Payment status:</span>
                       <span className={`${styles.value} ${styles[paymentBadge.class]}`}>
                         {paymentBadge.text}
                       </span>
@@ -150,12 +150,12 @@ export default function BookingAccordionList({ bookings, isPast }: BookingAccord
               <div className={styles.cardFooter}>
                 <span className={`${styles.badge} ${styles[`badge${statusKey}`]}`}>{statusLabel}</span>
                 <span className={styles.addedDate}>
-                  dodano: {createdAtDate ? `${createdAtDate.toLocaleDateString('pl-PL')} ${createdAtDate.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}` : '-'}
+                  added: {createdAtDate ? `${createdAtDate.toLocaleDateString('pl-PL')} ${createdAtDate.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}` : '-'}
                 </span>
-                {isPast ? <DeletePastBookingButton bookingId={bookingId} /> : <Button variant="secondary" href={`/admin/bookings/list/${bookingId}`} className={styles.editBtn}>Szczegóły</Button>}
+                {isPast ? <DeletePastBookingButton bookingId={bookingId} /> : <Button variant="secondary" href={`/admin/bookings/list/${bookingId}`} className={styles.editBtn}>Details</Button>}
               </div>
               {booking.source === 'admin' && (
-                <div className={styles.adminBubble}>Rezerwacja dokonana przez panel admina.</div>
+                <div className={styles.adminBubble}>Booking made via admin panel.</div>
               )}
             </div>
           </article>

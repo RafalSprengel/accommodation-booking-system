@@ -7,9 +7,9 @@ export default function Hero() {
             <div className={styles.overlay}>
                 <div className={styles.content}>
                     <h1>Wilcze Chatki</h1>
-                    <p>Odkryj spokój w sercu Kaszub – Szumleś Królewski</p>
+                    <p>Discover peace in the heart of Kashubia – Szumleś Królewski</p>
                     <Link href="#services" className={styles.cta}>
-                        Sprawdź ofertę
+                        Check our offer
                     </Link>
                 </div>
             </div>

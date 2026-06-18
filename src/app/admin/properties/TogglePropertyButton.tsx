@@ -26,7 +26,7 @@ export default function TogglePropertyButton({ id, isActive }: TogglePropertyBut
       onClick={handleToggle}
       disabled={isPending}
     >
-      {isPending ? "Zapisywanie..." : (isActive ? "🔘 Dezaktywuj" : "✅ Aktywuj")}
+      {isPending ? "Saving..." : (isActive ? "🔘 Deactivate" : "✅ Activate")}
     </Button>
   );
 }

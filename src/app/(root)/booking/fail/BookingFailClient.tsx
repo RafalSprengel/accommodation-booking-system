@@ -31,23 +31,23 @@ export default function BookingFailClient({
           <span className={styles.failIcon}>✗</span>
         </div>
 
-        <h1 className={styles.title}>Płatność nieudana</h1>
+        <h1 className={styles.title}>Payment failed</h1>
 
         <p className={styles.message}>
-          Niestety nie udało się przetworzyć Twojej płatności.
+          Unfortunately, your payment could not be processed.
         </p>
 
         <p className={styles.details}>
-          Przyczyną może być: brak środków na karcie, błędny kod CVC lub
-          tymczasowy problem z systemem płatności.
+          Possible reasons: insufficient funds on the card, incorrect CVC code, or
+          a temporary problem with the payment system.
         </p>
 
         <div className={styles.infoBox}>
           <p className={styles.infoText}>
-            💳 Sprawdź czy dane karty są poprawne
+            💳 Check if the card details are correct
           </p>
           <p className={styles.infoText}>
-            📞 W razie problemów:{" "}
+            📞 If you have any questions:{" "}
                 <a
                   href={`tel:${siteSettings.phone}`}
                   className={styles.phoneLink}
@@ -59,10 +59,10 @@ export default function BookingFailClient({
 
         <div className={styles.actions}>
           <Button onClick={handleRetry} variant="danger" disabled={isRetrying}>
-            {isRetrying ? "Przekierowywanie..." : "Spróbuj ponownie"}
+            {isRetrying ? "Redirecting..." : "Try again"}
           </Button>
           <Button href="/" variant="tertiary">
-            Wróć na stronę główną
+            Back to home page
           </Button>
         </div>
       </div>

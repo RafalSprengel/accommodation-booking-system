@@ -16,7 +16,7 @@ export default function FloatingBackButton() {
       type="button"
       className={styles.floatingBack}
       onClick={handleBack}
-      aria-label="Wróć"
+      aria-label="Back"
     >
       <FontAwesomeIcon icon={faArrowLeft} aria-hidden="true" />
     </button>

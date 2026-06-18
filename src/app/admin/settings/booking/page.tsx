@@ -5,7 +5,7 @@ import BookingSettingsForm from './BookingSettingsForm';
 export default async function BookingSettingsPage() {
   const config = await getBookingConfig();
   return (
-    <AdminShell title="Ustawienia rezerwacji" description="Zarządzaj globalnymi zasadami rezerwacji.">
+    <AdminShell title="Booking settings" description="Manage global booking rules.">
       <BookingSettingsForm initialConfig={config} />
     </AdminShell>
   );

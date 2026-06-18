@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   const password = body?.password;
 
   if (login !== DEV_AUTH_LOGIN || password !== DEV_AUTH_PASSWORD) {
-    return NextResponse.json({ success: false, message: 'Nieprawidłowy login lub hasło' }, { status: 401 });
+    return NextResponse.json({ success: false, message: 'Invalid login or password' }, { status: 401 });
   }
 
   const response = NextResponse.json({ success: true });

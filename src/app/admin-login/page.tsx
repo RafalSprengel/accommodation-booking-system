@@ -26,7 +26,7 @@ export default function AdminLoginPage() {
 
   const handleResetPassword = async () => {
     if (username.trim() === "") {
-      setError("Najpierw wpisz login");
+      setError("First enter your username");
       setSuccessMsg(null);
       return;
     }
@@ -42,12 +42,12 @@ export default function AdminLoginPage() {
         setError(res.error);
       } else {
         setSuccessMsg(
-          "Jeśli podany login istnieje, na powiązany e-mail został wysłany link do zmiany hasła.",
+          "If the username exists, a password reset link has been sent to the associated email.",
         );
         setIsForgotPasswordFieldVisible(false);
       }
     } catch (err) {
-      setError("Wystąpił błąd podczas wysyłania linku.");
+      setError("An error occurred while sending the link.");
     } finally {
       setIsResetLoading(false);
     }
@@ -55,7 +55,7 @@ export default function AdminLoginPage() {
 
   const handleUsernameReminder = async () => {
     if (recoveryEmail.trim() === "") {
-      setError("Najpierw wpisz adres e-mail");
+      setError("First enter your email address");
       setSuccessMsg(null);
       return;
     }
@@ -71,12 +71,12 @@ export default function AdminLoginPage() {
         setError(res.error);
       } else {
         setSuccessMsg(
-          "Jeśli podany adres e-mail istnieje, login został wysłany na powiązaną skrzynkę.",
+          "If the email address exists, the username has been sent to the associated inbox.",
         );
         setIsForgotPasswordFieldVisible(false);
       }
     } catch (err) {
-      setError("Wystąpił błąd podczas wysyłania loginu.");
+      setError("An error occurred while sending the username.");
     } finally {
       setIsUsernameReminderLoading(false);
     }
@@ -100,16 +100,16 @@ export default function AdminLoginPage() {
           signInError.message === "Invalid username or password" ||
           signInError.message === "Invalid email or password"
         ) {
-          setError("Błędny login lub hasło");
+          setError("Invalid username or password");
           return;
         }
 
-        setError(signInError.message || "Wystąpił błąd podczas logowania");
+        setError(signInError.message || "An error occurred during login");
         return;
       }
       router.push("/admin");
     } catch (err) {
-      setError("Wystąpił nieoczekiwany błąd. Spróbuj ponownie.");
+      setError("An unexpected error occurred. Please try again.");
       console.error(err);
     } finally {
       setIsLoggingIn(false);
@@ -119,14 +119,14 @@ export default function AdminLoginPage() {
   return (
     <div className={styles.page}>
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
-        <h1 className={styles.title}>Panel Admina</h1>
-        <p className={styles.subtitle}>Zaloguj się, aby kontynuować</p>
+        <h1 className={styles.title}>Admin Panel</h1>
+        <p className={styles.subtitle}>Log in to continue</p>
 
         {error && <p className={styles.error}>{error}</p>}
         {successMsg && <p className={styles.success}>{successMsg}</p>}
 
         <label className={styles.label} htmlFor="username">
-          Login
+          Username
         </label>
         <input
           id="username"
@@ -137,11 +137,11 @@ export default function AdminLoginPage() {
           required
           autoComplete="username"
           disabled={isLoggingIn}
-          placeholder="Wpisz login"
+          placeholder="Enter username"
         />
 
         <label className={styles.label} htmlFor="password">
-          Hasło
+          Password
         </label>
         <input
           id="password"
@@ -152,7 +152,7 @@ export default function AdminLoginPage() {
           required
           autoComplete="current-password"
           disabled={isLoggingIn}
-          placeholder="Wpisz hasło"
+          placeholder="Enter password"
         />
         <div
           onClick={() =>
@@ -160,7 +160,7 @@ export default function AdminLoginPage() {
           }
           className={styles.forgotPassword}
         >
-          Nie pamiętam loginu lub hasła
+          I don't remember my username or password
         </div>
         {isForgotPasswordFieldVisible && (
           <>
@@ -170,8 +170,8 @@ export default function AdminLoginPage() {
               className={styles.forgotPasswordInfo}
             >
               {isResetLoading
-                ? "Wysyłanie linku..."
-                : "Kliknij tu, aby otrzymać link do zmiany hasła na e-mail powiązany z kontem"}
+                ? "Sending link..."
+                : "Click here to receive a password reset link to the email associated with the account"}
             </div>
             <input
               id="recovery-email"
@@ -180,7 +180,7 @@ export default function AdminLoginPage() {
               value={recoveryEmail}
               onChange={(e) => setRecoveryEmail(e.target.value)}
               autoComplete="email"
-              placeholder="Wpisz adres e-mail powiązany z kontem"
+              placeholder="Enter email address associated with the account"
               disabled={isLoggingIn || isUsernameReminderLoading}
             />
             <div
@@ -189,8 +189,8 @@ export default function AdminLoginPage() {
               className={styles.forgotPasswordInfo}
             >
               {isUsernameReminderLoading
-                ? "Wysyłanie loginu..."
-                : "Wyślij login na adres e-mail powiązany z kontem"}
+                ? "Sending username..."
+                : "Send username to the email address associated with the account"}
             </div>
           </>
         )}
@@ -199,10 +199,10 @@ export default function AdminLoginPage() {
           {isLoggingIn ? (
             <span className={styles.loadingWrapper}>
               <span className={styles.spinner} />
-              Logowanie...
+              Logging in...
             </span>
           ) : (
-            "Zaloguj się"
+            "Log in"
           )}
         </Button>
       </form>

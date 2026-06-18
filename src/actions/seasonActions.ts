@@ -60,7 +60,7 @@ export async function getAllSeasons() {
     const seasons = await Season.find({}).sort({ startDate: 1 }).lean();
     return JSON.parse(JSON.stringify(seasons)) as ISeasonData[];
   } catch (error) {
-    console.error('Błąd pobierania sezonów:', error);
+    console.error('Error fetching seasons:', error);
     return [];
   }
 }
@@ -72,7 +72,7 @@ export async function getSeasonById(id: string) {
     if (!season) return null;
     return JSON.parse(JSON.stringify(season)) as ISeasonData;
   } catch (error) {
-    console.error('Błąd pobierania sezonu:', error);
+    console.error('Error fetching season:', error);
     return null;
   }
 }
@@ -93,7 +93,7 @@ export async function updateSeasonDates(
     end.setHours(12, 0, 0, 0);
 
     if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
-      return { success: false, message: 'Nieprawidłowe daty sezonu' };
+      return { success: false, message: 'Invalid season dates' };
     }
 
     const startMonth = start.getMonth();
@@ -125,7 +125,7 @@ export async function updateSeasonDates(
       const overlapEnd = formatMonthDay(overlappingSeason.endDate as Date);
       return {
         success: false,
-        message: `Zakres dat nakłada się na sezon "${overlappingSeason.name}", który jest ustawiony od ${overlapStart} do ${overlapEnd}.`,
+        message: `Date range overlaps with season "${overlappingSeason.name}", which is set from ${overlapStart} to ${overlapEnd}.`,
       };
     }
 
@@ -138,10 +138,10 @@ export async function updateSeasonDates(
     revalidatePath('/admin/settings/booking');
     revalidatePath('/admin/prices');
     revalidatePath('/', 'layout');
-    return { success: true, message: 'Zaktualizowano daty sezonu' };
+    return { success: true, message: 'Season dates updated' };
   } catch (error) {
-    console.error('Błąd aktualizacji sezonu:', error);
-    return { success: false, message: 'Nie udało się zaktualizować dat sezonu' };
+    console.error('Error updating season:', error);
+    return { success: false, message: 'Failed to update season dates' };
   }
 }
 
@@ -151,10 +151,10 @@ export async function createSeason(name: string, description: string, startDate:
 
     const normalizedName = name.trim();
     if (!normalizedName) {
-      return { success: false, message: 'Nazwa sezonu jest wymagana' };
+      return { success: false, message: 'Season name is required' };
     }
     if (!startDate || !endDate) {
-      return { success: false, message: 'Daty sezonu są wymagane' };
+      return { success: false, message: 'Season dates are required' };
     }
 
     const parsedStartDate = new Date(startDate);
@@ -163,7 +163,7 @@ export async function createSeason(name: string, description: string, startDate:
     parsedEndDate.setHours(12, 0, 0, 0);
 
     if (Number.isNaN(parsedStartDate.getTime()) || Number.isNaN(parsedEndDate.getTime())) {
-      return { success: false, message: 'Nieprawidłowe daty sezonu' };
+      return { success: false, message: 'Invalid season dates' };
     }
 
     const startMD = toMonthDayValue(parsedStartDate);
@@ -179,7 +179,7 @@ export async function createSeason(name: string, description: string, startDate:
       const overlapEnd = formatMonthDay(s.endDate as Date);
       return {
         success: false,
-        message: `Zakres dat nakłada się na sezon "${s.name as string}", który jest ustawiony od ${overlapStart} do ${overlapEnd}.`,
+        message: `Date range overlaps with season "${s.name as string}", which is set from ${overlapStart} to ${overlapEnd}.`,
       };
     }
 
@@ -195,12 +195,12 @@ export async function createSeason(name: string, description: string, startDate:
     revalidatePath('/admin/prices');
     return {
       success: true,
-      message: `Dodano sezon: ${normalizedName}`,
+      message: `Season added: ${normalizedName}`,
       seasonId: season._id.toString(),
     };
   } catch (error) {
-    console.error('Błąd tworzenia sezonu:', error);
-    return { success: false, message: 'Nie udało się dodać sezonu' };
+    console.error('Error creating season:', error);
+    return { success: false, message: 'Failed to add season' };
   }
 }
 
@@ -210,15 +210,15 @@ export async function deleteSeason(seasonId: string) {
 
     const deleted = await Season.findByIdAndDelete(seasonId);
     if (!deleted) {
-      return { success: false, message: 'Nie znaleziono sezonu do usunięcia' };
+      return { success: false, message: 'Season not found for deletion' };
     }
 
     revalidatePath('/admin/settings/booking');
     revalidatePath('/admin/prices');
-    return { success: true, message: `Usunięto sezon: ${deleted.name}` };
+    return { success: true, message: `Season deleted: ${deleted.name}` };
   } catch (error) {
-    console.error('Błąd usuwania sezonu:', error);
-    return { success: false, message: 'Nie udało się usunąć sezonu' };
+    console.error('Error deleting season:', error);
+    return { success: false, message: 'Failed to delete season' };
   }
 }
 
@@ -238,7 +238,7 @@ export async function getPricesForProperty(propertyId: string) {
     const prices = await PropertyPrices.find({ propertyId }).lean();
     return JSON.parse(JSON.stringify(prices));
   } catch (error) {
-    console.error('Błąd pobierania cen domku:', error);
+    console.error('Error fetching property prices:', error);
     return [];
   }
 }
@@ -258,12 +258,12 @@ export async function getBasicPrices(propertyId: string) {
       success: true,
       data: prices ?? null,
       message: prices
-        ? 'Ceny podstawowe znalezione'
-        : 'Brak skonfigurowanych cen podstawowych',
+        ? 'Basic prices found'
+        : 'No basic prices configured',
     };
   } catch (error) {
-    console.error('Błąd pobierania cen podstawowych:', error);
-    return { success: false, message: 'Nie udało się pobrać cen podstawowych' };
+    console.error('Error fetching basic prices:', error);
+    return { success: false, message: 'Failed to fetch basic prices' };
   }
 }
 
@@ -289,7 +289,7 @@ export async function updateBasicPrices(
       !Array.isArray(weekdayPrices) ||
       !Array.isArray(weekendPrices)
     ) {
-      return { success: false, message: 'Nieprawidłowe dane' };
+      return { success: false, message: 'Invalid data' };
     }
 
     await dbConnect();
@@ -302,10 +302,10 @@ export async function updateBasicPrices(
 
     // revalidatePath('/admin/prices');
     revalidatePath('/', 'layout');
-    return { success: true, message: 'Zapisano ceny podstawowe' };
+    return { success: true, message: 'Basic prices saved' };
   } catch (error) {
-    console.error('Błąd zapisu cen podstawowych:', error);
-    return { success: false, message: 'Nie udało się zapisać cen podstawowych' };
+    console.error('Error saving basic prices:', error);
+    return { success: false, message: 'Failed to save basic prices' };
   }
 }
 
@@ -318,10 +318,10 @@ export async function deleteBasicPrices(propertyId: string) {
     await PropertyPrices.deleteOne({ propertyId, seasonId: null });
     revalidatePath('/admin/prices');
     revalidatePath('/', 'layout');
-    return { success: true, message: 'Usunięto ceny podstawowe' };
+    return { success: true, message: 'Basic prices deleted' };
   } catch (error) {
-    console.error('Błąd usuwania cen podstawowych:', error);
-    return { success: false, message: 'Nie udało się usunąć cen podstawowych' };
+    console.error('Error deleting basic prices:', error);
+    return { success: false, message: 'Failed to delete basic prices' };
   }
 }
 
@@ -351,7 +351,7 @@ export async function updateSeasonPricesForProperty(
       !Array.isArray(weekdayPrices) ||
       !Array.isArray(weekendPrices)
     ) {
-      return { success: false, message: 'Nieprawidłowe dane' };
+      return { success: false, message: 'Invalid data' };
     }
 
     await dbConnect();
@@ -361,7 +361,7 @@ export async function updateSeasonPricesForProperty(
       : null;
 
     if (mode === 'season' && !seasonId) {
-      return { success: false, message: 'Brak ID sezonu' };
+      return { success: false, message: 'Missing season ID' };
     }
 
     await PropertyPrices.findOneAndUpdate(
@@ -375,12 +375,12 @@ export async function updateSeasonPricesForProperty(
     return {
       success: true,
       message: mode === 'basic'
-        ? 'Zapisano ceny podstawowe'
-        : 'Zapisano ceny sezonowe',
+        ? 'Basic prices saved'
+        : 'Seasonal prices saved',
     };
   } catch (error) {
-    console.error('Błąd zapisu cen:', error);
-    return { success: false, message: 'Wystąpił błąd podczas zapisu' };
+    console.error('Error saving prices:', error);
+    return { success: false, message: 'An error occurred while saving' };
   }
 }
 
@@ -407,7 +407,7 @@ export async function copyPricesToAllProperties(sourcePropertyId: string) {
     }).lean();
 
     if (otherProperties.length === 0) {
-      return { success: false, message: 'Brak innych domków do skopiowania cen.' };
+      return { success: false, message: 'No other cottages to copy prices to.' };
     }
 
     for (const property of otherProperties) {
@@ -432,10 +432,10 @@ export async function copyPricesToAllProperties(sourcePropertyId: string) {
     revalidatePath('/', 'layout');
     return {
       success: true,
-      message: `Ceny skopiowano do ${otherProperties.length} domku(ów).`,
+      message: `Prices copied to ${otherProperties.length} cottage(s).`,
     };
   } catch (error) {
-    console.error('Błąd kopiowania cen:', error);
-    return { success: false, message: 'Nie udało się skopiować cen.' };
+    console.error('Error copying prices:', error);
+    return { success: false, message: 'Failed to copy prices.' };
   }
 }

@@ -8,32 +8,32 @@ export default function AdminRegisterPage() {
   const [password, setPassword] = useState("");
 
   const handleSignUp = () => {
-    // Logika rejestracji admina
+    // Admin registration logic
   };
 
   const handleSignIn = () => {
-    // Logika logowania admina
+    // Admin login logic
   };
 
   return (
     <div className="auth-container">
-      <h2>Rejestracja admina</h2>
+      <h2>Admin Registration</h2>
       <input
         type="email"
-        placeholder="E-mail"
+        placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <input
         type="password"
-        placeholder="Hasło"
+        placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
       <div className="buttons">
-        <Button onClick={handleSignUp}>Zarejestruj się</Button>
+        <Button onClick={handleSignUp}>Sign up</Button>
         <Button variant="secondary" onClick={handleSignIn}>
-          Zaloguj się
+          Sign in
         </Button>
       </div>
     </div>

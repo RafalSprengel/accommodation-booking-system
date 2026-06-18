@@ -228,16 +228,16 @@ export default function AddBookingPage() {
     if (state.success) {
       setFeedbackModal({
         isOpen: true,
-        title: "Rezerwacja utworzona",
+        title: "Booking created",
         message: (
           <div className={styles.successDetails}>
             <p>{state.message}</p>
             <ul className={styles.successList}>
-              <li><strong>Obiekt:</strong> <span>{selectedProperty?.name}</span></li>
-              <li><strong>Termin:</strong> <span>{bookingDates.start ? formatDisplayDate(bookingDates.start) : ""} — {bookingDates.end ? formatDisplayDate(bookingDates.end) : ""}</span></li>
-              <li><strong>Dorosłych:</strong> <span>{adults}</span></li>
-              <li><strong>Dzieci:</strong> <span>{children}</span></li>
-              <li><strong>Dostawek:</strong> <span>{extraBeds}</span></li>
+              <li><strong>Property:</strong> <span>{selectedProperty?.name}</span></li>
+              <li><strong>Dates:</strong> <span>{bookingDates.start ? formatDisplayDate(bookingDates.start) : ""} — {bookingDates.end ? formatDisplayDate(bookingDates.end) : ""}</span></li>
+              <li><strong>Adults:</strong> <span>{adults}</span></li>
+              <li><strong>Children:</strong> <span>{children}</span></li>
+              <li><strong>Extra beds:</strong> <span>{extraBeds}</span></li>
             </ul>
           </div>
         ),
@@ -267,7 +267,7 @@ export default function AddBookingPage() {
     } else if (state.message && !state.success) {
       setFeedbackModal({
         isOpen: true,
-        title: "Nie udało się utworzyć rezerwacji",
+        title: "Failed to create booking",
         message: state.message,
       });
     }
@@ -313,13 +313,13 @@ export default function AddBookingPage() {
 
   const validateInvoiceData = (): boolean => {
     const errors: Record<string, string> = {};
-    if (!invoiceData.companyName.trim()) errors.companyName = "Wymagane";
-    if (!invoiceData.nip.trim()) errors.nip = "Wymagane";
-    if (!invoiceData.street.trim()) errors.street = "Wymagane";
+    if (!invoiceData.companyName.trim()) errors.companyName = "Required";
+    if (!invoiceData.nip.trim()) errors.nip = "Required";
+    if (!invoiceData.street.trim()) errors.street = "Required";
     if (!invoiceData.postalCode.trim()) {
-      errors.postalCode = "Wymagane";
+      errors.postalCode = "Required";
     }
-    if (!invoiceData.city.trim()) errors.city = "Wymagane";
+    if (!invoiceData.city.trim()) errors.city = "Required";
     setInvoiceErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -351,14 +351,14 @@ export default function AddBookingPage() {
 
   const validateGuestData = (): boolean => {
     const errors: Record<string, string> = {};
-    if (!guestData.firstName.trim()) errors.firstName = "Wymagane";
-    if (!guestData.lastName.trim()) errors.lastName = "Wymagane";
+    if (!guestData.firstName.trim()) errors.firstName = "Required";
+    if (!guestData.lastName.trim()) errors.lastName = "Required";
     if (!guestData.email.trim()) {
-      errors.email = "Wymagane";
+      errors.email = "Required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestData.email)) {
-      errors.email = "Nieprawidłowy e-mail";
+      errors.email = "Invalid email";
     }
-    if (!guestData.phone.trim()) errors.phone = "Wymagane";
+    if (!guestData.phone.trim()) errors.phone = "Required";
     setGuestErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -366,19 +366,19 @@ export default function AddBookingPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     let hasErrors = false;
     if (!propertySelection) {
-      setPropertyError("Wybierz obiekt");
+      setPropertyError("Select a property");
       hasErrors = true;
     }
     if (!bookingDates.start || !bookingDates.end) {
       setFeedbackModal({
         isOpen: true,
-        title: "Brak terminu",
-        message: "Proszę wybrać termin rezerwacji.",
+        title: "No date selected",
+        message: "Please select a booking date.",
       });
       hasErrors = true;
     }
     if (paidAmount === null) {
-      setPaidAmountError("Wymagane");
+      setPaidAmountError("Required");
       hasErrors = true;
     }
     if (hasErrors) {
@@ -389,8 +389,8 @@ export default function AddBookingPage() {
       e.preventDefault();
       setFeedbackModal({
         isOpen: true,
-        title: "Nieprawidłowe dane faktury",
-        message: "Proszę poprawnie uzupełnić dane do faktury.",
+        title: "Invalid invoice data",
+        message: "Please fill in the invoice data correctly.",
       });
       return;
     }
@@ -403,10 +403,10 @@ export default function AddBookingPage() {
   const remainingAmount = totalPrice - (paidAmount ?? 0);
   const getPaymentBadge = () => {
     if ((paidAmount ?? 0) >= totalPrice && totalPrice > 0)
-      return { text: "Opłacone", class: styles.paymentPaid };
+      return { text: "Paid", class: styles.paymentPaid };
     if (paidAmount !== null && paidAmount > 0)
-      return { text: "Zaliczka", class: styles.paymentDeposit };
-    return { text: "Nieopłacone", class: styles.paymentUnpaid };
+      return { text: "Deposit", class: styles.paymentDeposit };
+    return { text: "Unpaid", class: styles.paymentUnpaid };
   };
   const paymentBadge = getPaymentBadge();
 
@@ -418,13 +418,13 @@ export default function AddBookingPage() {
     (selectedPropertyMaxAdults == null || selectedPropertyMaxExtraBeds == null);
 
   return (
-    <AdminShell title="Dodaj nową rezerwację" description="Ręczne wprowadzenie rezerwacji (np. telefonicznej).">
+    <AdminShell title="Add new booking" description="Manual entry of a booking (e.g. by phone).">
 
       {missingLimits && (
         <div className={styles.warningBox}>
           <span>
-            Brak skonfigurowanych limitów gości lub dostawek dla wybranego
-            obiektu.
+            No guest limits or extra bed limits configured for the selected
+            property.
             <br />
             <a
               href="/admin/properties"
@@ -432,7 +432,7 @@ export default function AddBookingPage() {
               rel="noopener noreferrer"
               className={styles.settingsLink}
             >
-              Przejdź do ustawień domków
+              Go to property settings
             </a>
           </span>
         </div>
@@ -474,10 +474,10 @@ export default function AddBookingPage() {
         />
         <input type="hidden" name="invoiceCity" value={invoiceData.city} />
 
-        <h2 className={styles.sectionTitle}>Termin i Obiekt</h2>
+        <h2 className={styles.sectionTitle}>Date and Property</h2>
         <div className={styles.grid}>
           <div className={styles.inputGroup}>
-            <label htmlFor="propertyId">Obiekt</label>
+            <label htmlFor="propertyId">Property</label>
             <select
               id="propertyId"
               name="propertyId"
@@ -487,7 +487,7 @@ export default function AddBookingPage() {
               className={propertyError ? styles.inputError : ""}
             >
               <option value="">
-                {isLoadingProperties ? "Wczytywanie..." : "Wybierz domek"}
+                {isLoadingProperties ? "Loading..." : "Select a cottage"}
               </option>
               {properties.map((prop) => (
                 <option key={prop._id} value={prop._id}>
@@ -499,7 +499,7 @@ export default function AddBookingPage() {
           </div>
 
           <div className={styles.dateBox}>
-            <label className={styles.label}>Wybierz termin</label>
+            <label className={styles.label}>Select dates</label>
             <div
               className={`${styles.date} ${!propertySelection || isLoadingUnavailableDates ? styles.dateDisabled : ""}`}
               onClick={() =>
@@ -514,10 +514,10 @@ export default function AddBookingPage() {
                   {bookingDates.start && bookingDates.end
                     ? `${formatDisplayDate(bookingDates.start)} — ${formatDisplayDate(bookingDates.end)}`
                     : !propertySelection
-                      ? "Najpierw wybierz obiekt"
+                      ? "First select a property"
                       : isLoadingUnavailableDates
-                        ? "Wczytywanie kalendarza..."
-                        : "Wybierz daty"}
+                        ? "Loading calendar..."
+                        : "Select dates"}
                 </span>
                 {isLoadingUnavailableDates && (
                   <span
@@ -546,7 +546,7 @@ export default function AddBookingPage() {
                     variant="secondary"
                     onClick={() => setCalendarOpen(false)}
                   >
-                    Gotowe
+                    Done
                   </Button>
                 </div>
               )}
@@ -555,7 +555,7 @@ export default function AddBookingPage() {
           <div
             className={`${styles.inputGroup} ${!propertySelection || missingLimits ? styles.disabledGroup : ""}`}
           >
-            <label>Dorosłych</label>
+            <label>Adults</label>
             <QuantityPicker
               value={adults}
               onIncrement={() =>
@@ -570,7 +570,7 @@ export default function AddBookingPage() {
           <div
             className={`${styles.inputGroup} ${!propertySelection || missingLimits ? styles.disabledGroup : ""}`}
           >
-            <label>Dzieci (bezpłatnie)</label>
+            <label>Children (free)</label>
             <QuantityPicker
               value={children}
               onIncrement={() => setChildren((prev) => Math.min(selectedProperty?.maxChildren ?? 10, prev + 1))}
@@ -583,7 +583,7 @@ export default function AddBookingPage() {
           <div
             className={`${styles.inputGroup} ${!propertySelection || missingLimits ? styles.disabledGroup : ""}`}
           >
-            <label>Dostawek</label>
+            <label>Extra beds</label>
             <QuantityPicker
               value={extraBeds}
               onIncrement={() =>
@@ -598,10 +598,10 @@ export default function AddBookingPage() {
           </div>
         </div>
 
-        <h2 className={styles.sectionTitle}>Płatność</h2>
+        <h2 className={styles.sectionTitle}>Payment</h2>
         <div className={styles.grid}>
           <div className={styles.inputGroup}>
-            <label htmlFor="totalPrice">Cena całkowita (PLN)</label>
+            <label htmlFor="totalPrice">Total price (GBP)</label>
             <div className={styles.priceInputWrapper}>
               <input
                 id="totalPrice"
@@ -620,7 +620,7 @@ export default function AddBookingPage() {
           </div>
 
           <div className={styles.inputGroup}>
-            <label htmlFor="paidAmount">Wpłacono (PLN)</label>
+            <label htmlFor="paidAmount">Paid amount (GBP)</label>
             <input
               id="paidAmount"
               type="number"
@@ -641,23 +641,23 @@ export default function AddBookingPage() {
           </div>
 
           <div className={styles.inputGroup}>
-            <label>Do zapłaty</label>
+            <label>Amount due</label>
             <div className={styles.remainingAmount}>
               <span className={styles.remainingValue}>
-                {remainingAmount.toFixed(2)} zł
+                {remainingAmount.toFixed(2)} GBP
               </span>
             </div>
           </div>
 
           <div className={styles.inputGroup}>
-            <label>Status płatności</label>
+            <label>Payment status</label>
             <span className={`${styles.badge} ${paymentBadge.class}`}>
               {paymentBadge.text}
             </span>
           </div>
         </div>
 
-        <h2 className={styles.sectionTitle}>Dodatkowe opcje</h2>
+        <h2 className={styles.sectionTitle}>Additional options</h2>
         <div className={styles.invoiceOptionGroup}>
           <label className={styles.checkboxLabel}>
             <input
@@ -665,7 +665,7 @@ export default function AddBookingPage() {
               checked={wantsInvoice}
               onChange={(e) => setWantsInvoice(e.target.checked)}
             />
-            <span>Chcę otrzymać fakturę VAT</span>
+            <span>Invoice required</span>
           </label>
         </div>
 
@@ -673,9 +673,9 @@ export default function AddBookingPage() {
           className={`${styles.invoiceWrapper} ${wantsInvoice ? styles.expanded : ""}`}
         >
           <div className={styles.invoiceContent}>
-            <h3 className={styles.invoiceTitle}>Dane do faktury VAT</h3>
+            <h3 className={styles.invoiceTitle}>VAT invoice details</h3>
             <div className={styles.inputGroup}>
-              <label>Nazwa firmy *</label>
+              <label>Company name *</label>
               <input
                 name="companyName"
                 type="text"
@@ -699,7 +699,7 @@ export default function AddBookingPage() {
               {invoiceErrors.nip && <span className={styles.errorText}>{invoiceErrors.nip}</span>}
             </div>
             <div className={styles.inputGroup}>
-              <label>Ulica i numer *</label>
+              <label>Street and number *</label>
               <input
                 name="street"
                 type="text"
@@ -712,7 +712,7 @@ export default function AddBookingPage() {
             </div>
             <div className={styles.grid}>
               <div className={styles.inputGroup}>
-                <label>Kod pocztowy *</label>
+                <label>Postal code *</label>
                 <input
                   name="postalCode"
                   type="text"
@@ -725,7 +725,7 @@ export default function AddBookingPage() {
                 {invoiceErrors.postalCode && <span className={styles.errorText}>{invoiceErrors.postalCode}</span>}
               </div>
               <div className={styles.inputGroup}>
-                <label>Miejscowość *</label>
+                <label>City *</label>
                 <input
                   name="city"
                   type="text"
@@ -740,10 +740,10 @@ export default function AddBookingPage() {
           </div>
         </div>
 
-        <h2 className={styles.sectionTitle}>Dane gościa</h2>
+        <h2 className={styles.sectionTitle}>Guest details</h2>
         <div className={styles.grid}>
           <div className={styles.inputGroup}>
-            <label htmlFor="firstName">Imię</label>
+            <label htmlFor="firstName">First name</label>
             <input
               id="firstName"
               name="firstName"
@@ -755,7 +755,7 @@ export default function AddBookingPage() {
             {guestErrors.firstName && <span className={styles.errorText}>{guestErrors.firstName}</span>}
           </div>
           <div className={styles.inputGroup}>
-            <label htmlFor="lastName">Nazwisko</label>
+            <label htmlFor="lastName">Last name</label>
             <input
               id="lastName"
               name="lastName"
@@ -767,7 +767,7 @@ export default function AddBookingPage() {
             {guestErrors.lastName && <span className={styles.errorText}>{guestErrors.lastName}</span>}
           </div>
           <div className={styles.inputGroup}>
-            <label htmlFor="guestEmail">E-mail</label>
+            <label htmlFor="guestEmail">Email</label>
             <input
               id="guestEmail"
               name="guestEmail"
@@ -779,7 +779,7 @@ export default function AddBookingPage() {
             {guestErrors.email && <span className={styles.errorText}>{guestErrors.email}</span>}
           </div>
           <div className={styles.inputGroup}>
-            <label htmlFor="guestPhone">Telefon</label>
+            <label htmlFor="guestPhone">Phone</label>
             <input
               id="guestPhone"
               name="guestPhone"
@@ -793,24 +793,24 @@ export default function AddBookingPage() {
         </div>
 
         <div className={styles.inputGroup + " " + styles.internalNotes}>
-          <label htmlFor="internalNotes">Uwagi wewnętrzne</label>
+          <label htmlFor="internalNotes">Internal note</label>
           <textarea id="internalNotes" name="internalNotes" rows={3}></textarea>
         </div>
 
         <div className={styles.actions}>
           <Button type="button" variant="secondary" onClick={resetAll}>
-            Anuluj
+            Cancel
           </Button>
           <Button
             type="submit"
             disabled={Boolean(isPending || missingLimits)}
             title={
               missingLimits
-                ? "Najpierw skonfiguruj limity gości w ustawieniach domków"
+                ? "First configure guest limits in property settings"
                 : undefined
             }
           >
-            {isPending ? "Zapisuję..." : "Zapisz rezerwację"}
+            {isPending ? "Saving..." : "Save booking"}
           </Button>
         </div>
       </form>
@@ -825,7 +825,7 @@ export default function AddBookingPage() {
           })
         }
         title={feedbackModal.title}
-        cancelText="Zamknij"
+        cancelText="Close"
       >
         <div>{feedbackModal.message}</div>
       </Modal>

@@ -7,13 +7,13 @@ export default async function RentalPolicySettings() {
   const config = await getSystemConfig();
 
   return (
-    <AdminSection title="Polityka wynajmu" badge="Globalne">
+    <AdminSection title="Rental Policy" badge="Global">
       <SettingRow
-        label={<label htmlFor="auto-block-toggle">Automatyczna blokada drugiego domku</label>}
+        label={<label htmlFor="auto-block-toggle">Auto-block other cabins</label>}
         description={
           <>
-            Gdy ta opcja jest <strong>włączona</strong>, rezerwacja jednego domku automatycznie blokuje wszystkie pozostałe na te same daty (zasada &quot;jedna grupa na terenie&quot;).<br />
-            Gdy <strong>wyłączona</strong>, klienci mogą rezerwować domek niezależnie, mimo że drugi jest już zarezerwowany przez innego klienta.
+            When <strong>enabled</strong>, booking one cabin automatically blocks all others for the same dates ("single group on premises" rule).<br />
+            When <strong>disabled</strong>, clients may book a cabin independently even if another cabin is already booked by another client.
           </>
         }
       >

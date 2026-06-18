@@ -52,7 +52,7 @@ async function getAllowCheckinOnDepartureDay(): Promise<boolean> {
     .lean()
 
   if (typeof bookingConfig?.allowCheckinOnDepartureDay !== 'boolean') {
-    throw new Error('Brak poprawnej konfiguracji ustawienia zameldowania w dniu wymeldowania.')
+    throw new Error('Missing valid configuration for check-in on departure day setting.')
   }
 
   return bookingConfig.allowCheckinOnDepartureDay
@@ -110,29 +110,29 @@ export async function getUnavailableDatesForProperty(propertyId: string): Promis
 
 function validateBookingData(data: any) {
   const errors: string[] = []
-  if (!data.propertyId) errors.push('Należy wybrać obiekt')
-  if (!data.startDate) errors.push('Należy podać datę rozpoczęcia')
-  if (!data.endDate) errors.push('Należy podać datę zakończenia')
-  if (new Date(data.endDate) <= new Date(data.startDate)) errors.push('Data zakończenia musi być późniejsza niż data rozpoczęcia')
+  if (!data.propertyId) errors.push('Please select a property')
+  if (!data.startDate) errors.push('Please enter a start date')
+  if (!data.endDate) errors.push('Please enter an end date')
+  if (new Date(data.endDate) <= new Date(data.startDate)) errors.push('End date must be later than start date')
   const adults = Number(data.adults)
-  if (isNaN(adults) || adults <= 0) errors.push('Liczba dorosłych musi być poprawną liczbą większą od 0')
+  if (isNaN(adults) || adults <= 0) errors.push('Number of adults must be a valid number greater than 0')
   const children = Number(data.children)
-  if (isNaN(children) || children < 0) errors.push('Liczba dzieci nie może być ujemna')
+  if (isNaN(children) || children < 0) errors.push('Number of children cannot be negative')
   const extraBeds = Number(data.extraBedsCount)
-  if (isNaN(extraBeds) || extraBeds < 0) errors.push('Liczba dostawek nie może być ujemna')
+  if (isNaN(extraBeds) || extraBeds < 0) errors.push('Number of extra beds cannot be negative')
   const totalPrice = Number(data.totalPrice)
-  if (isNaN(totalPrice) || totalPrice < 0) errors.push('Cena całkowita nie może być ujemna')
+  if (isNaN(totalPrice) || totalPrice < 0) errors.push('Total price cannot be negative')
   const paidAmount = Number(data.paidAmount)
-  if (isNaN(paidAmount) || paidAmount < 0) errors.push('Wpłacona kwota nie może być ujemna')
-  if (!(data.firstName && data.lastName)) errors.push('Należy podać imię i nazwisko gościa')
-  if (!data.guestEmail || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(data.guestEmail)) errors.push('Niepoprawny format adresu email')
-  if (!data.guestPhone) errors.push('Należy podać numer telefonu gościa')
+  if (isNaN(paidAmount) || paidAmount < 0) errors.push('Paid amount cannot be negative')
+  if (!(data.firstName && data.lastName)) errors.push('Please enter the guest\'s first and last name')
+  if (!data.guestEmail || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(data.guestEmail)) errors.push('Invalid email address format')
+  if (!data.guestPhone) errors.push('Please enter the guest\'s phone number')
   if (data.invoice === 'true') {
-    if (!data.invoiceCompany) errors.push('Nazwa firmy jest wymagana dla faktury')
-    if (!data.invoiceNip) errors.push('NIP jest wymagany dla faktury')
-    if (!data.invoiceStreet) errors.push('Ulica jest wymagana dla faktury')
-    if (!data.invoicePostalCode) errors.push('Kod pocztowy jest wymagany dla faktury')
-    if (!data.invoiceCity) errors.push('Miejscowość jest wymagana dla faktury')
+    if (!data.invoiceCompany) errors.push('Company name is required for invoice')
+    if (!data.invoiceNip) errors.push('Tax ID is required for invoice')
+    if (!data.invoiceStreet) errors.push('Street is required for invoice')
+    if (!data.invoicePostalCode) errors.push('Postal code is required for invoice')
+    if (!data.invoiceCity) errors.push('City is required for invoice')
   }
   return errors
 }
@@ -238,7 +238,7 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
     const endDate = new Date(rawData.endDate as string)
 
     if (!Types.ObjectId.isValid(propertyId)) {
-      return { message: 'Nieprawidłowy identyfikator obiektu.', success: false }
+      return { message: 'Invalid property ID.', success: false }
     }
 
     // Validate property capacity (prevent admin from creating bookings exceeding limits)
@@ -247,19 +247,19 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
       .lean()
 
     if (!property) {
-      return { message: 'Wybrany obiekt nie istnieje lub jest nieaktywny.', success: false }
+      return { message: 'The selected property does not exist or is inactive.', success: false }
     }
 
     if (adults > property.maxAdults) {
-      return { message: `Liczba dorosłych (${adults}) przekracza pojemność obiektu "${property.name}" (max ${property.maxAdults}).`, success: false }
+      return { message: `Number of adults (${adults}) exceeds the capacity of "${property.name}" (max ${property.maxAdults}).`, success: false }
     }
 
     if (children > property.maxChildren) {
-      return { message: `Liczba dzieci (${children}) przekracza pojemność obiektu "${property.name}" (max ${property.maxChildren}).`, success: false }
+      return { message: `Number of children (${children}) exceeds the capacity of "${property.name}" (max ${property.maxChildren}).`, success: false }
     }
 
     if (extraBedsCount > property.maxExtraBeds) {
-      return { message: `Liczba dostawek (${extraBedsCount}) przekracza pojemność obiektu "${property.name}" (max ${property.maxExtraBeds}).`, success: false }
+      return { message: `Number of extra beds (${extraBedsCount}) exceeds the capacity of "${property.name}" (max ${property.maxExtraBeds}).`, success: false }
     }
 
     const overlapFilter = buildBookingOverlapFilter(startDate, endDate, allowCheckinOnDepartureDay)
@@ -277,7 +277,7 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
     const existingConflict = occupiedPropertyIds.size > 0
 
     if (existingConflict) {
-      return { message: 'Wybrany termin koliduje z istniejącą rezerwacją lub blokadą.', success: false }
+      return { message: 'The selected dates conflict with an existing booking or block.', success: false }
     }
 
     const newBooking = new Booking({
@@ -312,7 +312,7 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
         if (siteSettings.sendBookingConfirmationEmails !== false) {
         await sendBookingEmail({
           to: newBooking.guestEmail,
-          subject: 'Potwierdzenie rezerwacji w Wilcze Chatki',
+      subject: 'Booking Confirmation - Wilcze Chatki',
           react: BookingConfirmationToClient({
             customerName,
             orderNumber: newBooking.orderId ?? '',
@@ -344,7 +344,7 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
           if (adminEmail) {
           await sendBookingEmail({
             to: adminEmail,
-            subject: `Nowa rezerwacja: ${customerName} (${newBooking.orderId})`,
+      subject: `New booking: ${customerName} (${newBooking.orderId})`,
             react: BookingConfirmationToAdmin({
               customerName,
               orderNumber: newBooking.orderId ?? '',
@@ -374,16 +374,16 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
         }
       }
     } catch (err) {
-      console.error('Błąd wysyłki maila po utworzeniu rezerwacji przez admina:', err)
+      console.error('Error sending email after admin booking creation:', err)
     }
     revalidatePath('/', 'layout')
     revalidatePath('/admin', 'layout')
     revalidatePath('/admin/bookings/list')
     revalidatePath('/admin/bookings/calendar')
     revalidatePath('/admin/bookings/block')
-    return { message: 'Rezerwacja została pomyślnie utworzona!', success: true }
+    return { message: 'Booking has been successfully created!', success: true }
   } catch (error: any) {
-    return { message: error.message || 'Wystąpił nieoczekiwany błąd serwera.', success: false }
+    return { message: error.message || 'An unexpected server error occurred.', success: false }
   }
 }
 
@@ -393,7 +393,7 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
   const bookingId = rawData.bookingId as string
 
   if (!Types.ObjectId.isValid(bookingId)) {
-    return { message: 'Nieprawidłowe ID rezerwacji.', success: false }
+    return { message: 'Invalid booking ID.', success: false }
   }
 
   const validationErrors = validateBookingData(rawData)
@@ -406,7 +406,7 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
     const extraBedsCount = Number(rawData.extraBedsCount)
     const prevBooking = await Booking.findById(bookingId).lean()
     if (!prevBooking) {
-      return { message: 'Nie znaleziono rezerwacji do zaktualizowania.', success: false }
+      return { message: 'Booking not found for update.', success: false }
     }
     const invoiceData = rawData.invoice === 'true'
       ? {
@@ -427,7 +427,7 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
     const status = rawData.status as string
 
     if (!Types.ObjectId.isValid(propertyId)) {
-      return { message: 'Nieprawidłowy identyfikator obiektu.', success: false }
+      return { message: 'Invalid property ID.', success: false }
     }
 
     const property = await Property.findOne({ _id: propertyId, isActive: true })
@@ -435,26 +435,26 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
       .lean()
 
     if (!property) {
-      return { message: 'Wybrany obiekt nie istnieje lub jest nieaktywny.', success: false }
+      return { message: 'The selected property does not exist or is inactive.', success: false }
     }
 
     if (adults > property.maxAdults) {
-      return { message: `Liczba dorosłych (${adults}) przekracza pojemność obiektu "${property.name}" (max ${property.maxAdults}).`, success: false }
+      return { message: `Number of adults (${adults}) exceeds the capacity of "${property.name}" (max ${property.maxAdults}).`, success: false }
     }
 
     if (children > property.maxChildren) {
-      return { message: `Liczba dzieci (${children}) przekracza pojemność obiektu "${property.name}" (max ${property.maxChildren}).`, success: false }
+      return { message: `Number of children (${children}) exceeds the capacity of "${property.name}" (max ${property.maxChildren}).`, success: false }
     }
 
     if (extraBedsCount > property.maxExtraBeds) {
-      return { message: `Liczba dostawek (${extraBedsCount}) przekracza pojemność obiektu "${property.name}" (max ${property.maxExtraBeds}).`, success: false }
+      return { message: `Number of extra beds (${extraBedsCount}) exceeds the capacity of "${property.name}" (max ${property.maxExtraBeds}).`, success: false }
     }
 
    // Prevent manual setting of statuses that are managed automatically
     const forbiddenStatuses = ['blocked', 'pending', 'failed']
     if (forbiddenStatuses.includes(status)) {
       return {
-        message: 'Ręczne ustawianie statusów "blocked", "pending" i "failed" jest niedozwolone. Użyj funkcji blokad lub poczekaj na automatyczną aktualizację.',
+        message: 'Manually setting "blocked", "pending" and "failed" statuses is not allowed. Use the blocking function or wait for automatic update.',
         success: false,
       }
     }
@@ -476,7 +476,7 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
       const existingConflict = occupiedPropertyIds.size > 0
 
       if (existingConflict) {
-        return { message: 'Wybrany termin koliduje z istniejącą rezerwacją lub blokadą.', success: false }
+        return { message: 'The selected dates conflict with an existing booking or block.', success: false }
       }
     }
 
@@ -524,7 +524,7 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
 
     const updatedBooking = await Booking.findByIdAndUpdate(bookingId, bookingData, { new: true })
     if (!updatedBooking) {
-      return { message: 'Nie znaleziono rezerwacji do zaktualizowania.', success: false }
+      return { message: 'Booking not found for update.', success: false }
     }
 
     // Send notification emails after update (non-blocking)
@@ -538,7 +538,7 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
           const propertyName = propertyDoc?.name || '';
           await sendBookingEmail({
             to: updatedBooking.guestEmail,
-            subject: 'Aktualizacja rezerwacji w Wilcze Chatki',
+      subject: 'Booking Update - Wilcze Chatki',
             react: BookingConfirmationToClient({
               customerName,
               orderNumber: updatedBooking.orderId ?? '',
@@ -579,7 +579,7 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
           const propertyName = propertyDoc?.name || '';
           await sendBookingEmail({
             to: adminEmail,
-            subject: `Zaktualizowana rezerwacja: ${customerName} (${updatedBooking.orderId})`,
+      subject: `Updated booking: ${customerName} (${updatedBooking.orderId})`,
             react: BookingConfirmationToAdmin({
               customerName,
               orderNumber: updatedBooking.orderId ?? '',
@@ -609,16 +609,16 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
         }
       }
     } catch (err) {
-      console.error('Błąd wysyłki maila po aktualizacji rezerwacji przez admina:', err)
+      console.error('Error sending email after admin booking update:', err)
     }
     revalidatePath('/', 'layout')
     revalidatePath('/admin', 'layout')
     revalidatePath('/admin/bookings/list')
     revalidatePath('/admin/bookings/calendar')
     revalidatePath('/admin/bookings/block')
-    return { message: 'Rezerwacja została pomyślnie zaktualizowana!', success: true }
+    return { message: 'Booking has been successfully updated!', success: true }
   } catch (error: any) {
-    return { message: error.message || 'Wystąpił nieoczekiwany błąd serwera.', success: false }
+    return { message: error.message || 'An unexpected server error occurred.', success: false }
   }
 }
 
@@ -626,22 +626,22 @@ export async function deleteBookingAction(bookingId: string) {
   await dbConnect()
 
   if (!Types.ObjectId.isValid(bookingId)) {
-    return { message: 'Nieprawidłowe ID rezerwacji.', success: false }
+    return { message: 'Invalid booking ID.', success: false }
   }
 
   try {
     const result = await Booking.findByIdAndDelete(bookingId)
     if (!result) {
-      return { message: 'Nie znaleziono rezerwacji.', success: false }
+      return { message: 'Booking not found.', success: false }
     }
     revalidatePath('/', 'layout')
     revalidatePath('/admin', 'layout')
     revalidatePath('/admin/bookings/list')
     revalidatePath('/admin/bookings/calendar')
     revalidatePath('/admin/bookings/block')
-    return { message: 'Rezerwacja została pomyślnie usunięta!', success: true }
+    return { message: 'Booking has been successfully deleted!', success: true }
   } catch (error: any) {
-    return { message: error.message || 'Wystąpił nieoczekiwany błąd serwera.', success: false }
+    return { message: error.message || 'An unexpected server error occurred.', success: false }
   }
 }
 
@@ -664,7 +664,7 @@ export async function calculatePriceAction(
     });
     return { price }
   } catch (error) {
-    console.error('Błąd podczas obliczania ceny:', error)
+    console.error('Error calculating price:', error)
     return { price: 0 }
   }
 }
@@ -745,18 +745,18 @@ export async function createBlockedBookingByAdmin(data: BlockCreateInput) {
     const allowCheckinOnDepartureDay = await getAllowCheckinOnDepartureDay()
 
     if (!data.propertyId || !data.startDate || !data.endDate) {
-      return { success: false, message: 'Wybierz obiekt oraz zakres dat.' }
+      return { success: false, message: 'Select a property and date range.' }
     }
 
     const startDate = new Date(data.startDate)
     const endDate = new Date(data.endDate)
 
     if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
-      return { success: false, message: 'Nieprawidłowy zakres dat.' }
+      return { success: false, message: 'Invalid date range.' }
     }
 
     if (endDate <= startDate) {
-      return { success: false, message: 'Data końca blokady musi być późniejsza niż data początku.' }
+      return { success: false, message: 'Block end date must be later than start date.' }
     }
 
     let targetProperties: Array<{ _id: Types.ObjectId; name: string }> = []
@@ -770,7 +770,7 @@ export async function createBlockedBookingByAdmin(data: BlockCreateInput) {
       targetProperties = properties.map((p: any) => ({ _id: p._id, name: p.name || 'Domek' }))
     } else {
       if (!Types.ObjectId.isValid(data.propertyId)) {
-        return { success: false, message: 'Nieprawidłowy obiekt.' }
+        return { success: false, message: 'Invalid property.' }
       }
 
       const property = await Property
@@ -779,14 +779,14 @@ export async function createBlockedBookingByAdmin(data: BlockCreateInput) {
         .lean()
 
       if (!property) {
-        return { success: false, message: 'Nie znaleziono wybranego domku.' }
+        return { success: false, message: 'The selected cottage was not found.' }
       }
 
       targetProperties = [{ _id: property._id, name: property.name || 'Domek' }]
     }
 
     if (targetProperties.length === 0) {
-      return { success: false, message: 'Brak domków do zablokowania.' }
+      return { success: false, message: 'No cottages to block.' }
     }
 
     const conflictedProperties: string[] = []
@@ -811,7 +811,7 @@ export async function createBlockedBookingByAdmin(data: BlockCreateInput) {
     if (conflictedProperties.length > 0) {
       return {
         success: false,
-        message: `Zakres koliduje z istniejącą rezerwacją/blokadą: ${conflictedProperties.join(', ')}`,
+        message: `The range conflicts with an existing booking/block: ${conflictedProperties.join(', ')}`,
       }
     }
 
@@ -831,7 +831,7 @@ export async function createBlockedBookingByAdmin(data: BlockCreateInput) {
       paymentStatus: 'unpaid',
       status: 'blocked',
       paymentMethod: '',
-      adminNotes: data.adminNotes?.trim() || 'Blokada terminu',
+      adminNotes: data.adminNotes?.trim() || 'Date block',
       source: 'admin',
     }))
 
@@ -846,11 +846,11 @@ export async function createBlockedBookingByAdmin(data: BlockCreateInput) {
     return {
       success: true,
       message: targetProperties.length === 1
-        ? 'Termin został zablokowany.'
-        : `Terminy zostały zablokowane dla ${targetProperties.length} domków.`,
+        ? 'The date has been blocked.'
+        : `The dates have been blocked for ${targetProperties.length} cottages.`,
     }
   } catch (error: any) {
-    return { success: false, message: error?.message || 'Wystąpił błąd podczas blokowania terminu.' }
+    return { success: false, message: error?.message || 'An error occurred while blocking the date.' }
   }
 }
 
@@ -859,7 +859,7 @@ export async function deleteBlockedBookingByAdmin(bookingId: string) {
     await dbConnect()
 
     if (!Types.ObjectId.isValid(bookingId)) {
-      return { success: false, message: 'Nieprawidłowe ID blokady.' }
+      return { success: false, message: 'Invalid block ID.' }
     }
 
     const deleted = await Booking.findOneAndDelete({
@@ -868,7 +868,7 @@ export async function deleteBlockedBookingByAdmin(bookingId: string) {
     })
 
     if (!deleted) {
-      return { success: false, message: 'Nie znaleziono blokady do usunięcia.' }
+      return { success: false, message: 'Block not found for deletion.' }
     }
 
     revalidatePath('/', 'layout')
@@ -877,8 +877,8 @@ export async function deleteBlockedBookingByAdmin(bookingId: string) {
     revalidatePath('/admin/bookings/calendar')
     revalidatePath('/admin/bookings/block')
 
-    return { success: true, message: 'Blokada została usunięta.' }
+    return { success: true, message: 'Block has been deleted.' }
   } catch (error: any) {
-    return { success: false, message: error?.message || 'Wystąpił błąd podczas usuwania blokady.' }
+    return { success: false, message: error?.message || 'An error occurred while deleting the block.' }
   }
 }

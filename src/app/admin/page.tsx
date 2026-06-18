@@ -15,19 +15,19 @@ export default async function AdminDashboard() {
     .slice(0, 5);
 
   return (
-    <AdminShell title="Panel Administratora" description="Witaj w panelu zarządzania Wilcze Chatki.">
+    <AdminShell title="Admin Panel" description="Welcome to the Wilcze Chatki management panel.">
 
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2>Nadchodzące rezerwacje</h2>
+          <h2>Upcoming bookings</h2>
           <Link href="/admin/bookings/list" className={styles.viewAll}>
-            Zobacz wszystkie →
+            View all →
           </Link>
         </div>
 
         {upcomingBookings.length === 0 ? (
           <div className={styles.emptyState}>
-            <p>Brak nadchodzących rezerwacji.</p>
+            <p>No upcoming bookings.</p>
           </div>
         ) : (
           <div className={styles.upcomingList}>
@@ -49,7 +49,7 @@ export default async function AdminDashboard() {
                     <span className={styles.detailSep}>•</span>
                     <span className={styles.cabinName}>{booking.propertyName}</span>
                   </span>
-                  <span className={styles.nightsBadge}>{nights} nocy</span>
+                  <span className={styles.nightsBadge}>{nights} nights</span>
                   <span className={styles.statusBadge}>
                     {booking.status === 'confirmed' ? '✓' : booking.status === 'pending' ? '⏳' : '•'}
                   </span>
@@ -62,24 +62,24 @@ export default async function AdminDashboard() {
 
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2> Szybki dostęp</h2>
+          <h2> Quick access</h2>
         </div>
         <div className={styles.quickActions}>
           <Link href="/admin/bookings/add" className={styles.actionCard}>
             <span className={styles.actionIcon}>➕</span>
-            <span>Dodaj rezerwację</span>
+            <span>Add booking</span>
           </Link>
           <Link href="/admin/bookings/calendar" className={styles.actionCard}>
             <span className={styles.actionIcon}>📅</span>
-            <span>Kalendarz</span>
+            <span>Calendar</span>
           </Link>
           <Link href="/admin/properties" className={styles.actionCard}>
             <span className={styles.actionIcon}>🏠</span>
-            <span>Zarządzaj domkami</span>
+            <span>Manage cottages</span>
           </Link>
           <Link href="/admin/settings" className={styles.actionCard}>
             <span className={styles.actionIcon}>⚙️</span>
-            <span>Ustawienia</span>
+            <span>Settings</span>
           </Link>
         </div>
       </section>

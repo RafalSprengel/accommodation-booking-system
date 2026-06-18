@@ -6,7 +6,7 @@ import AdminShell from '../_components/AdminShell/AdminShell';
 
 export default async function SettingsPage() {
   return (
-    <AdminShell title="Ustawienia systemu" description="Zarządzaj globalną polityką wynajmu obiektu.">
+    <AdminShell title="System settings" description="Manage the global property rental policy.">
       <RentalPolicySettings />
       <SiteSettingsForm />
       <BookingConfirmationSettings />

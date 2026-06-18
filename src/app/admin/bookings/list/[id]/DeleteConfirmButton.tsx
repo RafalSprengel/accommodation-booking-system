@@ -22,7 +22,7 @@ export default function DeleteConfirmButton({
       router.push("/admin/bookings/list");
       router.refresh();
     } else {
-      toast.error("Błąd: " + (result.message || "Nie udało się usunąć rezerwacji"));
+      toast.error("Error: " + (result.message || "Failed to delete booking"));
       setIsDeleting(false);
     }
   };
@@ -45,19 +45,19 @@ export default function DeleteConfirmButton({
         onClick={openConfirm}
         disabled={isDeleting}
       >
-        {isDeleting ? "⏳ Usuwanie..." : "🗑️ Usuń rezerwację"}
+        {isDeleting ? "⏳ Deleting..." : "🗑️ Delete booking"}
       </Button>
       <Modal
         isOpen={showConfirm}
         onClose={closeConfirm}
         onConfirm={confirmDelete}
-        title={"Usuń rezerwację"}
-        confirmText={"Usuń"}
-        cancelText={"Anuluj"}
+        title={"Delete booking"}
+        confirmText={"Delete"}
+        cancelText={"Cancel"}
         confirmVariant="danger"
         isLoading={isDeleting}
       >
-        <p>Czy na pewno usunąć tę rezerwację? Tej operacji nie można cofnąć.</p>
+        <p>Are you sure you want to delete this booking? This action cannot be undone.</p>
       </Modal>
     </>
   );

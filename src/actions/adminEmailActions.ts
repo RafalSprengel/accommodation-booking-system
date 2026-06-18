@@ -10,7 +10,7 @@ export async function changeAdminEmail(newEmail: string): Promise<{ success: boo
     const trimmed = newEmail.trim().toLowerCase();
 
     if (!trimmed) {
-        return { success: false, error: "Adres e-mail nie może być pusty." };
+        return { success: false, error: "Email address cannot be empty." };
     }
 
     try {
@@ -18,18 +18,18 @@ export async function changeAdminEmail(newEmail: string): Promise<{ success: boo
         const session = await auth.api.getSession({ headers: await headers() });
 
         if (!session?.user?.id) {
-            return { success: false, error: "Brak aktywnej sesji." };
+            return { success: false, error: "No active session." };
         }
 
         await dbConnect();
         const db = mongoose.connection.db;
         if (!db) {
-            return { success: false, error: "Błąd połączenia z bazą danych." };
+            return { success: false, error: "Database connection error." };
         }
 
         const existing = await db.collection("user").findOne({ email: trimmed });
         if (existing && existing._id.toString() !== session.user.id) {
-            return { success: false, error: "Ten adres e-mail jest już zajęty." };
+            return { success: false, error: "This email address is already taken." };
         }
 
         const { ObjectId } = mongoose.Types;
@@ -42,7 +42,7 @@ export async function changeAdminEmail(newEmail: string): Promise<{ success: boo
         revalidatePath('/', 'layout');
         return { success: true };
     } catch (error) {
-        console.error("[changeAdminEmail] błąd:", error);
-        return { success: false, error: "Wystąpił nieoczekiwany błąd." };
+        console.error("[changeAdminEmail] error:", error);
+        return { success: false, error: "An unexpected error occurred." };
     }
 }

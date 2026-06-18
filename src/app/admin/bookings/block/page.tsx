@@ -65,10 +65,10 @@ export default function BlockBookingsPage() {
 
   const loadBlockedBookings = useCallback(async () => {
     try {
-      const rows = await getBlockedBookings(); // Zawsze pobieraj wszystkie
+      const rows = await getBlockedBookings();
       setAllBlockedBookings(rows);
     } catch (error: any) {
-      setErrorMessage(error?.message ?? "Nie udało się pobrać listy blokad.");
+      setErrorMessage(error?.message ?? "Failed to load blocked dates.");
     }
   }, []);
 
@@ -87,7 +87,7 @@ export default function BlockBookingsPage() {
       setCalendarDates(mapped);
     } catch (error: any) {
       setErrorMessage(
-        error?.message ?? "Nie udało się pobrać zajętych terminów.",
+        error?.message ?? "Failed to load occupied dates.",
       );
     } finally {
       setIsLoadingUnavailable(false);
@@ -122,7 +122,7 @@ export default function BlockBookingsPage() {
 
   const handleCreateBlock = async () => {
     if (!selectedPropertyId || !bookingDates.start) {
-      const message = "Wybierz domek i co najmniej dzień rozpoczęcia blokady.";
+      const message = "Select a cottage and at least a start date for the block.";
       setErrorMessage(message);
       toast.error(message);
       return;
@@ -157,7 +157,7 @@ export default function BlockBookingsPage() {
       }
     } catch (error: any) {
       const message =
-        error?.message ?? "Nie udało się utworzyć blokady terminu.";
+        error?.message ?? "Failed to create date block.";
       toast.error(message);
       setErrorMessage(message);
     } finally {
@@ -183,7 +183,7 @@ export default function BlockBookingsPage() {
         setErrorMessage(result.message);
       }
     } catch (error: any) {
-      const message = error?.message ?? "Nie udało się usunąć blokady.";
+      const message = error?.message ?? "Failed to delete block.";
       toast.error(message);
       setErrorMessage(message);
     } finally {
@@ -192,7 +192,7 @@ export default function BlockBookingsPage() {
   };
 
   return (
-    <AdminShell title="Blokuj terminy" description="Twórz blokady administracyjne dla jednego domku lub wszystkich domków.">
+    <AdminShell title="Block dates" description="Create administrative blocks for one cottage or all cottages.">
       <div className={styles.container}>
         <form
           className={styles.card}
@@ -202,17 +202,17 @@ export default function BlockBookingsPage() {
           }}
         >
           <div className={styles.cardHeader}>
-            <h2>Nowa blokada</h2>
+            <h2>New block</h2>
             <span className={styles.cardBadge}>Admin</span>
           </div>
 
           <div className={styles.settingRow}>
             <div className={styles.settingContent}>
               <label className={styles.settingLabel} htmlFor="propertySelect">
-                Domek
+                Cottage
               </label>
               <p className={styles.settingDescription}>
-                Wybierz domek z listy lub opcję "Wszystkie".
+                Select a cottage from the list or the "All" option.
               </p>
             </div>
             <div className={styles.settingControl}>
@@ -223,13 +223,13 @@ export default function BlockBookingsPage() {
                 className={styles.selectInput}
                 disabled={isLoading || isSubmitting}
               >
-                <option value="">-- Wybierz domek --</option>
+                <option value="">-- Select cottage --</option>
                 {properties.map((property) => (
                   <option key={property._id} value={property._id}>
                     {property.name}
                   </option>
                 ))}
-                <option value={ALL_PROPERTIES_ID}>Wszystkie</option>
+                <option value={ALL_PROPERTIES_ID}>All</option>
               </select>
             </div>
           </div>
@@ -237,15 +237,15 @@ export default function BlockBookingsPage() {
           {selectedPropertyId && (
             <div className={styles.settingRow}>
               <div className={styles.settingContent}>
-                <label className={styles.settingLabel}>Zakres blokady</label>
+                <label className={styles.settingLabel}>Block range</label>
                 <p className={styles.settingDescription}>
-                  Wybierz dzień lub zakres blokady w kalendarzu.
+                  Select a day or range to block in the calendar.
                 </p>
               </div>
               <div className={styles.settingControl}>
                 {isLoadingUnavailable ? (
                   <div className={styles.loadingHint}>
-                    Wczytywanie zajętych terminów...
+                    Loading occupied dates...
                   </div>
                 ) : (
                   <CalendarPicker
@@ -255,12 +255,12 @@ export default function BlockBookingsPage() {
                   />
                 )}
                 <div className={styles.rangePreview}>
-                  <strong>Wybrany zakres:</strong>{" "}
+                  <strong>Selected range:</strong>{" "}
                   {bookingDates.start && bookingDates.end
                     ? `${formatDisplayDate(bookingDates.start)} -> ${formatDisplayDate(bookingDates.end)}`
                     : bookingDates.start
-                      ? `${formatDisplayDate(bookingDates.start)} (1 dzień)`
-                      : "brak"}
+                      ? `${formatDisplayDate(bookingDates.start)} (1 day)`
+                      : "none"}
                 </div>
               </div>
             </div>
@@ -270,11 +270,10 @@ export default function BlockBookingsPage() {
             <div className={styles.settingRow}>
               <div className={styles.settingContent}>
                 <label className={styles.settingLabel} htmlFor="adminNotes">
-                  Notatka (opcjonalnie)
+                  Note (optional)
                 </label>
                 <p className={styles.settingDescription}>
-                  Ta notatka nie będzie widoczna dla klientów, będzie widoczna
-                  tylko w panelu admina.
+                  This note will not be visible to customers, only in the admin panel.
                 </p>
               </div>
               <div className={styles.settingControl}>
@@ -283,7 +282,7 @@ export default function BlockBookingsPage() {
                   value={adminNotes}
                   onChange={(e) => setAdminNotes(e.target.value)}
                   className={styles.notesInput}
-                  placeholder="np. serwis techniczny"
+                  placeholder="e.g. technical service"
                   disabled={isSubmitting}
                 />
               </div>
@@ -297,7 +296,7 @@ export default function BlockBookingsPage() {
               onClick={() => void handleCreateBlock()}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Zapisywanie..." : "Zablokuj termin"}
+              {isSubmitting ? "Saving..." : "Block date"}
             </Button>
           </div>
 
@@ -306,7 +305,7 @@ export default function BlockBookingsPage() {
 
         <div className={styles.card}>
           <div className={styles.cardHeader}>
-            <h2>Istniejące blokady</h2>
+            <h2>Existing blocks</h2>
             <span className={styles.cardBadge}>
               {showPast
                 ? allBlockedBookings.length
@@ -319,7 +318,7 @@ export default function BlockBookingsPage() {
             : allBlockedBookings.filter((b) => !isDateInPast(b.endDate))
           ).length === 0 ? (
             <div className={styles.emptyState}>
-              Brak aktywnych blokad.
+              No active blocks.
             </div>
           ) : (
             <div className={styles.blockList}>
@@ -335,7 +334,7 @@ export default function BlockBookingsPage() {
                     <div className={styles.blockMetaHeader}>
                       <strong>{item.propertyName}</strong>
                       {isDateInPast(item.endDate) && (
-                        <span className={styles.pastBadge}>przeszłe</span>
+                        <span className={styles.pastBadge}>past</span>
                       )}
                     </div>
                     <span>
@@ -352,7 +351,7 @@ export default function BlockBookingsPage() {
                     disabled={isDeletingId === item._id}
                     style={{ backgroundColor : isDateInPast(item.endDate) ? "#d66a6a" : undefined, borderColor: isDateInPast(item.endDate) ? "#ef7d7d" : undefined }}
                   >
-                    {isDeletingId === item._id ? "Usuwanie..." : "Usuń blokadę"}
+                    {isDeletingId === item._id ? "Deleting..." : "Delete block"}
                   </Button>
                 </article>
               ))}
@@ -363,7 +362,7 @@ export default function BlockBookingsPage() {
             className={styles.togglePastLink}
             onClick={() => setShowPast((prev) => !prev)}
           >
-            {showPast ? "Pokaż aktualne" : "Pokaż również przeszłe"}
+            {showPast ? "Show current" : "Show past as well"}
           </button>
         </div>
 
@@ -373,14 +372,14 @@ export default function BlockBookingsPage() {
           onConfirm={
             deleteTarget ? () => handleDeleteBlock(deleteTarget._id) : undefined
           }
-          title="Potwierdź usunięcie"
-          confirmText="Tak, usuń"
-          loadingText="Usuwanie..."
-          cancelText="Anuluj"
+          title="Confirm deletion"
+          confirmText="Yes, delete"
+          loadingText="Deleting..."
+          cancelText="Cancel"
           confirmVariant="danger"
           isLoading={Boolean(deleteTarget && isDeletingId === deleteTarget._id)}
         >
-          <p>Czy na pewno chcesz usunąć tę blokadę?</p>
+          <p>Are you sure you want to delete this block?</p>
         </Modal>
       </div>
     </AdminShell>

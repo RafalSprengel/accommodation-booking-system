@@ -89,31 +89,30 @@ export const ContactAutoReply = ({
       <Head />
       <Body style={mainStyle}>
         <Container style={containerStyle}>
-          <Heading style={headingStyle}>Dziękujemy za wiadomość</Heading>
-          <Text style={textStyle}>Dzień dobry {customerName},</Text>
+          <Heading style={headingStyle}>Thank you for your message</Heading>
+          <Text style={textStyle}>Hello {customerName},</Text>
           <Text style={textStyle}>
-            dziękujemy za kontakt z Wilczymi Chatkami. Otrzymaliśmy Twoją
-            wiadomość i wrócimy z odpowiedzią tak szybko, jak to możliwe.
+            thank you for contacting Wilcze Chatki. We have received your
+            message and will get back to you as soon as possible.
           </Text>
 
           <Section style={sectionStyle}>
             <Text style={sectionTextStyle}>
-              <strong>Przesłana wiadomość:</strong>
+              <strong>Your message:</strong>
             </Text>
             <Text style={messageStyle}>{message}</Text>
           </Section>
 
           <Text style={textStyle}>
-            Jeśli sprawa jest pilna, możesz skontaktować się z nami również
-            telefonicznie:{" "}
+            If the matter is urgent, you can also reach us by phone:{" "}
             <Link href={`tel:${siteSettings.phone}`}>
               {siteSettings.phone}
             </Link>
             .
           </Text>
-          <Text style={textStyle}>Pozdrawiamy,</Text>
+          <Text style={textStyle}>Best regards,</Text>
           <Text style={textStyle}>Wilcze Chatki</Text>
-          <Text style={footerTextStyle}>E-mail: {siteSettings.email}</Text>
+          <Text style={footerTextStyle}>Email: {siteSettings.email}</Text>
           <Hr style={footerHrStyle} />
           <Link href="https://wilczechatki.pl" style={footerLinkStyle}>
             wilczechatki.pl

@@ -26,7 +26,7 @@ export default function EditPropertyForm({
     startTransition(async () => {
       const result = await updateProperty(propertyId, formData);
       if (result.success) {
-        setMessage({ type: "success", text: "Zapisano zmiany!" });
+        setMessage({ type: "success", text: "Changes saved!" });
         router.refresh();
       } else {
         setMessage({ type: "error", text: result.message });
@@ -36,7 +36,7 @@ export default function EditPropertyForm({
 
   const handleDelete = async () => {
     if (
-      !confirm("Czy na pewno usunąć ten domek? Ta operacja jest nieodwracalna.")
+      !confirm("Are you sure you want to delete this cottage? This action cannot be undone.")
     )
       return;
     setIsDeleting(true);
@@ -66,35 +66,35 @@ export default function EditPropertyForm({
 
       <form action={handleUpdate} className={styles.formCard}>
         <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>Podstawowe informacje</h2>
+          <h2 className={styles.sectionTitle}>Basic information</h2>
           <div className={styles.grid}>
-            <FormField id="name" label="Nazwa domku *">
+            <FormField id="name" label="Cottage name *">
               <input
                 id="name"
                 name="name"
                 type="text"
                 required
                 defaultValue={property.name}
-                placeholder="np. Chatka A (Wilcza)"
+                placeholder="e.g. Cottage A (Wolf)"
               />
             </FormField>
-            
+
           </div>
-          <FormField id="description" label="Opis">
+          <FormField id="description" label="Description">
             <textarea
               id="description"
               name="description"
               rows={4}
               defaultValue={property.description || ""}
-              placeholder="Krótki opis domku dla gości..."
+              placeholder="Short description of the cottage for guests..."
             />
           </FormField>
         </div>
 
         <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>Pojemność</h2>
+          <h2 className={styles.sectionTitle}>Capacity</h2>
           <div className={styles.grid}>
-            <FormField id="maxAdults" label="Max. dorosłych *" hint="Maksymalna liczba dorosłych gości.">
+            <FormField id="maxAdults" label="Max. adults *" hint="Maximum number of adult guests.">
               <input
                 id="maxAdults"
                 name="maxAdults"
@@ -105,7 +105,7 @@ export default function EditPropertyForm({
                 defaultValue={property.maxAdults}
               />
             </FormField>
-            <FormField id="maxChildren" label="Max. dzieci (bezpłatnie) *" hint="Maksymalna liczba dzieci.">
+            <FormField id="maxChildren" label="Max. children (free) *" hint="Maximum number of children.">
               <input
                 id="maxChildren"
                 name="maxChildren"
@@ -116,7 +116,7 @@ export default function EditPropertyForm({
                 defaultValue={property.maxChildren}
               />
             </FormField>
-            <FormField id="maxExtraBeds" label="Maksymalna liczba dostawek *" hint="Ile dodatkowych łóżek można dostawić.">
+            <FormField id="maxExtraBeds" label="Max. extra beds *" hint="How many additional beds can be added.">
               <input
                 id="maxExtraBeds"
                 name="maxExtraBeds"
@@ -129,20 +129,19 @@ export default function EditPropertyForm({
             </FormField>
           </div>
         </div>
-
         {/* <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>Zdjęcia</h2>
+          <h2 className={styles.sectionTitle}>Images</h2>
           <div className={styles.inputGroup}>
-            <label htmlFor="images">URL-e zdjęć (oddzielone przecinkiem)</label>
+            <label htmlFor="images">Image URLs (separated by commas)</label>
             <textarea
               id="images"
               name="images"
               rows={3}
               defaultValue={property.images?.join(", ") || ""}
-              placeholder="/images/chatka-1.jpg, /images/chatka-2.jpg"
+              placeholder="/images/cottage-1.jpg, /images/cottage-2.jpg"
             />
             <small className={styles.hint}>
-              Wklej ścieżki do zdjęć, oddzielając je przecinkami.
+              Paste image paths, separating them with commas.
             </small>
           </div>
         </div> */}
@@ -162,8 +161,8 @@ export default function EditPropertyForm({
                 className={`${styles.toggleText} ${isActive ? styles.active : styles.inactive}`}
               >
                 {isActive
-                  ? "Aktywny – widoczny w wyszukiwarce"
-                  : "Nieaktywny – ukryty przed gośćmi"}
+                  ? "Active – visible in search"
+                  : "Inactive – hidden from guests"}
               </span>
             </label>
           </div>
@@ -171,19 +170,19 @@ export default function EditPropertyForm({
 
         <div className={styles.actions}>
           <Button href="/admin/properties" variant="secondary">
-            Anuluj
+            Cancel
           </Button>
           <Button type="submit" disabled={isPending}>
-            {isPending ? "⏳ Zapisywanie..." : "💾 Zapisz zmiany"}
+            {isPending ? "⏳ Saving..." : "💾 Save changes"}
           </Button>
         </div>
       </form>
 
       <div className={styles.dangerZone}>
-        <h3 className={styles.dangerTitle}>Strefa niebezpieczna</h3>
+        <h3 className={styles.dangerTitle}>Danger Zone</h3>
         <p className={styles.dangerDesc}>
-          Usunięcie domku jest nieodwracalne. Można usunąć tylko obiekty bez
-          rezerwacji.
+          Deleting a cottage is permanent. You can only delete properties that have no
+          bookings.
         </p>
         <Button
           type="button"
@@ -191,7 +190,7 @@ export default function EditPropertyForm({
           onClick={handleDelete}
           disabled={isDeleting}
         >
-          {isDeleting ? "⏳ Usuwanie..." : "🗑️ Usuń domek"}
+          {isDeleting ? "⏳ Deleting..." : "🗑️ Delete cottage"}
         </Button>
       </div>
     </>

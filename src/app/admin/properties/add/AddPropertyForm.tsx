@@ -5,7 +5,6 @@ import { createProperty } from '@/actions/adminPropertyActions';
 import Button from '@/app/_components/UI/Button/Button';
 import FormField from '@/app/admin/_components/FormField/FormField';
 import styles from './page.module.css';
-// FloatingBackButton provided by admin layout
 
 export default function AddPropertyForm() {
   const router = useRouter();
@@ -32,28 +31,28 @@ export default function AddPropertyForm() {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1>Dodaj nowy obiekt</h1>
-        <p>Wprowadź dane nowego obiektu w systemie.</p>
+        <h1>Add new property</h1>
+        <p>Enter the details of the new property in the system.</p>
       </header>
       {message && (<div className={`${styles.alert} ${message.type === 'success' ? styles.alertSuccess : styles.alertError}`}>{message.text}</div>)}
       <form ref={formRef} onSubmit={handleSubmit} className={styles.formCard}>
         <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>Podstawowe informacje</h2>
+          <h2 className={styles.sectionTitle}>Basic information</h2>
           <div className={styles.grid}>
-            <FormField id="name" label="Nazwa domku *">
-              <input id="name" name="name" type="text" required placeholder="np. Chatka A (Wilcza)" />
+            <FormField id="name" label="Cottage name *">
+              <input id="name" name="name" type="text" required placeholder="e.g. Cottage A (Wolf)" />
             </FormField>
-            
+
           </div>
-          <FormField id="description" label="Opis">
-            <textarea id="description" name="description" rows={4} placeholder="Krótki opis domku dla gości..." />
+          <FormField id="description" label="Description">
+            <textarea id="description" name="description" rows={4} placeholder="Short description of the cottage for guests..." />
           </FormField>
         </div>
 
         <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>Pojemność</h2>
+          <h2 className={styles.sectionTitle}>Capacity</h2>
           <div className={styles.grid}>
-            <FormField id="maxAdults" label="Max. dorosłych *" hint="Maksymalna liczba dorosłych gości.">
+            <FormField id="maxAdults" label="Max. adults *" hint="Maximum number of adult guests.">
               <input
                 id="maxAdults"
                 name="maxAdults"
@@ -64,7 +63,7 @@ export default function AddPropertyForm() {
                 required
               />
             </FormField>
-            <FormField id="maxChildren" label="Max. dzieci (bezpłatnie) *" hint="Maksymalna liczba dzieci.">
+            <FormField id="maxChildren" label="Max. children (free) *" hint="Maximum number of children.">
               <input
                 id="maxChildren"
                 name="maxChildren"
@@ -75,7 +74,7 @@ export default function AddPropertyForm() {
                 required
               />
             </FormField>
-            <FormField id="maxExtraBeds" label="Maksymalna liczba dostawek *" hint="Liczba dodatkowych łóżek, które można dostawić.">
+            <FormField id="maxExtraBeds" label="Max. extra beds *" hint="How many additional beds can be added.">
               <input
                 id="maxExtraBeds"
                 name="maxExtraBeds"
@@ -88,19 +87,18 @@ export default function AddPropertyForm() {
             </FormField>
           </div>
         </div>
-
         {/* <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>Zdjęcia</h2>
+          <h2 className={styles.sectionTitle}>Images</h2>
           <div className={styles.inputGroup}>
-            <label htmlFor="images">URL-e zdjęć (oddzielone przecinkiem)</label>
-            <textarea id="images" name="images" rows={3} placeholder="/images/chatka-1.jpg, /images/chatka-2.jpg" />
-            <small className={styles.hint}>Wklej ścieżki do zdjęć, oddzielając je przecinkami.</small>
+            <label htmlFor="images">Image URLs (separated by commas)</label>
+            <textarea id="images" name="images" rows={3} placeholder="/images/cottage-1.jpg, /images/cottage-2.jpg" />
+            <small className={styles.hint}>Paste image paths, separating them with commas.</small>
           </div>
         </div> */}
 
         <div className={styles.actions}>
-          <Button type="button" variant="secondary" onClick={() => router.back()}>Anuluj</Button>
-          <Button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Zapisuję...' : '💾 Zapisz obiekt'}</Button>
+          <Button type="button" variant="secondary" onClick={() => router.back()}>Cancel</Button>
+          <Button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : '💾 Save property'}</Button>
         </div>
       </form>
     </div>

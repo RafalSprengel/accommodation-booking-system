@@ -27,7 +27,7 @@ async function ensureBookingConfigExists() {
       });
     }
   } catch (error) {
-    console.error('Błąd podczas sprawdzania konfiguracji rezerwacji:', error);
+    console.error('Error checking booking configuration:', error);
   }
 }
 
@@ -46,7 +46,7 @@ export async function getBookingConfig(): Promise<BookingConfig> {
       checkOutHour: config?.checkOutHour ?? 12
     };
   } catch (error) {
-    console.error('Błąd podczas pobierania konfiguracji rezerwacji:', error);
+    console.error('Error fetching booking configuration:', error);
     return {
       minBookingDays: 1,
       maxBookingDays: 30,
@@ -69,10 +69,10 @@ export async function updateAllowCheckinOnDepartureDay(allow: boolean) {
       { upsert: true }
     );
     revalidatePath('/', 'layout');
-    return { success: true, message: 'Zaktualizowano ustawienie' };
+    return { success: true, message: 'Setting updated' };
   } catch (error) {
     console.error(error);
-    return { success: false, message: 'Błąd zapisu' };
+    return { success: false, message: 'Save error' };
   }
 }
 
@@ -87,7 +87,7 @@ export async function updateBookingConfig(_prevState: Record<string, unknown>, f
     const checkOutHour = parseInt(formData.get('checkOutHour') as string, 10) || 12;
 
     if (checkInHour < 0 || checkInHour > 23 || checkOutHour < 0 || checkOutHour > 23) {
-      return { success: false, message: 'Godziny muszą być w zakresie 0-23.' };
+      return { success: false, message: 'Hours must be between 0-23.' };
     }
 
     await BookingConfig.findByIdAndUpdate(
@@ -103,9 +103,9 @@ export async function updateBookingConfig(_prevState: Record<string, unknown>, f
       { upsert: true, new: true }
     );
     revalidatePath('/', 'layout');
-    return { success: true, message: 'Zapisano ustawienia rezerwacji.' };
+    return { success: true, message: 'Booking settings saved.' };
   } catch (error) {
     console.error(error);
-    return { success: false, message: 'Wystąpił błąd podczas zapisu.' };
+    return { success: false, message: 'An error occurred while saving.' };
   }
 }

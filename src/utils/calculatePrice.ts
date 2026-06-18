@@ -34,7 +34,7 @@ export async function calculateDynamicPrice(
   // Fetch property with basicPrices
   const property = await Property.findById(propertyId);
   if (!property) {
-    throw new Error("Nieruchomość nie została znaleziona w bazie danych.");
+    throw new Error("Property not found in the database.");
   }
 
   // Fetch all seasons
@@ -59,7 +59,7 @@ export async function calculateDynamicPrice(
     if (customPrice) {
       const tier = findPriceTier(customPrice.prices ?? [], totalGuests);
       if (!tier) {
-        throw new Error(`Nie znaleziono wariantu cenowego custom dla ${totalGuests} gości`);
+        throw new Error(`Custom price tier not found for ${totalGuests} guests`);
       }
       nightPrice = tier.price;
       extraBedPrice = customPrice.extraBedPrice ?? 50;
@@ -76,7 +76,7 @@ export async function calculateDynamicPrice(
         const tier = findPriceTier(pricesTier, totalGuests);
         
         if (!tier) {
-          throw new Error(`Nie znaleziono wariantu cenowego dla ${totalGuests} gości w sezonie ${activeSeason.name}`);
+          throw new Error(`Price tier not found for ${totalGuests} guests in season ${activeSeason.name}`);
         }
         
         nightPrice = tier.price;
@@ -86,14 +86,14 @@ export async function calculateDynamicPrice(
       } else {
         // Step 3: Fallback to basicPrices from Property
         if (!property.basicPrices) {
-          throw new Error("Brak cen podstawowych dla nieruchomości. Proszę skonfigurować ceny podstawowe w panelu admina.");
+          throw new Error("Missing basic prices for the property. Please configure basic prices in the admin panel.");
         }
 
         const basicPricesTier = isWeekend ? property.basicPrices.weekendPrices : property.basicPrices.weekdayPrices;
         const tier = findPriceTier(basicPricesTier, totalGuests);
         
         if (!tier) {
-          throw new Error(`Nie znaleziono wariantu cenowego dla ${totalGuests} gości w cenach podstawowych`);
+          throw new Error(`Price tier not found for ${totalGuests} guests in basic prices`);
         }
         
         nightPrice = tier.price;
@@ -120,7 +120,7 @@ export async function calculateDynamicPrice(
     nightlyPrices,
     totalPrice,
     extraBedsTotal: totalExtraBedPrice,
-    summary: `${getNightsCount(start, end)} noclegów, ${totalGuests} gości, ${extraBedsCount} dostawek`
+    summary: `${getNightsCount(start, end)} nights, ${totalGuests} guests, ${extraBedsCount} extra beds`
   };
 }
 

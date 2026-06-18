@@ -23,18 +23,18 @@ function ResetPasswordForm() {
 
     if (!token) {
       setError(
-        "Brak tokenu resetującego. Upewnij się, że używasz poprawnego linku z e-maila.",
+        "Missing reset token. Make sure you are using the correct link from the email.",
       );
       return;
     }
 
     if (newPassword.length < 5) {
-      setError("Hasło musi mieć co najmniej 5 znaków.");
+      setError("Password must be at least 5 characters long.");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError("Hasła nie są identyczne.");
+      setError("Passwords do not match.");
       return;
     }
 
@@ -47,7 +47,7 @@ function ResetPasswordForm() {
 
       if (resetError) {
         setError(
-          resetError.message || "Wystąpił błąd podczas resetowania hasła.",
+          resetError.message || "An error occurred while resetting the password.",
         );
       } else {
         setSuccess(true);
@@ -56,7 +56,7 @@ function ResetPasswordForm() {
         }, 3000);
       }
     } catch (err) {
-      setError("Coś poszło nie tak. Spróbuj ponownie.");
+      setError("Something went wrong. Please try again.");
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -67,10 +67,10 @@ function ResetPasswordForm() {
     return (
       <div className={styles["reset-page"]}>
         <div className={styles["reset-page__form"]}>
-          <h1 className={styles["reset-page__title"]}>Sukces!</h1>
+          <h1 className={styles["reset-page__title"]}>Success!</h1>
           <p className={styles["reset-page__success"]}>
-            Twoje hasło zostało zmienione. Za chwilę zostaniesz przekierowany do
-            strony logowania.
+            Your password has been changed. You will be redirected to the
+            login page shortly.
           </p>
         </div>
       </div>
@@ -84,16 +84,16 @@ function ResetPasswordForm() {
         onSubmit={handleSubmit}
         noValidate
       >
-        <h1 className={styles["reset-page__title"]}>Nowe Hasło</h1>
+        <h1 className={styles["reset-page__title"]}>New Password</h1>
         <p className={styles["reset-page__subtitle"]}>
-          Wprowadź swoje nowe hasło poniżej
+          Enter your new password below
         </p>
 
         {error && <p className={styles["reset-page__error"]}>{error}</p>}
 
         <div className={styles["reset-page__field"]}>
           <label className={styles["reset-page__label"]} htmlFor="newPassword">
-            Nowe hasło
+            New password
           </label>
           <input
             id="newPassword"
@@ -103,7 +103,7 @@ function ResetPasswordForm() {
             onChange={(e) => setNewPassword(e.target.value)}
             required
             disabled={isLoading}
-            placeholder="Wpisz nowe hasło"
+            placeholder="Enter new password"
           />
         </div>
 
@@ -112,7 +112,7 @@ function ResetPasswordForm() {
             className={styles["reset-page__label"]}
             htmlFor="confirmPassword"
           >
-            Potwierdź nowe hasło
+            Confirm new password
           </label>
           <input
             id="confirmPassword"
@@ -122,12 +122,12 @@ function ResetPasswordForm() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             disabled={isLoading}
-            placeholder="Powtórz nowe hasło"
+            placeholder="Repeat new password"
           />
         </div>
 
         <Button type="submit" fullWidth disabled={isLoading}>
-          {isLoading ? "Zapisywanie..." : "Zmień hasło"}
+          {isLoading ? "Saving..." : "Change password"}
         </Button>
       </form>
     </div>
@@ -139,7 +139,7 @@ export default function ResetPasswordPage() {
     <Suspense
       fallback={
         <div className={styles["reset-page"]}>
-          <div className={styles["reset-page__title"]}>Ładowanie...</div>
+          <div className={styles["reset-page__title"]}>Loading...</div>
         </div>
       }
     >

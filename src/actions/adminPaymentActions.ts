@@ -30,30 +30,30 @@ export interface AdminPaymentsData {
 
 function normalizePaymentRow(row: Record<string, unknown>): AdminPaymentRow {
   if (!row._id) {
-    throw new Error('Brak identyfikatora rezerwacji podczas mapowania płatności.')
+    throw new Error('Missing booking ID during payment mapping.')
   }
 
   if (!row.createdAt) {
-    throw new Error('Brak daty utworzenia rezerwacji podczas mapowania płatności.')
+    throw new Error('Missing booking creation date during payment mapping.')
   }
 
   const createdAtValue = row.createdAt
   if (typeof createdAtValue !== 'string' && typeof createdAtValue !== 'number' && !(createdAtValue instanceof Date)) {
-    throw new Error('Nieprawidłowy typ daty utworzenia rezerwacji podczas mapowania płatności.')
+    throw new Error('Invalid booking creation date type during payment mapping.')
   }
 
   // Accept either structured names or legacy guestName string
 
   if (typeof row.totalPrice !== 'number') {
-    throw new Error('Brak poprawnej kwoty rezerwacji podczas mapowania płatności.')
+    throw new Error('Missing valid booking amount during payment mapping.')
   }
 
   if (row.paymentMethod !== 'online' && row.paymentMethod !== 'cash' && row.paymentMethod !== 'transfer') {
-    throw new Error('Brak poprawnej metody płatności podczas mapowania płatności.')
+    throw new Error('Missing valid payment method during payment mapping.')
   }
 
   if (typeof row.status !== 'string') {
-    throw new Error('Brak poprawnego statusu podczas mapowania płatności.')
+    throw new Error('Missing valid status during payment mapping.')
   }
 
   const mapped: AdminPaymentRow = {
@@ -112,7 +112,7 @@ export async function syncOnlinePaymentAction(bookingId: string): Promise<{
     await dbConnect()
 
     if (!Types.ObjectId.isValid(bookingId)) {
-      return { ok: false, level: 'error', message: 'Nieprawidłowe ID rezerwacji.' }
+      return { ok: false, level: 'error', message: 'Invalid booking ID.' }
     }
 
     const booking = await Booking.findById(bookingId)
@@ -120,19 +120,19 @@ export async function syncOnlinePaymentAction(bookingId: string): Promise<{
       .lean()
 
     if (!booking) {
-      return { ok: false, level: 'error', message: 'Nie znaleziono rezerwacji do synchronizacji.' }
+      return { ok: false, level: 'error', message: 'Booking not found for sync.' }
     }
 
     if (booking.source !== 'online') {
-      return { ok: false, level: 'error', message: 'Synchronizacja Stripe jest dostępna tylko dla płatności online.' }
+      return { ok: false, level: 'error', message: 'Stripe sync is only available for online payments.' }
     }
 
     if (booking.status !== 'pending') {
-      return { ok: false, level: 'info', message: 'Ta płatność nie ma statusu oczekującego.' }
+      return { ok: false, level: 'info', message: 'This payment does not have a pending status.' }
     }
 
     if (typeof booking.stripeSessionId !== 'string' || booking.stripeSessionId.trim().length === 0) {
-      return { ok: false, level: 'error', message: 'Brak stripeSessionId dla tej rezerwacji.' }
+      return { ok: false, level: 'error', message: 'No stripeSessionId for this booking.' }
     }
 
     const session = await stripe.checkout.sessions.retrieve(booking.stripeSessionId)
@@ -158,7 +158,7 @@ export async function syncOnlinePaymentAction(bookingId: string): Promise<{
       revalidatePath('/admin/payments')
       revalidatePath('/booking')
 
-      return { ok: true, level: 'success', message: 'Płatność potwierdzona. Rezerwacja została oznaczona jako confirmed i paid.' }
+      return { ok: true, level: 'success', message: 'Payment confirmed. Booking has been marked as confirmed and paid.' }
     }
 
     if (session.status === 'expired') {
@@ -181,17 +181,17 @@ export async function syncOnlinePaymentAction(bookingId: string): Promise<{
       revalidatePath('/admin/payments')
       revalidatePath('/booking')
 
-      return { ok: true, level: 'success', message: 'Sesja Stripe wygasła. Rezerwacja została oznaczona jako failed.' }
+      return { ok: true, level: 'success', message: 'Stripe session expired. Booking has been marked as failed.' }
     }
 
     if (session.status === 'open') {
-      return { ok: true, level: 'info', message: 'Klient wciąż ma otwarte okno płatności.' }
+      return { ok: true, level: 'info', message: 'Client still has an open payment window.' }
     }
 
     return {
       ok: false,
       level: 'error',
-      message: `Nieobsługiwany status sesji Stripe: ${session.status} / payment_status: ${session.payment_status}.`,
+      message: `Unsupported Stripe session status: ${session.status} / payment_status: ${session.payment_status}.`,
     }
   } catch (error: unknown) {
     if (error instanceof Stripe.errors.StripeError) {
@@ -206,6 +206,6 @@ export async function syncOnlinePaymentAction(bookingId: string): Promise<{
       return { ok: false, level: 'error', message: error.message }
     }
 
-    return { ok: false, level: 'error', message: 'Wystąpił nieznany błąd podczas synchronizacji ze Stripe.' }
+    return { ok: false, level: 'error', message: 'An unknown error occurred during Stripe sync.' }
   }
 }

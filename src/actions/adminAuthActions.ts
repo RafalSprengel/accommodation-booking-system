@@ -19,7 +19,7 @@ export async function resetAdminPassword(username: string) {
     if (!user) {
         return {
             success: false,
-            error: "Nie ma takiego użytkownika"
+            error: "User not found"
         }
     }
 
@@ -30,12 +30,12 @@ export async function resetAdminPassword(username: string) {
 
         return {
             success: true,
-            message: "Hasło zostało zresetowane"
+            message: "Password has been reset"
         }
     } catch (_error) {
         return {
             success: false,
-            error: "Wystąpił błąd. Spróbuj ponownie."
+            error: "An error occurred. Please try again."
         }
     }
 }

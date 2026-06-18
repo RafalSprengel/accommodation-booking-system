@@ -33,16 +33,16 @@ export async function updateCustompriceForDate(data: CustomPriceUpdate) {
     await dbConnect();
 
     if (!data.propertyId) {
-      return { success: false, message: 'Brak wymaganych danych zapisu.' };
+      return { success: false, message: 'Missing required data for save.' };
     }
     if (!Array.isArray(data.dates) || data.dates.length === 0) {
-      return { success: false, message: 'Brak wymaganych danych zapisu.' };
+      return { success: false, message: 'Missing required data for save.' };
     }
     if (!Array.isArray(data.prices) || data.prices.length === 0) {
-      return { success: false, message: 'Brak przedziałów cenowych do zapisania.' };
+      return { success: false, message: 'No price tiers to save.' };
     }
     if (typeof data.extraBedPrice !== 'number') {
-      return { success: false, message: 'Nieprawidłowa wartość extraBedPrice; oczekiwano liczby.' };
+      return { success: false, message: 'Invalid extraBedPrice value; expected a number.' };
     }
 
     const normalizedDates = data.dates.map(normalizeDate);
@@ -67,10 +67,10 @@ export async function updateCustompriceForDate(data: CustomPriceUpdate) {
     revalidatePath('/admin/prices');
     revalidatePath('/', 'layout');
 
-    return { success: true, message: 'Zapisano ceny dla zaznaczonych dni.' };
+    return { success: true, message: 'Prices saved for selected days.' };
   } catch (error) {
-    console.error('Błąd zapisu custom prices:', error);
-    return { success: false, message: 'Błąd bazy danych.' };
+    console.error('Error saving custom prices:', error);
+    return { success: false, message: 'Database error.' };
   }
 }
 
@@ -88,10 +88,10 @@ export async function deleteCustomPricesForDate(data: { propertyId: string; date
     revalidatePath('/admin/prices');
     revalidatePath('/', 'layout');
 
-    return { success: true, message: 'Usunięto ceny indywidualne.' };
+    return { success: true, message: 'Custom prices deleted.' };
   } catch (error) {
-    console.error('Błąd usuwania cen:', error);
-    return { success: false, message: 'Błąd bazy danych.' };
+    console.error('Error deleting prices:', error);
+    return { success: false, message: 'Database error.' };
   }
 }
 
@@ -124,7 +124,7 @@ export async function getPriceConfig() {
     if (!config) return null;
     return JSON.parse(JSON.stringify(config));
   } catch (error) {
-    console.error('Błąd pobierania konfiguracji cen:', error);
+    console.error('Error fetching price configuration:', error);
     return null;
   }
 }

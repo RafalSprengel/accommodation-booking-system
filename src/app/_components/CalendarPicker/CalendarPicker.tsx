@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect, useMemo } from 'react';
 import dayjs from 'dayjs';
-import 'dayjs/locale/pl';
+import 'dayjs/locale/en';
 import './ClendarPicker.css';
 
-dayjs.locale('pl');
+dayjs.locale('en');
 
 export interface DayData {
   price?: number;
@@ -102,7 +102,7 @@ export default function CalendarPicker({
   const [hoveredDate, setHoveredDate] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const weekDays = ['P', 'W', 'Ś', 'C', 'P', 'S', 'N'];
+  const weekDays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
   const days = useMemo(() => {
     const startOfMonth = viewDate.startOf('month');
@@ -175,9 +175,9 @@ export default function CalendarPicker({
         const diff = end.diff(start, 'day');
         
         if (diff < minBookingDays) {
-          setError(`Minimalna ilość nocy to ${minBookingDays}.`);
+          setError(`Minimum number of nights is ${minBookingDays}.`);
         } else if (diff > maxBookingDays) {
-          setError(`Maksymalny okres rezerwacji to ${maxBookingDays} dni.`);
+          setError(`Maximum booking period is ${maxBookingDays} days.`);
         } else {
           setSelectedStart(start.format('YYYY-MM-DD'));
           setSelectedEnd(end.format('YYYY-MM-DD'));

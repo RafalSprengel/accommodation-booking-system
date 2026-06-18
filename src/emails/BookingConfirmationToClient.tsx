@@ -136,7 +136,7 @@ export const BookingConfirmation = ({
       <Body style={mainStyle}>
         <Container style={containerStyle}>
           <Heading style={headingStyle}>
-            Booking Confirmation - Wilcze Chatki
+            Booking Confirmation - Accommodation Booking System
           </Heading>
           <Text style={textStyle}>
             Hello <strong>{customerName}</strong>,

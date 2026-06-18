@@ -69,13 +69,13 @@ export async function createBookingFromDraft(draftData: BookingDraftData) {
     const { startDate, endDate, adults, children, extraBeds, selectedOption, guestData } = draftData;
 
     if (!selectedOption) {
-      console.error('Brak selectedOption');
-      return { success: false, error: 'Brak wybranego obiektu' };
+      console.error('Missing selectedOption');
+      return { success: false, error: 'No property selected' };
     }
 
     if (!guestData.firstName || !guestData.lastName || !guestData.email || !guestData.phone) {
-      console.error('Niekompletne dane gościa');
-      return { success: false, error: 'Niekompletne dane gościa' };
+      console.error('Incomplete guest data');
+      return { success: false, error: 'Incomplete guest data' };
     }
 
     const bookings: any[] = [];
@@ -100,12 +100,12 @@ export async function createBookingFromDraft(draftData: BookingDraftData) {
     if (selectedOption.propertyId === 'ALL_PROPERTIES') {
       const allocations = selectedOption.propertyAllocations || [];
       if (allocations.length === 0) {
-        return { success: false, error: 'Brak podziału rezerwacji na domki.' };
+        return { success: false, error: 'No property allocation for cottages.' };
       }
 
       for (const allocation of allocations) {
         if (!Types.ObjectId.isValid(allocation.propertyId)) {
-          return { success: false, error: `Nieprawidłowe ID domku: ${allocation.displayName}` };
+          return { success: false, error: `Invalid cottage ID: ${allocation.displayName}` };
         }
 
         const property = await Property.findOne({
@@ -114,7 +114,7 @@ export async function createBookingFromDraft(draftData: BookingDraftData) {
         }).select('_id');
 
         if (!property) {
-          return { success: false, error: `Nie można znaleźć domku w bazie: ${allocation.displayName}` };
+          return { success: false, error: `Cannot find cottage in database: ${allocation.displayName}` };
         }
 
         const recalculatedPrice = await calculateTotalPrice({
@@ -128,7 +128,7 @@ export async function createBookingFromDraft(draftData: BookingDraftData) {
         if (recalculatedPrice <= 0) {
           return {
             success: false,
-            error: `Nie udało się wyliczyć ceny dla domku: ${allocation.displayName}`,
+            error: `Could not calculate price for cottage: ${allocation.displayName}`,
           };
         }
 
@@ -157,8 +157,8 @@ export async function createBookingFromDraft(draftData: BookingDraftData) {
       }
 
       if (!property) {
-        console.error('Nie znaleziono domku w bazie');
-        return { success: false, error: 'Nie można znaleźć domku w bazie' };
+        console.error('Cottage not found in database');
+        return { success: false, error: 'Cannot find cottage in database' };
       }
 
       const recalculatedPrice = await calculateTotalPrice({
@@ -169,7 +169,7 @@ export async function createBookingFromDraft(draftData: BookingDraftData) {
         propertySelection: property._id.toString(),
       });
       if (recalculatedPrice <= 0) {
-        return { success: false, error: 'Nie udało się poprawnie wyliczyć ceny rezerwacji.' };
+        return { success: false, error: 'Could not calculate the booking price correctly.' };
       }
 
       bookings.push({
@@ -189,22 +189,22 @@ export async function createBookingFromDraft(draftData: BookingDraftData) {
     revalidatePath('/', 'layout');
     return {
       success: true,
-      message: 'Rezerwacja utworzona pomyślnie',
+      message: 'Booking created successfully',
       bookingIds: savedBookings.map(b => b._id.toString())
     };
   } catch (error: any) {
-    console.error('Błąd podczas tworzenia rezerwacji:', error);
+    console.error('Error creating booking:', error);
 
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map((err: any) => err.message);
-      return { success: false, error: `Błąd walidacji: ${errors.join(', ')}` };
+      return { success: false, error: `Validation error: ${errors.join(', ')}` };
     }
 
     if (error.message && error.message.includes('Path') && error.message.includes('is not in schema')) {
-      return { success: false, error: `Próba zapisu nieznanego pola: ${error.message}` };
+      return { success: false, error: `Attempt to save unknown field: ${error.message}` };
     }
 
-    return { success: false, error: 'Nie udało się utworzyć rezerwacji' };
+    return { success: false, error: 'Failed to create booking' };
   }
 }
 
@@ -279,7 +279,7 @@ export async function getBlockedDates(): Promise<{ date: string }[]> {
 
     return Array.from(blockedSet).map(date => ({ date }));
   } catch (error) {
-    console.error('Błąd podczas pobierania zablokowanych dat:', error);
+    console.error('Error fetching blocked dates:', error);
     return [];
   }
 }

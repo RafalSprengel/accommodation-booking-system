@@ -45,7 +45,7 @@ export default function BookingConfirmationSettings() {
     } catch (err) {
       console.error(err)
       setConfirmationEnabled(!newValue)
-      toast.error('Błąd zapisu ustawień')
+      toast.error('Error saving settings')
     } finally {
       setIsTogglePending(false)
     }
@@ -67,7 +67,7 @@ export default function BookingConfirmationSettings() {
       }
     } catch (err) {
       console.error(err)
-      toast.error('Błąd zapisu ustawień')
+      toast.error('Error saving settings')
     } finally {
       setIsSaving(false)
     }
@@ -75,7 +75,7 @@ export default function BookingConfirmationSettings() {
 
   if (isLoading) {
     return (
-      <AdminSection title="Potwierdzenie rezerwacji" badge="Globalne">
+      <AdminSection title="Booking confirmation" badge="Global">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner} />
           <p className={styles.loadingText}>Loading...</p>
@@ -85,13 +85,13 @@ export default function BookingConfirmationSettings() {
   }
 
   return (
-    <AdminSection title="Potwierdzenie rezerwacji" badge="Globalne">
+    <AdminSection title="Booking confirmation" badge="Global">
       <SettingRow
-        label={<label>Wysyłka potwierdzenia rezerwacji</label>}
+        label={<label>Send booking confirmation</label>}
         description={
           <>
-            Gdy ta opcja jest <strong>włączona</strong>, po każdej rezerwacji zostanie automatycznie wysłane potwierdzenie do klienta oraz powiadomienie do administratora strony.<br />
-            Gdy <strong>wyłączona</strong>, żadne e-maile potwierdzające nie będą wysyłane.
+            When this option is <strong>enabled</strong>, after each booking a confirmation email will be automatically sent to the customer and a notification to the site administrator.<br />
+            When <strong>disabled</strong>, no confirmation emails will be sent.
           </>
         }
       >
@@ -102,19 +102,19 @@ export default function BookingConfirmationSettings() {
             disabled={isTogglePending}
             className={`${styles.toggleSwitch} ${confirmationEnabled ? styles.toggleOn : styles.toggleOff}${isTogglePending ? ` ${styles.toggleDisabled}` : ''}`}
             aria-pressed={confirmationEnabled}
-            aria-label="Przełącz ustawienie"
+            aria-label="Toggle setting"
           >
             <span className={styles.toggleKnob} />
           </button>
           <span className={`${styles.toggleStatusLabel} ${confirmationEnabled ? styles.statusActive : styles.statusInactive}`}>
-            {confirmationEnabled ? 'WŁĄCZONE' : 'WYŁĄCZONE'}
+            {confirmationEnabled ? 'ON' : 'OFF'}
           </span>
         </div>
       </SettingRow>
 
       <SettingRow
-        label={<label htmlFor="booking-admin-email">Adres e-mail dla powiadomień</label>}
-        description="Adres, na który wysyłane będą e-maile z potwierdzeniami o rezerwacjach do admina."
+        label={<label htmlFor="booking-admin-email">Notification email address</label>}
+        description="Address to which booking confirmation emails to the admin will be sent."
       >
         <div className={siteStyles.siteSettings__inputGroup}>
           <div className={siteStyles.siteSettings__editHeader}>
@@ -126,7 +126,7 @@ export default function BookingConfirmationSettings() {
                 setIsEditing(!isEditing)
               }}
             >
-              {isEditing ? 'Anuluj' : 'Edytuj'}
+              {isEditing ? 'Cancel' : 'Edit'}
             </button>
           </div>
           <input
@@ -146,7 +146,7 @@ export default function BookingConfirmationSettings() {
                 onClick={handleSaveEmail}
                 disabled={!hasEmailChanges || isSaving}
               >
-                {isSaving ? 'Zapisywanie...' : 'Zapisz'}
+                {isSaving ? 'Saving...' : 'Save'}
               </button>
             </div>
           )}

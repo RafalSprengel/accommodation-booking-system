@@ -19,21 +19,21 @@ export default async function PricesPage() {
   const serializedSeasons = JSON.parse(JSON.stringify(seasons))
 
   return (
-    <AdminShell title="Zarządzanie cenami" description="Konfiguruj stawki podstawowe, stawki w sezonach oraz ceny indywidualne.">
+    <AdminShell title="Price Management" description="Configure base rates, seasonal rates, and individual prices.">
 
       <div className={styles.priorityInfo}>
         <div className={styles.priorityInfoIcon}>i</div>
         <div className={styles.content}>
-          <span className={styles.priorityInfoTitle}>Priorytety cen</span>
+          <span className={styles.priorityInfoTitle}>Price Priorities</span>
           <span className={styles.priorityInfoText}>
-            Ceny indywidualne mają priorytet nad cenami sezonowymi, a ceny sezonowe mają priorytet nad cenami podstawowymi.
+            Individual prices take priority over seasonal prices, and seasonal prices take priority over base prices.
           </span>
           <div className={styles.priorityInfoChain}>
-            <span>Ceny indywidualne</span>
+            <span>Individual prices</span>
             <span className={styles.priorityInfoArrow}>→</span>
-            <span>Ceny sezonowe</span>
+            <span>Seasonal prices</span>
             <span className={styles.priorityInfoArrow}>→</span>
-            <span>Ceny podstawowe</span>
+            <span>Base prices</span>
           </div>
         </div>
       </div>

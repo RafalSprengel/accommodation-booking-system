@@ -44,23 +44,23 @@ export default function ToggleSwitch({ initialState, settingKey }: ToggleSwitchP
         disabled={isPending}
         className={`${styles.toggleSwitch} ${state ? styles.toggleOn : styles.toggleOff} ${isPending ? styles.toggleDisabled : ''}`}
         aria-pressed={state}
-        aria-label="Przełącz ustawienie"
+        aria-label="Toggle setting"
       >
         <span className={styles.toggleKnob} />
       </button>
       
       <span className={`${styles.toggleStatusLabel} ${state ? styles.statusActive : styles.statusInactive}`}>
-        {state ? 'WŁĄCZONE' : 'WYŁĄCZONE'}
+        {state ? 'ON' : 'OFF'}
       </span>
 
       {statusMessage && (
-        <div className={`${styles.statusMessage} ${statusMessage.includes('Włączono') || statusMessage.includes('W') ? styles.msgSuccess : styles.msgError}`}>
+        <div className={`${styles.statusMessage} ${statusMessage.includes('W') ? styles.msgSuccess : styles.msgError}`}>
           {statusMessage}
         </div>
       )}
       
       {isPending && (
-        <span className={styles.loadingText}>Zapisywanie...</span>
+        <span className={styles.loadingText}>Saving...</span>
       )}
     </div>
   );

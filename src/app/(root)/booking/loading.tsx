@@ -5,7 +5,7 @@ export default function Loading() {
   return (
     <div className={styles.container}>
       <div className={styles.head}>
-        <h2>Znajdź swój termin</h2>
+        <h2>Find dates:</h2>
       </div>
 
       <div className={styles.searchBox} style={{ opacity: 0.6, pointerEvents: 'none' }}>
@@ -22,14 +22,14 @@ export default function Loading() {
         </div>
 
         <button className={styles.button} disabled>
-          Ładowanie...
+          Loading...
         </button>
       </div>
 
       <div className={styles.resultsContainer}>
         <div className={styles.loadingState}>
           <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '4px solid #f3f3f3', borderTop: '4px solid var(--accent-color)', animation: 'spin 1s linear infinite' }}></div>
-          <p>Przygotowywanie konfiguracji rezerwacji...</p>
+          <p>Preparing booking configuration...</p>
         </div>
       </div>
       

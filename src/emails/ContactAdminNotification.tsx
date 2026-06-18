@@ -90,24 +90,24 @@ export const ContactAdminNotification = ({
       <Body style={mainStyle}>
         <Container style={containerStyle}>
           <Heading style={headingStyle}>
-            Nowa wiadomość z formularza kontaktowego
+            New message from the contact form
           </Heading>
 
           <Section style={sectionStyle}>
             <Text style={sectionTextStyle}>
-              <strong>Imię i nazwisko:</strong> {senderName}
+              <strong>Name:</strong> {senderName}
             </Text>
             <Text style={sectionTextStyle}>
-              <strong>E-mail:</strong> {senderEmail}
+              <strong>Email:</strong> {senderEmail}
             </Text>
             <Text style={sectionTextStyle}>
-              <strong>Wiadomość:</strong>
+              <strong>Message:</strong>
             </Text>
             <Text style={messageStyle}>{message}</Text>
           </Section>
 
           <Text style={footerTextStyle}>
-            Odpowiedz bezpośrednio na tę wiadomość albo skontaktuj się przez{" "}
+            Reply directly to this message or contact us via{" "}
             {contactEmail} / {contactPhone}.
           </Text>
           <Hr style={footerHrStyle} />

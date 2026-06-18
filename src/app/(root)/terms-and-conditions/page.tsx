@@ -10,52 +10,52 @@ export default async function TermsAndConditionsPage() {
     <div className={styles.wrapper}>
       <div className={styles.container}>
         <h1 className={styles.title}>
-          Regulamin
+          Terms & Conditions
           <br />
-          🌲 Wilczych Chatek <span className={styles.emoji}>🌲</span>
+          🌲 Wilcze Chatki <span className={styles.emoji}>🌲</span>
         </h1>
         <p className={styles.lead}>
-          Najważniejsze: dobrze się bawcie i porządnie odpoczywajcie! To Wasz czas{' '}
+          Most importantly: have fun and get some proper rest! This is your time{' '}
           <span className={styles.emoji}>🌿</span>
         </p>
 
         <ul className={styles.list}>
           <li>
-            <strong>Doba trwa</strong> od <span className={styles.highlight}>{checkInHour}:00</span> w dniu przyjazdu do{' '}
-            <span className={styles.highlight}>{checkOutHour}:00</span> w dniu wyjazdu.
+            <strong>Check-in/Check-out:</strong> from <span className={styles.highlight}>{checkInHour}:00</span> on arrival day to{' '}
+            <span className={styles.highlight}>{checkOutHour}:00</span> on departure day.
           </li>
            <li>
-            W domkach i w chacie biesiadnej <strong> nie palimy </strong>(papierosów ani e-papierosów). Na zewnątrz - jak najbardziej.
+            <strong>No smoking</strong> inside the cottages or the pavilion (cigarettes or e-cigarettes). Outside is fine.
           </li>
           <li>
-            W godzinach <span className={styles.highlight}>22:00 – 6:00</span> obowiązuje cisza nocna – las też chce spać{' '}
+            Quiet hours between <span className={styles.highlight}>22:00 – 6:00</span> – the forest needs its sleep too{' '}
             <span className={styles.emoji}>🌙.</span>
           </li>
           <li>
-            W domku przebywa <strong>tylko tyle osób</strong>, ile zostało zgłoszone przy rezerwacji.
+            Only the number of guests <strong>declared at booking</strong> may stay in the cottage.
           </li>
           <li>
-            Jeśli coś się uszkodzi – <strong>dajcie znać</strong>. Za szkody powstałe podczas pobytu odpowiadają Goście.
+            If something gets damaged – <strong>please let us know</strong>. Guests are responsible for any damage caused during their stay.
           </li>
           <li>
-            <strong>Zostawcie po sobie porządek</strong> – kolejna wilcza ekipa też chce wejść z uśmiechem{' '}
+            <strong>Leave things tidy</strong> – the next wolf pack wants to check in with a smile too{' '}
             <span className={styles.emoji}>🙂.</span>
           </li>
           <li className={styles.pets}>
-            <span className={styles.petsIcon}>🐾</span> Zwierzęta są mile widziane! Prosimy tylko o opiekę nad nimi i
-            sprzątanie po swoich pupilach.
+            <span className={styles.petsIcon}>🐾</span> Pets are welcome! We only ask you to take care of them and
+            clean up after them.
           </li>
           <li>
-            <strong>Nie odpowiadamy</strong> za rzeczy pozostawione w domkach.
+            We are <strong>not responsible</strong> for items left in the cottages.
           </li>
         </ul>
 
         <div className={styles.footer}>
-          <p>Dziękujemy za szacunek do miejsca i natury <span className={styles.emoji}>🌲</span></p>
+          <p>Thank you for respecting the place and nature <span className={styles.emoji}>🌲</span></p>
           <p className={styles.signature}>
-            Miłego pobytu
+            Enjoy your stay
             <br />
-            w Wilczych Chatkach! <span className={styles.emoji}>🐺✨</span>
+            at Wilcze Chatki! <span className={styles.emoji}>🐺✨</span>
           </p>
         </div>
 

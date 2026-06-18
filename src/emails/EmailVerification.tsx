@@ -74,28 +74,28 @@ export const EmailVerification = ({ url }: EmailVerificationProps) => {
       <Body style={mainStyle}>
         <Container style={containerStyle}>
           <Heading style={headingStyle}>
-            Potwierdź nowy adres e-mail – Wilcze Chatki
+            Confirm your new email address – Wilcze Chatki
           </Heading>
           <Text style={textStyle}>
-            Witaj,
+            Hello,
           </Text>
           <Text style={textStyle}>
-            otrzymaliśmy prośbę o zmianę adresu e-mail konta administratora. Kliknij poniższy przycisk, aby potwierdzić nowy adres:
+            we received a request to change the administrator account email address. Click the button below to confirm your new email:
           </Text>
 
           <Section style={{ textAlign: 'center' }}>
             <Button style={buttonStyle} href={url}>
-              Potwierdź nowy adres e-mail
+              Confirm new email address
             </Button>
           </Section>
 
           <Text style={textStyle}>
-            Jeśli to nie Ty prosiłeś o zmianę adresu e-mail, zignoruj tę wiadomość.
+            If you did not request an email address change, please ignore this message.
           </Text>
 
           <Hr style={footerHrStyle} />
           <Text style={footerTextStyle}>
-            Wilcze Chatki – panel administracyjny
+            Wilcze Chatki – Admin Panel
           </Text>
         </Container>
       </Body>

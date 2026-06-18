@@ -31,7 +31,7 @@ export default function DeletePropertyButton({
       if (err instanceof Error) {
         setError(err.message)
       } else {
-        setError('Wystąpił nieznany błąd.')
+        setError('An unknown error occurred.')
       }
     } finally {
       setIsDeleting(false)
@@ -48,23 +48,23 @@ export default function DeletePropertyButton({
           setShowConfirm(true)
         }}
       >
-        🗑️ Usuń
+        🗑️ Delete
       </Button>
       
       <Modal
         isOpen={showConfirm}
         onClose={() => setShowConfirm(false)}
         onConfirm={handleDelete}
-        title="Potwierdź usunięcie"
-        confirmText="Tak, usuń"
-        loadingText="Usuwanie"
-        cancelText="Anuluj"
+        title="Confirm deletion"
+        confirmText="Yes, delete"
+        loadingText="Deleting"
+        cancelText="Cancel"
         confirmVariant="danger"
         isLoading={isDeleting}
       >
         <p>
-          Czy na pewno chcesz trwale usunąć domek "<b>{propertyName}</b>"?
-          Tej operacji nie można cofnąć.
+          Are you sure you want to permanently delete the cottage "<b>{propertyName}</b>"?
+          This action cannot be undone.
         </p>
         {error && <p style={{ color: '#ef4444', marginTop: '12px' }}>{error}</p>}
       </Modal>

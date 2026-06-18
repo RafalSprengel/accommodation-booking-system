@@ -22,7 +22,7 @@ export async function getSiteSettings(): Promise<Partial<ISiteSettings>> {
       bookingNotificationsEmail: settings.bookingNotificationsEmail,
     };
   } catch (error) {
-    console.error('Błąd podczas pobierania SiteSettings:', error);
+    console.error('Error fetching SiteSettings:', error);
     return {};
   }
 }
@@ -64,20 +64,20 @@ export async function updateSiteSettings(
 
     return {
       success: true,
-      message: "Ustawienia strony zostały zaktualizowane."
+      message: "Site settings have been updated."
     };
   } catch (error: any) {
-    console.error('Błąd podczas aktualizacji SiteSettings:', error);
+    console.error('Error updating SiteSettings:', error);
 
     // 5. Obsługa błędów walidacji
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map((err: any) => err.message);
       return { 
         success: false, 
-        message: `Błąd walidacji: ${messages.join(', ')}` 
+        message: `Validation error: ${messages.join(', ')}` 
       };
     }
 
-    return { success: false, message: "Wystąpił błąd podczas zapisywania zmian." };
+    return { success: false, message: "An error occurred while saving changes." };
   }
 }

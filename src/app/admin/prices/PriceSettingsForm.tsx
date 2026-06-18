@@ -115,10 +115,10 @@ function normalizeAndValidateTiers(
       sorted: [],
       message:
         label === "weekday"
-          ? "Dodaj przynajmniej jeden przedzial dla dni powszednich."
+          ? "Add at least one tier for weekdays."
           : label === "weekend"
-            ? "Dodaj przynajmniej jeden przedzial dla weekendu."
-            : "Dodaj przynajmniej jeden przedział dla cen indywidualnych.",
+            ? "Add at least one tier for weekends."
+            : "Add at least one tier for custom prices.",
     };
   }
 
@@ -135,12 +135,12 @@ function normalizeAndValidateTiers(
       return {
         isValid: false,
         sorted,
-        message: "Wszystkie pola przedzialow musza byc liczbami calkowitymi.",
+        message: "All tier fields must be integers.",
         errors: [
           {
             index: i,
             fields: ["minGuests", "maxGuests", "price"],
-            message: "Wszystkie pola musza byc liczbami calkowitymi.",
+            message: "All fields must be integers.",
           },
         ],
       };
@@ -150,12 +150,12 @@ function normalizeAndValidateTiers(
       return {
         isValid: false,
         sorted,
-        message: "Zakres gosci musi zaczynac sie od co najmniej 1 osoby.",
+        message: "Guest range must start from at least 1 person.",
         errors: [
           {
             index: i,
             fields: ["minGuests", "maxGuests"],
-            message: "Pole Od i Do musi miec wartosc co najmniej 1.",
+            message: "From and To fields must have a value of at least 1.",
           },
         ],
       };
@@ -165,12 +165,12 @@ function normalizeAndValidateTiers(
       return {
         isValid: false,
         sorted,
-        message: `Nieprawidlowy przedzial: od ${tier.minGuests} do ${tier.maxGuests}.`,
+        message: `Invalid range: from ${tier.minGuests} to ${tier.maxGuests}.`,
         errors: [
           {
             index: i,
             fields: ["minGuests", "maxGuests"],
-            message: "Wartosc Od nie moze byc wieksza niz Do.",
+            message: "From value cannot be greater than To.",
           },
         ],
       };
@@ -180,12 +180,12 @@ function normalizeAndValidateTiers(
       return {
         isValid: false,
         sorted,
-        message: "Cena nie moze byc ujemna.",
+        message: "Price cannot be negative.",
         errors: [
           {
             index: i,
             fields: ["price"],
-            message: "Cena nie moze byc ujemna.",
+            message: "Price cannot be negative.",
           },
         ],
       };
@@ -197,17 +197,17 @@ function normalizeAndValidateTiers(
         return {
           isValid: false,
           sorted,
-          message: `Przedzialy nakladaja sie: ${prev.minGuests}-${prev.maxGuests} i ${tier.minGuests}-${tier.maxGuests}.`,
+          message: `Tiers overlap: ${prev.minGuests}-${prev.maxGuests} and ${tier.minGuests}-${tier.maxGuests}.`,
           errors: [
             {
               index: i - 1,
               fields: ["maxGuests"],
-              message: "Ten zakres nachodzi na kolejny przedzial.",
+              message: "This range overlaps with the next tier.",
             },
             {
               index: i,
               fields: ["minGuests"],
-              message: "Ten zakres nachodzi na poprzedni przedzial.",
+              message: "This range overlaps with the previous tier.",
             },
           ],
         };
@@ -223,12 +223,12 @@ export default function PriceSettingsForm({
   childrenFreeAgeLimit,
   seasons,
 }: Props) {
-  // ── Selekcja ────────────────────────────────────────────────────────────────
+  // ── Selection ────────────────────────────────────────────────────────────────
   const [selectedPropertyId, setSelectedPropertyId] = useState<string>("");
   const [selectedSeasonId, setSelectedSeasonId] =
     useState<string>(OFF_SEASON_ID);
 
-  // ── Formularz cen ───────────────────────────────────────────────────────────
+  // ── Price form ──────────────────────────────────────────────────────────────
   const [weekdayTiers, setWeekdayTiers] = useState<InputPriceTier[]>([]);
   const [weekendTiers, setWeekendTiers] = useState<InputPriceTier[]>([]);
   const [weekdayExtraBedPrice, setWeekdayExtraBedPrice] = useState<number | "">(
@@ -238,7 +238,7 @@ export default function PriceSettingsForm({
     70,
   );
 
-  // ── Ceny indywidualne (per data) ────────────────────────────────────────────
+  // ── Individual prices (per date) ────────────────────────────────────────────
   const [bookingDates, setBookingDates] = useState<BookingDates>({
     start: null,
     end: null,
@@ -332,8 +332,8 @@ export default function PriceSettingsForm({
       setTierErrors({ weekday: [], weekend: [] });
       setIsSeasonDirty(false);
     } catch (err) {
-      console.error("Błąd ładowania cen:", err);
-      toast.error("Nie udało się załadować cen");
+      console.error("Error loading prices:", err);
+      toast.error("Failed to load prices");
     } finally {
       setIsLoadingPrices(false);
     }
@@ -457,7 +457,7 @@ export default function PriceSettingsForm({
     weekendTiersOverride?: InputPriceTier[];
   }): Promise<boolean> => {
     if (!selectedPropertyId) {
-      toast.error("Wybierz obiekt");
+      toast.error("Select a property");
       return false;
     }
 
@@ -472,20 +472,20 @@ export default function PriceSettingsForm({
 
     if (hasEmptyTierFields(weekdayInputTiers)) {
       toast.error(
-        "Uzupełnij wszystkie pola w przedziale cenowym (dzień powszedni).",
+        "Fill in all fields in the weekday price tier.",
       );
       return false;
     }
     if (hasEmptyTierFields(weekendInputTiers)) {
-      toast.error("Uzupełnij wszystkie pola w przedziale cenowym (weekend).");
+      toast.error("Fill in all fields in the weekend price tier.");
       return false;
     }
     if (weekdayExtraBedPrice === "") {
-      toast.error("Cena za dostawkę (dzień powszedni) nie może być pusta.");
+      toast.error("Extra bed price (weekday) cannot be empty.");
       return false;
     }
     if (weekendExtraBedPrice === "") {
-      toast.error("Cena za dostawkę (weekend) nie może być pusta.");
+      toast.error("Extra bed price (weekend) cannot be empty.");
       return false;
     }
 
@@ -504,7 +504,7 @@ export default function PriceSettingsForm({
       }));
       toast.error(
         weekdayValidation.message ??
-        "Nieprawidlowe przedzialy dla dni powszednich.",
+        "Invalid weekday tiers.",
       );
       return false;
     }
@@ -521,7 +521,7 @@ export default function PriceSettingsForm({
         weekend: weekendValidation.errors ?? [],
       }));
       toast.error(
-        weekendValidation.message ?? "Nieprawidlowe przedzialy dla weekendu.",
+        weekendValidation.message ?? "Invalid weekend tiers.",
       );
       return false;
     }
@@ -549,7 +549,7 @@ export default function PriceSettingsForm({
         formData.append("mode", "basic");
         const result = await updateBasicPrices(null, formData);
         if (result.success) {
-          toast.success("Zapisano ceny podstawowe");
+          toast.success("Base prices saved");
           setIsSeasonDirty(false);
         } else {
           toast.error(result.message);
@@ -561,7 +561,7 @@ export default function PriceSettingsForm({
         const result = await updateSeasonPricesForProperty(null, formData);
         if (result.success) {
           const season = seasons.find((s) => s._id === selectedSeasonId);
-          toast.success(`Zapisano ceny dla: ${season?.name ?? "sezonu"}`);
+          toast.success(`Prices saved for: ${season?.name ?? "season"}`);
           setIsSeasonDirty(false);
         } else {
           toast.error(result.message);
@@ -571,7 +571,7 @@ export default function PriceSettingsForm({
       return true;
     } catch (error) {
       console.error(error);
-      toast.error("Wystąpił błąd podczas zapisu");
+      toast.error("An error occurred while saving");
       return false;
     } finally {
       setIsSaving(false);
@@ -703,11 +703,11 @@ export default function PriceSettingsForm({
     if (!selectedPropertyId || !bookingDates.start) return false;
 
     if (hasEmptyTierFields(customTiers)) {
-      toast.error("Uzupełnij wszystkie pola w przedziale cenowym.");
+      toast.error("Fill in all fields in the price tier.");
       return false;
     }
     if (customExtraBedPrice === "") {
-      toast.error("Cena za dostawkę nie może być pusta.");
+      toast.error("Extra bed price cannot be empty.");
       return false;
     }
 
@@ -720,7 +720,7 @@ export default function PriceSettingsForm({
       setCustomTierErrors(customValidation.errors ?? []);
       toast.error(
         customValidation.message ??
-        "Nieprawidlowe przedzialy custom dla wybranych dni.",
+        "Invalid custom tiers for the selected dates.",
       );
       return false;
     }
@@ -744,12 +744,12 @@ export default function PriceSettingsForm({
         setIsCustomDirty(false);
         return true;
       } else {
-        toast.error(result?.message ?? "Błąd zapisu");
+        toast.error(result?.message ?? "Save error");
         return false;
       }
     } catch (error) {
       console.error(error);
-      toast.error("Wystąpił błąd");
+      toast.error("An error occurred");
       return false;
     } finally {
       setIsSaving(false);
@@ -834,11 +834,11 @@ export default function PriceSettingsForm({
         setBookingDates({ start: null, end: null, count: 0 });
         setIsCustomDirty(false);
       } else {
-        toast.error(result?.message ?? "Błąd usuwania");
+        toast.error(result?.message ?? "Delete error");
       }
     } catch (error) {
       console.error(error);
-      toast.error("Wystąpił błąd");
+      toast.error("An error occurred");
     } finally {
       setIsDeletingCustom(false);
     }
@@ -857,11 +857,11 @@ export default function PriceSettingsForm({
         await refreshCustomPrices();
       } else {
         toast.error(
-          res?.message ?? "Błąd podczas usuwania ceny indywidualnej.",
+          res?.message ?? "Error while deleting custom price.",
         );
       }
     } catch (e) {
-      toast.error("Błąd podczas usuwania ceny indywidualnej.");
+      toast.error("Error while deleting custom price.");
     } finally {
       setIsDeletingCustomSingle(false);
       setDeleteCustomModal({ isOpen: false, date: null });
@@ -880,7 +880,7 @@ export default function PriceSettingsForm({
         toast.error(result.message);
       }
     } catch {
-      toast.error("Wystąpił błąd podczas kopiowania cen");
+      toast.error("An error occurred while copying prices");
     } finally {
       setIsCopying(false);
     }
@@ -902,36 +902,35 @@ export default function PriceSettingsForm({
         isOpen={copyConfirmOpen}
         onClose={() => setCopyConfirmOpen(false)}
         onConfirm={handleCopyPrices}
-        confirmText="Tak, kopiuj"
+        confirmText="Yes, copy"
         confirmVariant="danger"
         isLoading={isCopying}
-        loadingText="Kopiowanie..."
-        title="Potwierdź kopiowanie cen"
+        loadingText="Copying..."
+        title="Confirm copying prices"
       >
         <p style={{ marginBottom: "16px" }}>
-          Czy na pewno chcesz skopiować wszystkie ceny z obiektu{" "}
-          <strong>{selectedProperty?.name}</strong> do wszystkich pozostałych
-          obiektów?
+          Are you sure you want to copy all prices from{" "}
+          <strong>{selectedProperty?.name}</strong> to all other properties?
         </p>
         <p style={{ color: "#c0392b", fontSize: "0.9rem" }}>
-          Uwaga: istniejące ceny w pozostałych obiektach zostaną nadpisane.
-          Dotyczy to cen:
-          <br />- bazowych,
-          <br />- sezonowych,
-          <br />- indywidualnych,
-          <br />- dostawek.
+          Note: existing prices in other properties will be overwritten.
+          This applies to:
+          <br />- base prices,
+          <br />- seasonal prices,
+          <br />- individual prices,
+          <br />- extra bed prices.
         </p>
       </Modal>
 
       <form className={styles.card} onSubmit={(e) => e.preventDefault()}>
         <div className={styles.cardHeader}>
-          <h2>Wybierz obiekt</h2>
+          <h2>Select property</h2>
         </div>
         <div className={styles.row}>
           <div className={styles.content}>
-            <label className={styles.label}>Obiekt</label>
+            <label className={styles.label}>Property</label>
             <p className={styles.description}>
-              Wybierz obiekt, dla którego chcesz skonfigurować ceny.
+              Select the property for which you want to configure prices.
             </p>
           </div>
           <div className={styles.control}>
@@ -947,7 +946,7 @@ export default function PriceSettingsForm({
               }}
               className={styles.select}
             >
-              <option value="">-- Wybierz obiekt --</option>
+              <option value="">-- Select property --</option>
               {properties.map((prop) => (
                 <option key={prop._id} value={prop._id}>
                   {prop.name}
@@ -961,7 +960,7 @@ export default function PriceSettingsForm({
                 className={styles.copyLink}
                 disabled={isCopying}
               >
-                Skopiuj ceny z tego domku do pozostałych domków
+                Copy prices from this cottage to other cottages
               </button>
             )}
           </div>
@@ -972,7 +971,7 @@ export default function PriceSettingsForm({
         <div className={styles.card}>
           <div className={styles.loading}>
             <span className={styles.spinner} aria-hidden="true"></span>
-            <span>Wczytywanie...</span>
+            <span>Loading...</span>
           </div>
         </div>
       )}
@@ -980,7 +979,7 @@ export default function PriceSettingsForm({
       {selectedPropertyId && !isPropertyDataLoading && (
         <form className={styles.card} onSubmit={(e) => e.preventDefault()}>
           <div className={styles.cardHeader}>
-            <h2>Konfiguracja cen sezonów</h2>
+            <h2>Season price configuration</h2>
             <div className={styles.control}>
               <select
                 value={selectedSeasonId}
@@ -989,16 +988,16 @@ export default function PriceSettingsForm({
                 disabled={isLoadingPrices}
               >
                 <option value={OFF_SEASON_ID}>
-                  🌿 Poza sezonem (ceny bazowe)
+                  🌿 Off-season (base prices)
                 </option>
                 {seasons.map((season) => (
                   <option key={season._id} value={season._id}>
-                    {season.name} {!season.isActive && "(nieaktywny)"}
+                    {season.name} {!season.isActive && "(inactive)"}
                   </option>
                 ))}
               </select>
               <Link href="/admin/settings/booking#seasons" className={styles.copyLink}>
-                Przejdź do ustawień nazw i dat sezonów
+                Go to season name and date settings
               </Link>
             </div>
           </div>
@@ -1007,10 +1006,10 @@ export default function PriceSettingsForm({
             <div className={styles.content}>
               <strong>
                 {isLoadingPrices
-                  ? "Ładowanie cen..."
+                  ? "Loading prices..."
                   : selectedSeasonId === OFF_SEASON_ID
-                    ? `Ceny podstawowe dla: ${selectedProperty?.name}`
-                    : `Ceny w sezonie "${selectedSeason?.name}" dla: ${selectedProperty?.name}`}
+                    ? `Base prices for: ${selectedProperty?.name}`
+                    : `Prices in season "${selectedSeason?.name}" for: ${selectedProperty?.name}`}
               </strong>
             </div>
           </div>
@@ -1018,10 +1017,10 @@ export default function PriceSettingsForm({
           <div className={styles.row}>
             <div className={styles.content}>
               <label className={styles.label}>
-                Cena za dobę – Dzień powszedni (nd–czw)
+                Price per night – Weekday (Sun–Thu)
               </label>
               <p className={styles.description}>
-                Ustaw przedziały: od ilu osób do ilu osób i za jaką cenę.
+                Set tiers: from how many guests to how many guests and at what price.
               </p>
             </div>
             <div className={styles.control}>
@@ -1034,7 +1033,7 @@ export default function PriceSettingsForm({
                         className={`${styles.tierRow} ${tierError ? styles.tierRowError : ""}`}
                       >
                         <label className={styles.tierField}>
-                          <span className={styles.tierFieldLabel}>Osób od</span>
+                          <span className={styles.tierFieldLabel}>Guests from</span>
                           <input
                             type="number"
                             min="1"
@@ -1055,7 +1054,7 @@ export default function PriceSettingsForm({
                           />
                         </label>
                         <label className={styles.tierField}>
-                          <span className={styles.tierFieldLabel}>Osób do</span>
+                          <span className={styles.tierFieldLabel}>Guests to</span>
                           <input
                             type="number"
                             min="1"
@@ -1076,7 +1075,7 @@ export default function PriceSettingsForm({
                           />
                         </label>
                         <label className={styles.tierField}>
-                          <span className={styles.tierFieldLabel}>Cena</span>
+                          <span className={styles.tierFieldLabel}>Price</span>
                           <input
                             type="number"
                             min="0"
@@ -1096,7 +1095,7 @@ export default function PriceSettingsForm({
                             disabled={isLoadingPrices}
                           />
                         </label>
-                        <span className={styles.currency}>zł</span>
+                        <span className={styles.currency}>GBP</span>
                         {weekdayTiers.length > 1 && (
                           <button
                             type="button"
@@ -1122,7 +1121,7 @@ export default function PriceSettingsForm({
                   className={styles.addBtn}
                   disabled={isLoadingPrices}
                 >
-                  + Dodaj przedział
+                  + Add tier
                 </button>
               </div>
             </div>
@@ -1131,10 +1130,10 @@ export default function PriceSettingsForm({
           <div className={styles.row}>
             <div className={styles.content}>
               <label className={styles.label}>
-                Cena za dobę – Weekend (pt–sob)
+                Price per night – Weekend (Fri–Sat)
               </label>
               <p className={styles.description}>
-                Ustaw przedziały: od ilu osób do ilu osób i za jaką cenę.
+                Set tiers: from how many guests to how many guests and at what price.
               </p>
             </div>
             <div className={styles.control}>
@@ -1147,7 +1146,7 @@ export default function PriceSettingsForm({
                         className={`${styles.tierRow} ${tierError ? styles.tierRowError : ""}`}
                       >
                         <label className={styles.tierField}>
-                          <span className={styles.tierFieldLabel}>Osób od</span>
+                          <span className={styles.tierFieldLabel}>Guests from</span>
                           <input
                             type="number"
                             min="1"
@@ -1168,7 +1167,7 @@ export default function PriceSettingsForm({
                           />
                         </label>
                         <label className={styles.tierField}>
-                          <span className={styles.tierFieldLabel}>Osób do</span>
+                          <span className={styles.tierFieldLabel}>Guests to</span>
                           <input
                             type="number"
                             min="1"
@@ -1189,7 +1188,7 @@ export default function PriceSettingsForm({
                           />
                         </label>
                         <label className={styles.tierField}>
-                          <span className={styles.tierFieldLabel}>Cena</span>
+                          <span className={styles.tierFieldLabel}>Price</span>
                           <input
                             type="number"
                             min="0"
@@ -1209,7 +1208,7 @@ export default function PriceSettingsForm({
                             disabled={isLoadingPrices}
                           />
                         </label>
-                        <span className={styles.currency}>zł</span>
+                        <span className={styles.currency}>GBP</span>
                         {weekendTiers.length > 1 && (
                           <button
                             type="button"
@@ -1235,7 +1234,7 @@ export default function PriceSettingsForm({
                   className={styles.addBtn}
                   disabled={isLoadingPrices}
                 >
-                  + Dodaj przedział
+                  + Add tier
                 </button>
               </div>
             </div>
@@ -1244,7 +1243,7 @@ export default function PriceSettingsForm({
           <div className={styles.row}>
             <div className={styles.content}>
               <label className={styles.label}>
-                Cena za dostawkę (dzień powszedni)
+                Extra bed price (weekday)
               </label>
             </div>
             <div className={styles.control}>
@@ -1263,14 +1262,14 @@ export default function PriceSettingsForm({
                   className={`${styles.input} ${styles.inputLarge}`}
                   disabled={isLoadingPrices}
                 />
-                <span className={styles.currency}>zł / noc</span>
+                <span className={styles.currency}>GBP / night</span>
               </div>
             </div>
           </div>
 
           <div className={styles.row}>
             <div className={styles.content}>
-              <label className={styles.label}>Cena za dostawkę (weekend)</label>
+              <label className={styles.label}>Extra bed price (weekend)</label>
             </div>
             <div className={styles.control}>
               <div className={styles.priceControl}>
@@ -1288,7 +1287,7 @@ export default function PriceSettingsForm({
                   className={`${styles.input} ${styles.inputLarge}`}
                   disabled={isLoadingPrices}
                 />
-                <span className={styles.currency}>zł / noc</span>
+                <span className={styles.currency}>GBP / night</span>
               </div>
             </div>
           </div>
@@ -1298,18 +1297,18 @@ export default function PriceSettingsForm({
       {selectedPropertyId && !isPropertyDataLoading && (
         <form className={styles.card} onSubmit={(e) => e.preventDefault()}>
           <div className={styles.cardHeader}>
-            <h2>Ceny indywidualne</h2>
-            <span className={styles.cardBadge}>Per obiekt / data</span>
+            <h2>Individual prices</h2>
+            <span className={styles.cardBadge}>Per property / date</span>
           </div>
 
           <div className={styles.row}>
             <div className={styles.content}>
               <label className={styles.label}>
-                Wybierz datę lub zakres dat
+                Select date or date range
               </label>
               <p className={styles.description}>
-                Kliknij na dzień w kalendarzu, aby ustawić cenę. Możesz wybrać
-                pojedynczy dzień lub zakres dat.
+                Click on a day in the calendar to set a price. You can select
+                a single day or a date range.
               </p>
               <label className={styles.selectionMode}>
                 <input
@@ -1317,7 +1316,7 @@ export default function PriceSettingsForm({
                   checked={!isCustomRangeMode}
                   onChange={(e) => setIsCustomRangeMode(!e.target.checked)}
                 />
-                Zaznaczaj jeden dzień
+                Select single day
               </label>
             </div>
             <div className={styles.control}>
@@ -1333,7 +1332,7 @@ export default function PriceSettingsForm({
               {bookingDates.start && (
                 <div className={styles.selectedInfo}>
                   <span>
-                    Wybrano: {formatDisplayDate(bookingDates.start)}
+                    Selected: {formatDisplayDate(bookingDates.start)}
                     {bookingDates.end &&
                       ` — ${formatDisplayDate(bookingDates.end)}`}
                   </span>
@@ -1342,7 +1341,7 @@ export default function PriceSettingsForm({
                       (
                       {getDayType(bookingDates.start) === "weekend"
                         ? "Weekend"
-                        : "Dzień powszedni"}
+                        : "Weekday"}
                       )
                     </span>
                   )}
@@ -1356,10 +1355,10 @@ export default function PriceSettingsForm({
               <div className={styles.row}>
                 <div className={styles.content}>
                   <label className={styles.label}>
-                    Cena za dobę (dla wybranego dnia / zakresu)
+                    Price per night (for the selected day / range)
                   </label>
                   <p className={styles.description}>
-                    Ustaw przedziały: od ilu osób do ilu osób i za jaką cenę.
+                    Set tiers: from how many guests to how many guests and at what price.
                   </p>
                 </div>
                 <div className={styles.control}>
@@ -1373,7 +1372,7 @@ export default function PriceSettingsForm({
                           >
                             <label className={styles.tierField}>
                               <span className={styles.tierFieldLabel}>
-                                Osób od
+                                Guests from
                               </span>
                               <input
                                 type="number"
@@ -1394,7 +1393,7 @@ export default function PriceSettingsForm({
                             </label>
                             <label className={styles.tierField}>
                               <span className={styles.tierFieldLabel}>
-                                Osób do
+                                Guests to
                               </span>
                               <input
                                 type="number"
@@ -1415,7 +1414,7 @@ export default function PriceSettingsForm({
                             </label>
                             <label className={styles.tierField}>
                               <span className={styles.tierFieldLabel}>
-                                Cena
+                                Price
                               </span>
                               <input
                                 type="number"
@@ -1434,7 +1433,7 @@ export default function PriceSettingsForm({
                                 className={`${styles.input} ${tierError?.fields.includes("price") ? styles.inputError : ""}`}
                               />
                             </label>
-                            <span className={styles.currency}>zł</span>
+                            <span className={styles.currency}>GBP</span>
                             {customTiers.length > 1 && (
                               <button
                                 type="button"
@@ -1458,7 +1457,7 @@ export default function PriceSettingsForm({
                       onClick={addCustomTier}
                       className={styles.addBtn}
                     >
-                      + Dodaj przedział
+                      + Add tier
                     </button>
                   </div>
                 </div>
@@ -1466,7 +1465,7 @@ export default function PriceSettingsForm({
 
               <div className={styles.row}>
                 <div className={styles.content}>
-                  <label className={styles.label}>Cena za dostawkę</label>
+                  <label className={styles.label}>Extra bed price</label>
                 </div>
                 <div className={styles.control}>
                   <div className={styles.priceControl}>
@@ -1483,7 +1482,7 @@ export default function PriceSettingsForm({
                       }}
                       className={`${styles.input} ${styles.inputLarge}`}
                     />
-                    <span className={styles.currency}>zł / noc</span>
+                    <span className={styles.currency}>GBP / night</span>
                   </div>
                 </div>
               </div>
@@ -1496,8 +1495,8 @@ export default function PriceSettingsForm({
                   disabled={isSaving || isDeletingCustom}
                 >
                   {isDeletingCustom
-                    ? "Przywracanie..."
-                    : "🗑️ Usuń cenę indywidualną"}
+                    ? "Restoring..."
+                    : "🗑️ Remove custom price"}
                 </Button>
               </div>
             </>
@@ -1507,7 +1506,7 @@ export default function PriceSettingsForm({
             <div className={styles.row}>
               <div className={styles.content}>
                 <label className={styles.label}>
-                  Ustawione ceny indywidualne dla: {selectedProperty?.name}
+                  Set individual prices for: {selectedProperty?.name}
                 </label>
                 <div className={styles.customList}>
                   {(isCustomPricesExpanded
@@ -1519,12 +1518,12 @@ export default function PriceSettingsForm({
                         {dayjs(entry.date).format("DD.MM.YYYY")}
                       </span>
                       <span className={styles.customPrice}>
-                        od {entry.previewPrice} zł
+                        from {entry.previewPrice} GBP
                       </span>
                       <button
                         type="button"
                         className={styles.removeBtn}
-                        aria-label="Usuń cenę indywidualną"
+                        aria-label="Remove custom price"
                         onClick={() => {
                           setDeleteCustomModal({
                             isOpen: true,
@@ -1545,8 +1544,8 @@ export default function PriceSettingsForm({
                       }
                     >
                       {isCustomPricesExpanded
-                        ? "Zwiń"
-                        : `+ ${customPrices.length - 10} więcej...`}
+                        ? "Collapse"
+                        : `+ ${customPrices.length - 10} more...`}
                     </button>
                   )}
                 </div>
@@ -1562,10 +1561,10 @@ export default function PriceSettingsForm({
         <div className={styles.floatingContent}>
           <p className={styles.floatingText}>
             {isSeasonDirty && isCustomDirty
-              ? "Masz niezapisane zmiany w cenach sezonowych i indywidualnych."
+              ? "You have unsaved changes in seasonal and individual prices."
               : isSeasonDirty
-                ? `Masz niezapisane zmiany w cenach dla ${selectedProperty?.name ?? "wybranego domku"}.`
-                : "Masz niezapisane zmiany w cenach indywidualnych."}
+                ? `You have unsaved changes in prices for ${selectedProperty?.name ?? "selected cottage"}.`
+                : "You have unsaved changes in individual prices."}
           </p>
           <div className={styles.floatingActions}>
             <Button
@@ -1576,7 +1575,7 @@ export default function PriceSettingsForm({
                 isSaving || isLoadingPrices || isDeletingCustom || isDiscarding
               }
             >
-              {isDiscarding ? "Przywracanie..." : "Odrzuć"}
+              {isDiscarding ? "Restoring..." : "Discard"}
             </Button>
             <Button
               type="button"
@@ -1585,7 +1584,7 @@ export default function PriceSettingsForm({
                 isSaving || isLoadingPrices || isDeletingCustom || isDiscarding
               }
             >
-              {isSaving ? "Zapisywanie..." : "Zapisz wszystko"}
+              {isSaving ? "Saving..." : "Save all"}
             </Button>
           </div>
         </div>
@@ -1597,27 +1596,27 @@ export default function PriceSettingsForm({
           setDeleteModal({ isOpen: false, type: null, index: null })
         }
         onConfirm={confirmRemoveTier}
-        title="Usuń przedział cenowy"
-        confirmText="Usuń"
-        cancelText="Anuluj"
+        title="Delete price tier"
+        confirmText="Delete"
+        cancelText="Cancel"
         confirmVariant="danger"
         isLoading={isRemovingTier}
-        loadingText="Usuwanie..."
+        loadingText="Deleting..."
       >
-        <p>Czy na pewno chcesz usunąć ten przedział cenowy?</p>
+        <p>Are you sure you want to delete this price tier?</p>
       </Modal>
 
       <Modal
         isOpen={deleteCustomModal.isOpen}
         onClose={() => setDeleteCustomModal({ isOpen: false, date: null })}
         onConfirm={handleDeleteCustomPriceForDate}
-        title="Usuń cenę indywidualną"
-        confirmText="Usuń"
-        cancelText="Anuluj"
+        title="Delete custom price"
+        confirmText="Delete"
+        cancelText="Cancel"
         confirmVariant="danger"
         isLoading={isDeletingCustomSingle}
       >
-        <p>Czy na pewno chcesz usunąć cenę indywidualną dla tej daty?</p>
+        <p>Are you sure you want to delete the custom price for this date?</p>
       </Modal>
     </>
   );

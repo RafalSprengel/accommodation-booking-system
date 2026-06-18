@@ -20,13 +20,13 @@ export async function generateOrderId(): Promise<string> {
   );
 
   if (!updated || typeof updated.lastOrderNumber === 'undefined') {
-    throw new Error('Nie udało się wygenerować numeru zamówienia.');
+    throw new Error('Failed to generate order number.');
   }
 
   const lastOrderNumber = Number(updated.lastOrderNumber);
 
   if (!Number.isInteger(lastOrderNumber) || lastOrderNumber <= 0) {
-    throw new Error('Nie udało się wygenerować numeru zamówienia.');
+    throw new Error('Failed to generate order number.');
   }
 
   const paddedNumber = String(lastOrderNumber).padStart(6, '0');

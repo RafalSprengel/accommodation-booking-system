@@ -43,18 +43,18 @@ interface Props {
 }
 
 const MONTH_OPTIONS = [
-  { value: 1, label: "Styczeń" },
-  { value: 2, label: "Luty" },
-  { value: 3, label: "Marzec" },
-  { value: 4, label: "Kwiecień" },
-  { value: 5, label: "Maj" },
-  { value: 6, label: "Czerwiec" },
-  { value: 7, label: "Lipiec" },
-  { value: 8, label: "Sierpień" },
-  { value: 9, label: "Wrzesień" },
-  { value: 10, label: "Październik" },
-  { value: 11, label: "Listopad" },
-  { value: 12, label: "Grudzień" },
+  { value: 1, label: "January" },
+  { value: 2, label: "February" },
+  { value: 3, label: "March" },
+  { value: 4, label: "April" },
+  { value: 5, label: "May" },
+  { value: 6, label: "June" },
+  { value: 7, label: "July" },
+  { value: 8, label: "August" },
+  { value: 9, label: "September" },
+  { value: 10, label: "October" },
+  { value: 11, label: "November" },
+  { value: 12, label: "December" },
 ];
 
 function getMaxDaysInMonth(month: number): number {
@@ -254,12 +254,12 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
         const updatedSeasons = await getAllSeasons();
         setSeasons(updatedSeasons);
         setSeasonDateErrors({});
-        toast.success(`Zapisano zmiany w sezonie: ${seasonName}`);
+        toast.success(`Changes saved for season: ${seasonName}`);
         return true;
       } else {
         const messageLower = result.message.toLowerCase();
         const isDateRangeConflict =
-          messageLower.includes("nakłada") || messageLower.includes("naklada");
+          messageLower.includes("overlap") || messageLower.includes("overlap");
         if (isDateRangeConflict) {
           setSeasonDateErrors({
             startDate: result.message,
@@ -270,7 +270,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
         return false;
       }
     } catch (_error) {
-      toast.error("Wystąpił błąd podczas automatycznego zapisu");
+      toast.error("An error occurred during auto-save");
       return false;
     } finally {
       setIsUpdatingSeason(false);
@@ -296,7 +296,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
         setAllowCheckin(newValue);
         toast.success(result.message);
       } else {
-        toast.error(result.message || "Błąd zapisu");
+        toast.error(result.message || "Save error");
       }
     });
   };
@@ -363,19 +363,19 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
 
   const handleCreateSeason = async () => {
     if (!newSeasonName.trim()) {
-      toast.error("Nazwa sezonu jest wymagana");
+      toast.error("Season name is required");
       return;
     }
     if (!newSeasonStartDate) {
-      toast.error("Data rozpoczęcia jest wymagana");
+      toast.error("Start date is required");
       return;
     }
     if (!newSeasonEndDate) {
-      toast.error("Data zakończenia jest wymagana");
+      toast.error("End date is required");
       return;
     }
     if (newSeasonEndDate < newSeasonStartDate) {
-      toast.error("Data zakończenia nie może być wcześniejsza niż rozpoczęcia");
+      toast.error("End date cannot be earlier than start date");
       return;
     }
     setIsCreatingSeason(true);
@@ -387,7 +387,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
         newSeasonEndDate,
       );
       if (!result.success) {
-        toast.error(result.message || "Nie udało się dodać sezonu");
+        toast.error(result.message || "Failed to add season");
         return;
       }
       const updatedSeasons = await getAllSeasons();
@@ -398,7 +398,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
       setIsAddExpanded(false);
       toast.success(result.message);
     } catch (_error) {
-      toast.error("Wystąpił błąd podczas dodawania sezonu");
+      toast.error("An error occurred while adding season");
     } finally {
       setIsCreatingSeason(false);
     }
@@ -411,7 +411,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
     try {
       const result = await deleteSeason(selectedSeasonId);
       if (!result.success) {
-        toast.error(result.message || "Nie udało się usunąć sezonu");
+        toast.error(result.message || "Failed to delete season");
         return;
       }
 
@@ -422,7 +422,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
       setIsEditExpanded(false);
       toast.success(result.message);
     } catch (_error) {
-      toast.error("Wystąpił błąd podczas usuwania sezonu");
+      toast.error("An error occurred while deleting season");
     } finally {
       setIsDeletingSeason(false);
     }
@@ -435,7 +435,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
       Number(localMinDays) < 1
     ) {
       toast.error(
-        "Minimalna liczba nocy jest wymagana i musi być większa od zera",
+        "Minimum number of nights is required and must be greater than zero",
       );
       setLocalMinDays(initialConfig.minBookingDays);
     }
@@ -448,7 +448,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
       Number(localMaxDays) < 1
     ) {
       toast.error(
-        "Maksymalna liczba nocy jest wymagana i musi być większa od zera",
+        "Maximum number of nights is required and must be greater than zero",
       );
       setLocalMaxDays(initialConfig.maxBookingDays);
     }
@@ -460,7 +460,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
       Number.isNaN(Number(localChildrenFreeAge)) ||
       Number(localChildrenFreeAge) < 0
     ) {
-      toast.error("Wiek dziecka musi być liczbą wieksze od zera");
+      toast.error("Child age must be a number greater than zero");
       setLocalChildrenFreeAge(initialConfig.childrenFreeAgeLimit);
     }
   };
@@ -474,7 +474,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
       Number(localCheckInHour) < Number(localCheckOutHour)
     ) {
       toast.error(
-        "Godzina rozpoczęcia doby nie może być wcześniejsza niż zakończenia i musi być z zakresu 0-23",
+        "Check-in hour cannot be earlier than check-out and must be between 0-23",
       );
       setLocalCheckInHour(initialConfig.checkInHour);
     }
@@ -489,7 +489,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
       Number(localCheckOutHour) > Number(localCheckInHour)
     ) {
       toast.error(
-        "Godzina zakończenia doby nie może być późniejsza niż rozpoczęcia i musi być z zakresu 0-23",
+        "Check-out hour cannot be later than check-in and must be between 0-23",
       );
       setLocalCheckOutHour(initialConfig.checkOutHour);
     }
@@ -562,10 +562,10 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
         <input type="hidden" name="checkInHour" value={localCheckInHour} />
         <input type="hidden" name="checkOutHour" value={localCheckOutHour} />
 
-        <AdminSection title="Długość pobytu">
+        <AdminSection title="Length of stay">
           <SettingRow
-            label={<label htmlFor="minBookingDays">Minimalna liczba nocy:</label>}
-            description="Klient nie może wybrać okresu krótszego."
+            label={<label htmlFor="minBookingDays">Minimum nights:</label>}
+            description="Customer cannot select a shorter period."
           >
             <div className={styles.settingControl}>
               <input
@@ -588,8 +588,8 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
             </div>
           </SettingRow>
           <SettingRow
-            label={<label htmlFor="maxBookingDays">Maksymalna liczba nocy:</label>}
-            description="Klient nie może wybrać okresu dłuższego."
+            label={<label htmlFor="maxBookingDays">Maximum nights:</label>}
+            description="Customer cannot select a longer period."
           >
             <div className={styles.settingControl}>
               <input
@@ -614,10 +614,10 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
         </AdminSection>
 
         <div id="seasons">
-          <AdminSection title="Ustawienia sezonów">
+          <AdminSection title="Season settings">
             <SettingRow
-              label={<label>Wybierz sezon:</label>}
-              description="Daty sezonu działają cyklicznie co roku."
+              label={<label>Select season:</label>}
+              description="Season dates are recurring annually."
             >
               <div className={styles.settingControl}>
                 <select
@@ -628,19 +628,19 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 className={`${styles.dateInput} ${styles.seasonSelectFull}`}
               >
                 {isLoadingSeasons ? (
-                  <option value="">Wczytywanie sezonów...</option>
+                  <option value="">Loading seasons...</option>
                 ) : (
                   [...seasons]
                     .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
                     .map((season) => (
                       <option key={season._id} value={season._id}>
-                        {season.name} {!season.isActive && "(nieaktywny)"}
+                        {season.name} {!season.isActive && "(inactive)"}
                       </option>
                     ))
                 )}
                 </select>
                 {isLoadingSeasons && (
-                  <p className={styles.loadingText}>Wczytywanie...</p>
+                  <p className={styles.loadingText}>Loading...</p>
                 )}
               </div>
             </SettingRow>
@@ -653,7 +653,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                   onClick={() => router.push(`/admin/prices`)}
                   className={styles.btnActionLink}
                 >
-                  Przejdź do ustawień cen sezonu
+                  Go to seasonal price settings
                 </button>
                 <button
                   type="button"
@@ -663,7 +663,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                     isDeletingSeason || isCreatingSeason || isUpdatingSeason
                   }
                 >
-                  Edytuj nazwę i opis sezonu
+                  Edit season name and description
                 </button>
                 <button
                   type="button"
@@ -673,7 +673,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                     isDeletingSeason || isCreatingSeason || isUpdatingSeason
                   }
                 >
-                  Usuń ten sezon
+                  Delete this season
                 </button>
                 <button
                   type="button"
@@ -683,14 +683,14 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                     isDeletingSeason || isCreatingSeason || isUpdatingSeason
                   }
                 >
-                  Dodaj nowy sezon
+                  Add new season
                 </button>
               </div>
 
               {selectedSeason.description &&
                 selectedSeason.description.trim() !== "" && (
                   <SettingRow
-                    label={<p>Opis sezonu:</p>}
+                    label={<p>Season description:</p>}
                     description={selectedSeason.description}
                   >
                     <div />
@@ -698,7 +698,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 )}
 
               <SettingRow
-                label={<label htmlFor="seasonStartDay">Data rozpoczęcia:</label>}
+                label={<label htmlFor="seasonStartDay">Start date:</label>}
               >
                 <div className={styles.settingControl}>
                   <div className={styles.seasonDateGrid}>
@@ -707,7 +707,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                         htmlFor="seasonStartDay"
                         className={`${styles.settingDescription} ${styles.settingsDateDescription}`}
                       >
-                        Dzień:
+                        Day:
                       </label>
                       <select
                         id="seasonStartDay"
@@ -735,7 +735,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                         htmlFor="seasonStartMonth"
                         className={`${styles.settingDescription} ${styles.settingsDateDescription}`}
                       >
-                        Miesiąc:
+                        Month:
                       </label>
                       <select
                         id="seasonStartMonth"
@@ -762,7 +762,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
               </SettingRow>
 
               <SettingRow
-                label={<label htmlFor="seasonEndDay">Data zakończenia:</label>}
+                label={<label htmlFor="seasonEndDay">End date:</label>}
               >
                 <div className={styles.settingControl}>
                   <div className={styles.seasonDateGrid}>
@@ -771,7 +771,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                         htmlFor="seasonEndDay"
                         className={`${styles.settingDescription} ${styles.settingsDateDescription}`}
                       >
-                        Dzień:
+                        Day:
                       </label>
                       <select
                         id="seasonEndDay"
@@ -799,7 +799,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                         htmlFor="seasonEndMonth"
                         className={`${styles.settingDescription} ${styles.settingsDateDescription}`}
                       >
-                        Miesiąc:
+                        Month:
                       </label>
                       <select
                         id="seasonEndMonth"
@@ -829,10 +829,10 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
           </AdminSection>
         </div>
 
-        <AdminSection title="Doba hotelowa">
+        <AdminSection title="Check-in / Check-out times">
           <SettingRow
-            label={<label htmlFor="checkInHour">Godzina rozpoczęcia doby (check-in):</label>}
-            description="Od której godziny można się zameldować w dniu przyjazdu."
+            label={<label htmlFor="checkInHour">Check-in hour:</label>}
+            description="From what hour can guests check in on arrival day."
           >
             <div className={styles.settingControl}>
               <input
@@ -856,8 +856,8 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
             </div>
           </SettingRow>
           <SettingRow
-            label={<label htmlFor="checkOutHour">Godzina zakończenia doby (check-out):</label>}
-            description="Do której godziny trzeba opuścić obiekt w dniu wyjazdu."
+            label={<label htmlFor="checkOutHour">Check-out hour:</label>}
+            description="By what hour must guests vacate the property on departure day."
           >
             <div className={styles.settingControl}>
               <input
@@ -882,9 +882,9 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
           </SettingRow>
         </AdminSection>
 
-        <AdminSection title="Dzieci">
+        <AdminSection title="Children">
           <SettingRow
-            label={<label htmlFor="childrenFreeAgeLimit">Bezpłatny pobyt dzieci do lat:</label>}
+            label={<label htmlFor="childrenFreeAgeLimit">Free stay for children up to (years):</label>}
           >
             <div className={styles.settingControl}>
               <input
@@ -909,19 +909,18 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
           </SettingRow>
         </AdminSection>
 
-        <AdminSection title="Dostępność terminów">
+        <AdminSection title="Date availability">
           <SettingRow
-            label={<p>Zezwalaj na zameldowanie w dniu wymeldowania poprzednich gości</p>}
+            label={<p>Allow check-in on the same day as previous guests' check-out</p>}
             description={
               <>
-                Jeśli <strong>włączone</strong>, nowi goście mogą przyjechać tego
-                samego dnia, w którym poprzedni wyjeżdżają (po {localCheckOutHour}
+                If <strong>enabled</strong>, new guests can arrive on the same day
+                that previous guests depart (after {localCheckOutHour}
                 :00).
                 <br />
-                Jeśli <strong>wyłączone</strong>, dzień rozpoczęcia i dzień
-                zakończenia istniejących rezerwacji pokazują się w kalendarzu jako
-                niedostępne do zarezerwowania dla nowych gości (zasada "sprzątanie
-                obiektu bez pośpiechu").
+                If <strong>disabled</strong>, the check-in and check-out days of
+                existing bookings show in the calendar as unavailable for new
+                guests ("no-rush cleaning" rule).
               </>
             }
           >
@@ -938,7 +937,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 <span
                   className={`${styles.toggleStatusLabel} ${allowCheckin ? styles.statusActive : styles.statusInactive}`}
                 >
-                  {allowCheckin ? "WŁĄCZONE" : "WYŁĄCZONE"}
+                  {allowCheckin ? "ON" : "OFF"}
                 </span>
               </div>
             </div>
@@ -950,7 +949,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
         >
           <div className={styles.floatingSaveContent}>
             <p className={styles.floatingSaveText}>
-              Masz niezapisane zmiany w ustawieniach głównych.
+              You have unsaved changes in the main settings.
             </p>
             <div className={styles.floatingSaveActions}>
               <Button
@@ -959,7 +958,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 onClick={handleReset}
                 disabled={isPending || isUpdatingSeason}
               >
-                Odrzuć
+                Discard
               </Button>
               <Button
                 type="button"
@@ -967,8 +966,8 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 onClick={handleSaveAll}
               >
                 {isPending || isUpdatingSeason
-                  ? "Zapisywanie..."
-                  : "Zapisz wszystko"}
+                  ? "Saving..."
+                  : "Save all"}
               </Button>
             </div>
           </div>
@@ -979,10 +978,10 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
         isOpen={isAddExpanded}
         onClose={() => setIsAddExpanded(false)}
         onConfirm={handleCreateSeason}
-        title="Dodaj nowy sezon"
-        confirmText="Utwórz sezon"
-        cancelText="Anuluj"
-        loadingText="Dodawanie..."
+        title="Add new season"
+        confirmText="Create season"
+        cancelText="Cancel"
+        loadingText="Adding..."
         confirmVariant="ok"
         isLoading={isCreatingSeason}
         modalSize="wide"
@@ -993,7 +992,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
           <div className={styles.seasonEditRow}>
             <div className={styles.seasonEditLabelCol}>
               <label htmlFor="newSeasonName" className={styles.seasonEditLabel}>
-                Nazwa sezonu:
+                Season name:
               </label>
             </div>
             <div className={styles.seasonEditControlCol}>
@@ -1008,7 +1007,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
           <div className={styles.seasonEditRow}>
             <div className={styles.seasonEditLabelCol}>
               <label htmlFor="newSeasonDesc" className={styles.seasonEditLabel}>
-                Opis sezonu:
+                Season description:
               </label>
             </div>
             <div className={styles.seasonEditControlCol}>
@@ -1026,7 +1025,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 htmlFor="newSeasonStartDate"
                 className={styles.seasonEditLabel}
               >
-                Data rozpoczęcia:
+                Start date:
               </label>
             </div>
             <div className={styles.seasonEditControlCol}>
@@ -1045,7 +1044,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 htmlFor="newSeasonEndDate"
                 className={styles.seasonEditLabel}
               >
-                Data zakończenia:
+                End date:
               </label>
             </div>
             <div className={styles.seasonEditControlCol}>
@@ -1065,10 +1064,10 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
         isOpen={isEditExpanded}
         onClose={handleCloseEditSeasonModal}
         onConfirm={handleConfirmEditSeason}
-        title="Edytuj sezon"
-        confirmText="Zapisz zmiany"
-        cancelText="Anuluj"
-        loadingText="Zapisywanie..."
+        title="Edit season"
+        confirmText="Save changes"
+        cancelText="Cancel"
+        loadingText="Saving..."
         confirmVariant="ok"
         isLoading={isUpdatingSeason}
         modalSize="wide"
@@ -1082,7 +1081,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 htmlFor="editSeasonName"
                 className={styles.seasonEditLabel}
               >
-                Nazwa sezonu:
+                Season name:
               </label>
             </div>
             <div className={styles.seasonEditControlCol}>
@@ -1100,7 +1099,7 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
                 htmlFor="editSeasonDesc"
                 className={styles.seasonEditLabel}
               >
-                Opis sezonu:
+                Season description:
               </label>
             </div>
             <div className={styles.seasonEditControlCol}>
@@ -1119,15 +1118,15 @@ export default function BookingSettingsForm({ initialConfig }: Props) {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDeleteSeasonConfirm}
-        title="Usunąć sezon?"
-        confirmText="Usuń sezon"
-        cancelText="Anuluj"
-        loadingText="Usuwanie..."
+        title="Delete season?"
+        confirmText="Delete season"
+        cancelText="Cancel"
+        loadingText="Deleting..."
         confirmVariant="danger"
         isLoading={isDeletingSeason}
       >
         <p>
-          Czy na pewno chcesz usunąć sezon &quot;{selectedSeason?.name}&quot;?
+          Are you sure you want to delete season "{selectedSeason?.name}"?
         </p>
       </Modal>
     </>

@@ -157,7 +157,7 @@ async function getDailyPrice({
   const dateKey = date.format('YYYY-MM-DD');
   const customPrice = customPrices.get(dateKey);
   const day = date.day();
-  const isWeekend = day === 5 || day === 6; // piątek i sobota
+  const isWeekend = day === 5 || day === 6; // Friday and Saturday
 
   // 1. CustomPrice (schema: stałe tiery per konkretny dzień)
   if (customPrice) {
@@ -195,7 +195,7 @@ async function getDailyPrice({
 
   const tier = findPriceTier(ratesSource, baseGuests);
 
-  if (!tier) throw new Error(`Brak odpowiedniego przedziału cenowego dla ${baseGuests} gości w ${isWeekend ? 'weekendzie' : 'dniu powszednim'}.`);
+  if (!tier) throw new Error(`No suitable price tier for ${baseGuests} guests on ${isWeekend ? 'weekend' : 'weekday'}.`);
   return tier.price + extraBeds * bedPrice;
 }
 
@@ -205,12 +205,12 @@ export async function getMaxCapacity(): Promise<{ maxAdults: number; maxChildren
   await dbConnect();
   const properties = await Property.find({ isActive: true });
   if (properties.length === 0) {
-    throw new Error('Brak aktywnych domków. Skonfiguruj obiekty przed udostępnieniem formularza rezerwacji.');
+    throw new Error('No active cottages. Configure properties before making the booking form available.');
   }
   const maxAdults = properties.reduce((sum, prop) => sum + prop.maxAdults, 0);
   const maxChildren = properties.reduce((sum, prop) => sum + prop.maxChildren, 0);
   if (maxAdults === 0) {
-    throw new Error('Żaden aktywny domek nie ma skonfigurowanego limitu dorosłych.');
+    throw new Error('No active cottage has an adult limit configured.');
   }
   return { maxAdults, maxChildren };
 }
@@ -222,7 +222,7 @@ export async function calculateTotalPrice(
 ): Promise<number> {
   const { startDate, endDate, baseGuests, extraBeds, propertySelection } = params;
   if (!startDate || !endDate || !propertySelection || baseGuests <= 0 || extraBeds < 0) {
-    throw new Error('Nieprawidłowe parametry kalkulacji ceny.');
+    throw new Error('Invalid price calculation parameters.');
   }
 
   const startValidation = dayjs(startDate);
@@ -232,7 +232,7 @@ export async function calculateTotalPrice(
     !endValidation.isValid() ||
     !startValidation.isBefore(endValidation, 'day')
   ) {
-    throw new Error('Nieprawidłowy zakres dat kalkulacji ceny.');
+    throw new Error('Invalid date range for price calculation.');
   }
 
   await dbConnect();
@@ -252,14 +252,14 @@ export async function calculateTotalPrice(
       PropertyPrices.find({ propertyId: propertySelection }).lean(),
     ]);
 
-  if (!property) throw new Error(`Domek o ID ${propertySelection} nie istnieje.`);
+  if (!property) throw new Error(`Cottage with ID ${propertySelection} does not exist.`);
 
   const basicPrices = allPropertyPrices.find(
     (p) => p.seasonId === null || p.seasonId === undefined
   );
 
   if (!basicPrices) {
-    throw new Error(`Brak cennika podstawowego dla domku: ${property.name ?? propertySelection}. Skonfiguruj cennik przed udostępnieniem domku.`);
+    throw new Error(`No basic price list for cottage: ${property.name ?? propertySelection}. Configure the price list before making the cottage available.`);
   }
 
   const seasonPricesMap = new Map<string, any>(
@@ -301,7 +301,7 @@ export async function searchAction(params: SearchParams): Promise<SearchResults>
   const { startDate, endDate, adults, children, extraBeds } = params;
   const effectiveGuests = adults;
   if (adults < 1) {
-    throw new Error('Liczba platnych gosci musi byc wieksza od zera.');
+    throw new Error('Number of paying guests must be greater than zero.');
   }
   try {
     await dbConnect();
@@ -361,7 +361,7 @@ export async function searchAction(params: SearchParams): Promise<SearchResults>
     const occupiedIds = Array.from(occupiedPropertyIds)
       .map((id) => {
         if (!Types.ObjectId.isValid(id)) {
-          throw new Error('Nieprawidłowe propertyId podczas przygotowania listy zajętych domków.');
+          throw new Error('Invalid propertyId while preparing the list of occupied cottages.');
         }
 
         return new Types.ObjectId(id);
@@ -464,7 +464,7 @@ export async function searchAction(params: SearchParams): Promise<SearchResults>
           const propertyId = String(doc.propertyId);
           const displayName = propertyNameById.get(propertyId);
           if (!displayName) {
-            throw new Error(`Brak nazwy domku dla identyfikatora: ${propertyId}`);
+            throw new Error(`Missing cottage name for ID: ${propertyId}`);
           }
 
           return {
@@ -486,7 +486,7 @@ export async function searchAction(params: SearchParams): Promise<SearchResults>
       overlappingSeasons,
     };
   } catch (error) {
-    console.error('Błąd wyszukiwania dostępności:', error);
-    throw new Error('Nie udało się pobrać dostępnych terminów.');
+    console.error('Error searching availability:', error);
+    throw new Error('Failed to retrieve available dates.');
   }
 }
