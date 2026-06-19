@@ -48,7 +48,7 @@ function mapTiersToPriceItems(tiers: PriceTier[]): PriceItem[] {
         .sort((a, b) => a.minGuests - b.minGuests)
         .map((tier) => ({
             description: formatGuestsLabel(tier.minGuests, tier.maxGuests),
-            amount: `${tier.price} zł`,
+            amount: `£${tier.price}`,
         }));
 }
 
@@ -93,7 +93,7 @@ export default async function Services() {
             ...mapTiersToPriceItems(basicPricesData.weekdayPrices ?? []),
             {
                 description: 'Extra bed',
-                amount: basicPricesData.weekdayExtraBedPrice != null ? `+${basicPricesData.weekdayExtraBedPrice} zł` : '—',
+                amount: `£ `+basicPricesData.weekdayExtraBedPrice != null ? `+${' £'+basicPricesData.weekdayExtraBedPrice}` : '—',
             },
         ]
         : defaultWeekdayRates;
@@ -103,7 +103,7 @@ export default async function Services() {
             ...mapTiersToPriceItems(basicPricesData.weekendPrices ?? []),
             {
                 description: 'Extra bed',
-                amount: basicPricesData.weekendExtraBedPrice != null ? `+${basicPricesData.weekendExtraBedPrice} zł` : '—',
+                amount: basicPricesData.weekendExtraBedPrice != null ? `+${' £'+basicPricesData.weekendExtraBedPrice}` : '—',
             },
         ]
         : defaultWeekendRates;
