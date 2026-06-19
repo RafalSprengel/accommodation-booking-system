@@ -27,8 +27,8 @@ const mulish = Mulish({
 });
 
 export const metadata: Metadata = {
-    title: 'Wilcze Chatki - Cottages in Kashubia',
-    description: 'Comfortable cottages with sauna and jacuzzi in Szumlesie Królewski',
+    title: 'Wolf Lodges - Cozy Cabins & Nature Getaway',
+    description: 'Comfortable holiday cabins with a private sauna and hot tub in Szumlesie Królewski. Perfect for a peaceful escape.',
 };
 
 export default function RootLayout({

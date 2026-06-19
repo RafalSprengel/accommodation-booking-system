@@ -25,7 +25,7 @@ function createAuth(db: Db) {
                 const siteSettings = await getSiteSettings();
                 await sendEmail({
                     to: user.email,
-                subject: "Password Reset - Wilcze Chatki",
+                subject: "Password Reset - Wolf Lodges",
                     react: PasswordReset({ url, siteSettings })
                 });
             }
@@ -59,7 +59,7 @@ function createAuth(db: Db) {
                 try {
                     await sendEmail({
                         to: user.email,
-                subject: "Confirm New Email Address - Wilcze Chatki",
+                subject: "Confirm New Email Address - Wolf Lodges",
                         react: EmailVerification({ url })
                     });
                 } catch (err) {

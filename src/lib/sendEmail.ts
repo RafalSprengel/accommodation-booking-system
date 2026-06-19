@@ -30,7 +30,7 @@ export async function sendEmail({
   ...content
 }: SendEmailProps) {
   return resend.emails.send({
-    from: "Wilcze Chatki <rezerwacje@rafalsprengel.com>",
+    from: "Wolf Lodges <bookings@rafalsprengel.com>",
     to,
     subject,
     replyTo,

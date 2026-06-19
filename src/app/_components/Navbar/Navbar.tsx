@@ -51,7 +51,7 @@ export default function Navbar({isSmaller, isTransparent}: {isSmaller: boolean; 
                             className={styles.logoImage}
                         />
                     </div>
-                    <span className={styles.logoText}>Wilcze Chatki</span>
+                    <span className={styles.logoText}>Wolf Lodges</span>
                 </Link>
                 <div className={styles.hamburgerContainer}>
                     <HamburgerButton

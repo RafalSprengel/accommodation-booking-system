@@ -136,7 +136,7 @@ export async function POST(request: Request) {
 
           await sendBookingEmail({
             to: primary.guestEmail,
-            subject: "Booking Confirmation - Wilcze Chatki",
+            subject: "Booking Confirmation - Wolf Lodges",
             react: BookingConfirmationToClient({
               customerName,
               orderNumber,
@@ -234,7 +234,7 @@ export async function POST(request: Request) {
         const siteSettings = await getSiteSettings();
         await sendBookingEmail({
           to: failedBooking.guestEmail,
-          subject: "Failed Payment for Booking - Wilcze Chatki",
+          subject: "Failed Payment for Booking - Wolf Lodges",
           react: BookingFailure({
             customerName: `${failedBooking.firstName || ''} ${failedBooking.lastName || ''}`.trim(),
             orderNumber: failedBooking.orderId ?? '',

@@ -312,7 +312,7 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
         if (siteSettings.sendBookingConfirmationEmails !== false) {
         await sendBookingEmail({
           to: newBooking.guestEmail,
-      subject: 'Booking Confirmation - Wilcze Chatki',
+      subject: 'Booking Confirmation - Wolf Lodges',
           react: BookingConfirmationToClient({
             customerName,
             orderNumber: newBooking.orderId ?? '',
@@ -538,7 +538,7 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
           const propertyName = propertyDoc?.name || '';
           await sendBookingEmail({
             to: updatedBooking.guestEmail,
-      subject: 'Booking Update - Wilcze Chatki',
+      subject: 'Booking Update - Wolf Lodges',
             react: BookingConfirmationToClient({
               customerName,
               orderNumber: updatedBooking.orderId ?? '',

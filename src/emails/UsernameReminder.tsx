@@ -70,7 +70,7 @@ export const UsernameReminder = ({
       <Body style={mainStyle}>
         <Container style={containerStyle}>
           <Heading style={headingStyle}>
-            Username reminder – Wilcze Chatki
+            Username reminder – Wolf Lodges
           </Heading>
           <Text style={textStyle}>
             Hello,

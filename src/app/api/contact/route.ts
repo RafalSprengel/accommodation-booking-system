@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
     await sendEmail({
       to: email,
-      subject: "Message received confirmation - Wilcze Chatki",
+      subject: "Message received confirmation - Wolf Lodges",
       react: ContactAutoReply({
         customerName: name,
         message,

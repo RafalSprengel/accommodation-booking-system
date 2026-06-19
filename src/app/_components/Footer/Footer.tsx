@@ -14,11 +14,11 @@ export default async function Footer() {
         <div className={styles.info}>
           <Image
             src="/assets/logo-round.png"
-            alt="Wilcze Chatki Logo"
+            alt="Wolf Lodges Logo"
             width={100}
             height={100}
           />
-          <h3>Wilcze Chatki</h3>
+          <h3>Wolf Lodges</h3>
           <p>83-424 Szumleś Królewski 9A</p>
           <p>Kashubia, Pomeranian Voivodeship</p>
 
@@ -49,7 +49,7 @@ export default async function Footer() {
 
       <div className={styles.copyright}>
         <p><a href='admin' className={styles.creatorLink}>Admin</a></p>
-        <p>&copy; {new Date().getFullYear()} Wilcze Chatki. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Wolf Lodges. All rights reserved.</p>
         <div className={styles.creator}>
           Website by: &nbsp;
           <a

@@ -15,7 +15,7 @@ export default async function AdminDashboard() {
     .slice(0, 5);
 
   return (
-    <AdminShell title="Admin Panel" description="Welcome to the Wilcze Chatki management panel.">
+    <AdminShell title="Admin Panel" description="Welcome to the Wolf Lodges management panel.">
 
       <section className={styles.section}>
         <div className={styles.sectionHeader}>

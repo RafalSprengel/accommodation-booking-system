@@ -86,7 +86,7 @@ export const PasswordReset = ({
       <Body style={mainStyle}>
         <Container style={containerStyle}>
           <Heading style={headingStyle}>
-            Reset your password – Wilcze Chatki
+            Reset your password – Wolf Lodges
           </Heading>
           <Text style={textStyle}>
             Hello,

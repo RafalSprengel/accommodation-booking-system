@@ -111,8 +111,8 @@ export const ContactAdminNotification = ({
             {contactEmail} / {contactPhone}.
           </Text>
           <Hr style={footerHrStyle} />
-          <Link href="https://wilczechatki.pl" style={footerLinkStyle}>
-            wilczechatki.pl
+          <Link href="http://accommodation.rafalsprengel.com/" style={footerLinkStyle}>
+            wolflodges.pl
           </Link>
         </Container>
       </Body>

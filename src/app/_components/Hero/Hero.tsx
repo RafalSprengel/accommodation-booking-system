@@ -6,7 +6,7 @@ export default function Hero() {
         <section className={styles.hero}>
             <div className={styles.overlay}>
                 <div className={styles.content}>
-                    <h1>Wilcze Chatki</h1>
+                    <h1>Wolf Lodges</h1>
                     <p>Discover peace in the heart of Kashubia – Szumleś Królewski</p>
                     <Link href="#services" className={styles.cta}>
                         Check our offer

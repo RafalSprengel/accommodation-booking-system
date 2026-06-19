@@ -92,7 +92,7 @@ export const ContactAutoReply = ({
           <Heading style={headingStyle}>Thank you for your message</Heading>
           <Text style={textStyle}>Hello {customerName},</Text>
           <Text style={textStyle}>
-            thank you for contacting Wilcze Chatki. We have received your
+            thank you for contacting Wolf Lodges. We have received your
             message and will get back to you as soon as possible.
           </Text>
 
@@ -111,11 +111,11 @@ export const ContactAutoReply = ({
             .
           </Text>
           <Text style={textStyle}>Best regards,</Text>
-          <Text style={textStyle}>Wilcze Chatki</Text>
+          <Text style={textStyle}>Wolf Lodges</Text>
           <Text style={footerTextStyle}>Email: {siteSettings.email}</Text>
           <Hr style={footerHrStyle} />
-          <Link href="https://wilczechatki.pl" style={footerLinkStyle}>
-            wilczechatki.pl
+          <Link href="http://accommodation.rafalsprengel.com/" style={footerLinkStyle}>
+            wolflodges.pl
           </Link>
         </Container>
       </Body>

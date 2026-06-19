@@ -70,7 +70,7 @@ export async function requestUsernameReminderByEmail(email: string) {
 
         await sendEmail({
             to: normalizedEmail,
-            subject: "Username Reminder - Wilcze Chatki",
+            subject: "Username Reminder - Wolf Lodges",
             react: UsernameReminder({ username: userDoc.username, siteSettings }),
         });
 

@@ -142,7 +142,7 @@ export const BookingConfirmation = ({
             Hello <strong>{customerName}</strong>,
           </Text>
           <Text style={textStyle}>
-            your payment for the stay at Wilcze Chatki has been successfully processed.
+            your payment for the stay at Wolf Lodges has been successfully processed.
           </Text>
 
           <Section style={sectionStyle}>

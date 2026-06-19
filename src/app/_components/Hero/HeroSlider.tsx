@@ -27,7 +27,7 @@ const thumbnailItemVariants = {
 const items: SliderItem[] = [
   {
     id: 1,
-    title: 'Wilcze Chatki',
+    title: 'Wolf Lodges',
     topic: 'Kashubian silence',
     description: 'Two cozy cottages in Szumlesie Królewski, perfect for escaping the hustle and bustle of the city.',
     image: '/images/img1.webp'

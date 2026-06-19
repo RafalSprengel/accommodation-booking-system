@@ -8,7 +8,7 @@ export default function About() {
       <div className={styles.container}>
         <SlideRight>
           <h1 className={styles.title}>
-            A warm welcome to Wilcze Chatki!
+            A warm welcome to Wolf Lodges!
           </h1>
         </SlideRight>
         <SlideLeft delay={0.2}>

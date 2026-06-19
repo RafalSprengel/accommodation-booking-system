@@ -74,7 +74,7 @@ export const EmailVerification = ({ url }: EmailVerificationProps) => {
       <Body style={mainStyle}>
         <Container style={containerStyle}>
           <Heading style={headingStyle}>
-            Confirm your new email address – Wilcze Chatki
+            Confirm your new email address – Wolf Lodges
           </Heading>
           <Text style={textStyle}>
             Hello,
@@ -95,7 +95,7 @@ export const EmailVerification = ({ url }: EmailVerificationProps) => {
 
           <Hr style={footerHrStyle} />
           <Text style={footerTextStyle}>
-            Wilcze Chatki – Admin Panel
+            Wolf Lodges – Admin Panel
           </Text>
         </Container>
       </Body>

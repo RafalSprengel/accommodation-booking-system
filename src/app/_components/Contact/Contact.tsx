@@ -24,7 +24,7 @@ export default function Contact({ siteSettings }: { siteSettings: Partial<ISiteS
           <div className={styles.infoColumn}>
             <SlideLeft>
               <div className={styles.details}>
-              <div className={styles.companyName}>Wilcze Chatki</div>
+              <div className={styles.companyName}>Wolf Lodges</div>
               
                 <div>83-424 Szumleś Królewski 9A</div>
                 <div>Kashubia, Pomeranian Voivodeship</div>

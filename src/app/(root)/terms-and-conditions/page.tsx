@@ -12,7 +12,7 @@ export default async function TermsAndConditionsPage() {
         <h1 className={styles.title}>
           Terms & Conditions
           <br />
-          🌲 Wilcze Chatki <span className={styles.emoji}>🌲</span>
+          🌲 Wolf Lodges <span className={styles.emoji}>🌲</span>
         </h1>
         <p className={styles.lead}>
           Most importantly: have fun and get some proper rest! This is your time{' '}
@@ -55,7 +55,7 @@ export default async function TermsAndConditionsPage() {
           <p className={styles.signature}>
             Enjoy your stay
             <br />
-            at Wilcze Chatki! <span className={styles.emoji}>🐺✨</span>
+            at Wolf Lodges! <span className={styles.emoji}>🐺✨</span>
           </p>
         </div>
 

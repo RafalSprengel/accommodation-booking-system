@@ -9,7 +9,7 @@ if (!MONGODB_URI) throw new Error('Missing MONGODB_URI in .env.local');
 
 const admins = [
   {
-    email: 'kontakt@wilczechatki.pl',
+    email: 'info@wolflodges.com',
     password: 'wilczki',
     name: 'Marika',
     username: 'Marika',
