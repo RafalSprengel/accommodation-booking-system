@@ -27,7 +27,7 @@ export default function Contact({ siteSettings }: { siteSettings: Partial<ISiteS
               <div className={styles.companyName}>Wolf Lodges</div>
               
                 <div>83-424 Szumleś Królewski 9A</div>
-                <div>Kashubia, Pomeranian Voivodeship</div>
+                <div>Kashubia, Pomeranian Voivodeship </div>
                  <a 
                 href={mapsUrl}
                 target="_blank" 
