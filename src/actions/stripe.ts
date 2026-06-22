@@ -188,7 +188,7 @@ export async function createCheckoutSession(bookingData: BookingData) {
       line_items: [
         {
           price_data: {
-            currency: "pln",
+            currency: "gbp",
             product_data: {
               name: `Booking: ${orderDisplayName}`,
               description: `Stay from ${formatDisplayDate(startDate)} to ${formatDisplayDate(endDate)}`,
