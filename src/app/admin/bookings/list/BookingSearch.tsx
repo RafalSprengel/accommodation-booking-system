@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import styles from './page.module.css'
+import styles from './BookingSearch.module.css'
 
 export default function BookingSearch({ defaultValue }: { defaultValue: string }) {
   const [query, setQuery] = useState(defaultValue);
