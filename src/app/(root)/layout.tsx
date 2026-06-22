@@ -1,6 +1,7 @@
 import Header from '@components/Header/Header';
 import Footer from '@components/Footer/Footer';
 import TopBar from '@components/Navbar/TopBar';
+import HelloModalWrapper from '@/app/_components/HelloModal/HelloModalWrapper';
 import styles from './layout.module.css';
 
 export default async function ClientLayout({
@@ -15,6 +16,7 @@ export default async function ClientLayout({
                 <main className={styles.main}>{children}</main>
                 <Footer />
             </div>
+            <HelloModalWrapper />
         </>
     );
 }
