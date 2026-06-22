@@ -184,6 +184,7 @@ export async function createCheckoutSession(bookingData: BookingData) {
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card", "blik", "p24"],
+      locale: "en",
       line_items: [
         {
           price_data: {
@@ -235,8 +236,6 @@ export async function createCheckoutSession(bookingData: BookingData) {
     if (updatedBookings.matchedCount !== bookingObjectIds.length) {
       throw new Error('Failed to assign Stripe session ID to all bookings.');
     }
-
-
 
     return { url: session.url };
   } catch (error) {
