@@ -35,6 +35,7 @@ export interface BookingDetails {
   endDate: string;
   durationDays: number;
   color: string;
+  createdAt: string;
 }
 
 export interface CalendarCell {
@@ -118,7 +119,8 @@ export async function getCalendarData(daysInMonth: number, startDateStr: string)
       startDate: formatDisplayDate(b.startDate),
       endDate: formatDisplayDate(b.endDate),
       durationDays: dayjs.utc(b.endDate).diff(dayjs.utc(b.startDate), 'day'),
-      color: b.status === 'blocked' ? '#e3f2fd' : generatePastelColor(id)
+      color: b.status === 'blocked' ? '#e3f2fd' : generatePastelColor(id),
+      createdAt: b.createdAt ? new Date(b.createdAt).toISOString() : ''
     };
   };
 

@@ -176,6 +176,10 @@ const BookingTooltip = ({ details }: { details: BookingDetails }) => {
         <span className={styles.label}>💰 Total price:</span>
         <span className={`${styles.valueText} ${styles.priceValue}`}>{details.totalPrice.toFixed(2)} GBP</span>
       </div>
+      <div className={styles.tooltipRow}>
+        <span className={styles.label}>📅 Created at:</span>
+        <span className={styles.valueText}>{details.createdAt ? dayjs(details.createdAt).format('DD.MM.YYYY HH:mm') : '-'}</span>
+      </div>
       <div className={styles.tooltipSection}>
         <div className={styles.tooltipRow}>
           <span className={styles.label}>📧 Email:</span>
