@@ -113,7 +113,7 @@ export default function BookingAccordionList({ bookings, isPast }: BookingAccord
                 </div>
                 <div className={styles.detailRow}>
                   <span className={styles.label}>Price:</span>
-                  <span className={styles.value}>{totalPrice.toFixed(2)} PLN</span>
+                  <span className={styles.value}>{totalPrice.toFixed(2)} GBP</span>
                 </div>
                 <div className={styles.detailRow}>
                   <span className={styles.label}>VAT invoice:</span>
@@ -133,8 +133,8 @@ export default function BookingAccordionList({ bookings, isPast }: BookingAccord
                     <div className={styles.detailRow}>
                       <span className={styles.label}></span>
                       <div className={styles.priceBreakdown}>
-                        <span className={styles.pricePaid}>Paid: {paidAmount.toFixed(2)} PLN</span>
-                        <span className={styles.priceDue}>Due: {remainingAmount.toFixed(2)} PLN</span>
+                        <span className={styles.pricePaid}>Paid: {paidAmount.toFixed(2)} GBP</span>
+                        <span className={styles.priceDue}>Due: {remainingAmount.toFixed(2)} GBP</span>
                       </div>
                     </div>
                     <div className={styles.detailRow}>

@@ -194,11 +194,11 @@ export default function BookingConfirmationToAdmin({
             <Hr style={hrStyle} />
             {typeof paidAmount === 'number' && paidAmount !== totalPrice ? (
               <>
-                <Text style={sumStyle}>Paid: {Number(paidAmount).toFixed(2)} zł</Text>
-                <Text style={sectionTextStyle}>Remaining to pay: {Number(totalPrice - paidAmount).toFixed(2)} zł</Text>
+                <Text style={sumStyle}>Paid: {Number(paidAmount).toFixed(2)} £</Text>
+                <Text style={sectionTextStyle}>Remaining to pay: {Number(totalPrice - paidAmount).toFixed(2)} £</Text>
               </>
             ) : (
-              <Text style={sumStyle}>Amount: {Number(totalPrice).toFixed(2)} PLN</Text>
+              <Text style={sumStyle}>Amount: {Number(totalPrice).toFixed(2)} GBP</Text>
             )}
 
             <Hr style={hrStyle} />

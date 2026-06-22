@@ -374,7 +374,7 @@ export default function BookingDetailsPage() {
           </div>
           <div className={styles.summaryItem}>
             <span className={styles.summaryLabel}>Total price:</span>
-            <span className={styles.summaryPrice}>{totalPrice} zł</span>
+            <span className={styles.summaryPrice}>{totalPrice} £</span>
           </div>
         </div>
       </div>

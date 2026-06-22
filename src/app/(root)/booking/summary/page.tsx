@@ -266,7 +266,7 @@ export default function BookingSummaryPage() {
       <div className={styles.priceCard}>
         <div className={styles.priceRow}>
           <span className={styles.priceLabel}>Total price:</span>
-          <span className={styles.priceValue}>{totalPrice} zł</span>
+          <span className={styles.priceValue}>{totalPrice} £</span>
         </div>
       </div>
 

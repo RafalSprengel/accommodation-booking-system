@@ -289,7 +289,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           />
         </div>
         <div className={styles.inputGroup}>
-          <label>Total price (PLN)</label>
+          <label>Total price (GBP)</label>
           <input
             name="totalPrice"
             type="number"
@@ -302,7 +302,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
           />
         </div>
         <div className={styles.inputGroup}>
-          <label>Paid amount (PLN)</label>
+          <label>Paid amount (GBP)</label>
           <input
             name="paidAmount"
             type="number"

@@ -59,13 +59,13 @@ export default function ResultCard({
             min={0}
             max={option.maxExtraBeds}
           />
-          <span className={styles.extraBedsPrice}>+{extraBeds * option.extraBedPrice} zł</span>
+          <span className={styles.extraBedsPrice}>+{extraBeds * option.extraBedPrice} £</span>
         </div>
       )}
 
       <div className={styles.cardPrice}>
         <span className={styles.priceLabel}>Total price:</span>
-        <span className={styles.priceValue}>{totalPriceWithExtraBeds} zł</span>
+        <span className={styles.priceValue}>{totalPriceWithExtraBeds} £</span>
       </div>
 
       <Button

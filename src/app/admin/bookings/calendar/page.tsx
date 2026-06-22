@@ -126,7 +126,7 @@ const BookingTooltip = ({ details }: { details: BookingDetails }) => {
   const paymentLabel = isPaid
     ? 'Paid'
     : isDeposit
-      ? `Deposit (${details.paidAmount.toFixed(2)} PLN)`
+      ? `Deposit (${details.paidAmount.toFixed(2)} GBP)`
       : 'Unpaid'
   const statusBadgeText = details.status === 'confirmed' ? 'CONFIRMED' : details.status === 'pending' ? 'Customer is booking' : 'BLOCKED'
   const extraBedsText = details.extraBeds && details.extraBeds > 0 ? `${details.extraBeds} extra bed` : '0'
@@ -174,7 +174,7 @@ const BookingTooltip = ({ details }: { details: BookingDetails }) => {
       </div>
       <div className={styles.tooltipRow}>
         <span className={styles.label}>💰 Total price:</span>
-        <span className={`${styles.valueText} ${styles.priceValue}`}>{details.totalPrice.toFixed(2)} PLN</span>
+        <span className={`${styles.valueText} ${styles.priceValue}`}>{details.totalPrice.toFixed(2)} GBP</span>
       </div>
       <div className={styles.tooltipSection}>
         <div className={styles.tooltipRow}>

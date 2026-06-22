@@ -227,7 +227,7 @@ export default function AllPropertiesCard({
                   min={0}
                   max={option.maxExtraBeds}
                 />
-                <span className={styles.extraBedsPrice}>+{extraBeds * option.extraBedPrice} zł</span>
+                  <span className={styles.extraBedsPrice}>+{extraBeds * option.extraBedPrice} £</span>
               </div>
             </div>
           )
@@ -235,7 +235,7 @@ export default function AllPropertiesCard({
 
         <div className={`${styles.cardPrice} ${styles.allPropertiesTotalPrice}`}>
           <span className={styles.priceLabel}>Total price:</span>
-          <span className={styles.priceValue}>{combinedTotalPrice} zł</span>
+          <span className={styles.priceValue}>{combinedTotalPrice} £</span>
         </div>
 
         <div className={styles.allocationSummary}>

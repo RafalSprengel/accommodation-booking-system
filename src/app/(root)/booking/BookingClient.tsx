@@ -759,13 +759,13 @@ export default function BookingClient({
                                       <span>
                                         {tier.minGuests}-{tier.maxGuests} persons
                                       </span>
-                                      <span>{tier.price} zł</span>
+                                      <span>{tier.price} £</span>
                                     </div>
                                   ))}
                                   <div className={styles.seasonRow}>
                                     <span>Extra bed</span>
                                     <span>
-                                      +{price.weekdayExtraBedPrice} zł
+                                      +{price.weekdayExtraBedPrice} £
                                     </span>
                                   </div>
                                 </div>
@@ -782,13 +782,13 @@ export default function BookingClient({
                                       <span>
                                         {tier.minGuests}-{tier.maxGuests} persons
                                       </span>
-                                      <span>{tier.price} zł</span>
+                                      <span>{tier.price} £</span>
                                     </div>
                                   ))}
                                   <div className={styles.seasonRow}>
                                     <span>Extra bed</span>
                                     <span>
-                                      +{price.weekendExtraBedPrice} zł
+                                      +{price.weekendExtraBedPrice} £
                                     </span>
                                   </div>
                                 </div>
