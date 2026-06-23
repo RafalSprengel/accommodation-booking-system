@@ -266,7 +266,7 @@ export default function BookingSummaryPage() {
       </div>
 
       <div className={styles.actions}>
-        <Button href="/booking/details" variant="secondary">
+        <Button variant="secondary" onClick={() => router.back()}>
           ← Edit details
         </Button>
         <Button onClick={handleStripePayment} disabled={isProcessing}>

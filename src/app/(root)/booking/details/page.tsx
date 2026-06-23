@@ -583,7 +583,7 @@ export default function BookingDetailsPage() {
         </div>
 
         <div className={styles.formActions}>
-          <Button href="/booking" variant="secondary">
+          <Button variant="secondary" onClick={() => router.back()}>
             ← Back
           </Button>
           <Button type="submit" disabled={isSubmitting}>
