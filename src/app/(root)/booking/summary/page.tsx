@@ -223,10 +223,6 @@ export default function BookingSummaryPage() {
             </span>
           </div>
           <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Address:</span>
-            <span className={styles.summaryValue}>{clientData.address}</span>
-          </div>
-          <div className={styles.summaryItem}>
             <span className={styles.summaryLabel}>Email:</span>
             <span className={styles.summaryValue}>{clientData.email}</span>
           </div>
@@ -250,7 +246,18 @@ export default function BookingSummaryPage() {
             <div className={styles.summaryItem}>
               <span className={styles.summaryLabel}>Address:</span>
               <span className={styles.summaryValue}>
-                {invoiceData.address}, {invoiceData.postalCode}{" "}
+                {invoiceData.address}
+              </span>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>Postal code:</span>
+              <span className={styles.summaryValue}>
+                {invoiceData.postalCode}
+              </span>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>City:</span>
+              <span className={styles.summaryValue}>
                 {invoiceData.city}
               </span>
             </div>
