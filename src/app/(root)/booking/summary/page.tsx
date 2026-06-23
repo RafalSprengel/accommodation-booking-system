@@ -149,7 +149,7 @@ export default function BookingSummaryPage() {
   
   const hasInvoiceData = Boolean(
     invoiceData.companyName ||
-    invoiceData.addressLine1 ||
+    invoiceData.address ||
     invoiceData.city ||
     invoiceData.postalCode,
   );
@@ -250,7 +250,7 @@ export default function BookingSummaryPage() {
             <div className={styles.summaryItem}>
               <span className={styles.summaryLabel}>Address:</span>
               <span className={styles.summaryValue}>
-                {invoiceData.addressLine1}, {invoiceData.postalCode}{" "}
+                {invoiceData.address}, {invoiceData.postalCode}{" "}
                 {invoiceData.city}
               </span>
             </div>

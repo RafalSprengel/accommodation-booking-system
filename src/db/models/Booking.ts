@@ -19,7 +19,6 @@ export interface IBooking extends Document {
   lastName: string;
   guestEmail: string;
   guestPhone: string;
-  guestAddress?: string;
   adults: number;
   children: number;
   extraBedsCount: number;
@@ -33,8 +32,7 @@ export interface IBooking extends Document {
   invoice?: boolean;
   invoiceData?: {
     companyName?: string;
-    nip?: string;
-    street?: string;
+    address?: string;
     city?: string;
     postalCode?: string;
   };
@@ -82,10 +80,6 @@ const BookingSchema = new Schema({
   guestPhone: {
     type: String,
     required: true,
-    trim: true
-  },
-  guestAddress: {
-    type: String,
     trim: true
   },
   adults: {
@@ -138,7 +132,7 @@ const BookingSchema = new Schema({
   },
   invoiceData: {
     companyName: { type: String, trim: true },
-    addressLine1: { type: String, trim: true },
+    address: { type: String, trim: true },
     city: { type: String, trim: true },
     postalCode: { type: String, trim: true }
   },

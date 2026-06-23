@@ -49,7 +49,7 @@ export default function BookingDetailsPage() {
     invoice: false,
     invoiceData: {
       companyName: "",
-      addressLine1: "",
+      address: "",
       city: "",
       postalCode: "",
     },
@@ -67,7 +67,7 @@ export default function BookingDetailsPage() {
 
   const EMPTY_INVOICE_DATA = {
     companyName: '',
-    addressLine1: '',
+    address: '',
     city: '',
     postalCode: '',
   };
@@ -114,7 +114,7 @@ export default function BookingDetailsPage() {
 
         const hasInvoiceData = Boolean(
           parsed.invoiceData.companyName ||
-          parsed.invoiceData.addressLine1 ||
+          parsed.invoiceData.address ||
           parsed.invoiceData.city ||
           parsed.invoiceData.postalCode,
         );
@@ -156,8 +156,8 @@ export default function BookingDetailsPage() {
       if (!formData.invoiceData?.companyName.trim()) {
         newErrors.companyName = "Company name is required for VAT invoice";
       }
-      if (!formData.invoiceData?.addressLine1.trim()) {
-        newErrors.addressLine1 = "Address is required for VAT invoice";
+      if (!formData.invoiceData?.address.trim()) {
+        newErrors.address = "Address is required for VAT invoice";
       }
       if (!formData.invoiceData?.city.trim()) {
         newErrors.invoiceCity = "City is required for VAT invoice";
@@ -184,7 +184,7 @@ export default function BookingDetailsPage() {
           ? {
             invoiceData: {
               companyName: "",
-              addressLine1: "",
+              address: "",
               city: "",
               postalCode: "",
             },
@@ -497,19 +497,19 @@ export default function BookingDetailsPage() {
                 className={`${styles.inputGroup} ${styles.fadeIn}`}
                 style={{ animationDelay: "0.1s" }}
               >
-                <label htmlFor="invoice.addressLine1">Address *</label>
+                <label htmlFor="invoice.address">Address *</label>
                 <input
-                  id="invoice.addressLine1"
-                  name="invoice.addressLine1"
+                  id="invoice.address"
+                  name="invoice.address"
                   type="text"
-                  value={formData.invoiceData.addressLine1}
+                  value={formData.invoiceData.address}
                   onChange={handleChange}
-                  className={errors.addressLine1 ? styles.inputError : ""}
+                  className={errors.address ? styles.inputError : ""}
                   placeholder="123 Example Street"
                 />
-                {errors.addressLine1 && (
+                {errors.address && (
                   <span className={styles.errorText}>
-                    {errors.addressLine1}
+                    {errors.address}
                   </span>
                 )}
               </div>

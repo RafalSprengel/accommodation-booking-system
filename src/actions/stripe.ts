@@ -162,7 +162,6 @@ export async function createCheckoutSession(bookingData: BookingData) {
     lastName: clientData.lastName,
     guestEmail: clientData.email,
     guestPhone: clientData.phone,
-    guestAddress: clientData.address,
     adults: order.adults,
     children: order.children,
     extraBedsCount: order.extraBeds,

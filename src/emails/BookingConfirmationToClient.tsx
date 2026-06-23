@@ -23,7 +23,6 @@ interface BookingEmailProps {
   siteSettings: Partial<ISiteSettings>;
   guestPhone?: string;
   guestEmail?: string;
-  guestAddress?: string;
   propertyName?: string;
   adults?: number;
   children?: number;
@@ -31,7 +30,7 @@ interface BookingEmailProps {
   orderDate?: string;
   invoiceRequested?: boolean;
   companyName?: string;
-  addressLine1?: string;
+  address?: string;
   city?: string;
   postalCode?: string;
   cabinsCount?: number;
@@ -47,7 +46,6 @@ export const BookingConfirmation = ({
   siteSettings,
   guestPhone,
   guestEmail,
-  guestAddress,
   propertyName,
   adults,
   children,
@@ -55,7 +53,7 @@ export const BookingConfirmation = ({
   orderDate,
   invoiceRequested,
   companyName,
-  addressLine1,
+  address,
   city,
   postalCode,
   cabinsCount,
@@ -147,7 +145,6 @@ export const BookingConfirmation = ({
             <Text style={sectionTextStyle}><strong>Order No:</strong> {orderNumber}</Text>
             {guestPhone && <Text style={sectionTextStyle}><strong>Phone:</strong> {guestPhone}</Text>}
             {guestEmail && <Text style={sectionTextStyle}><strong>Email:</strong> {guestEmail}</Text>}
-            {guestAddress && <Text style={sectionTextStyle}><strong>Address:</strong> {guestAddress}</Text>}
             {propertyName && <Text style={sectionTextStyle}><strong>Property:</strong> {propertyName}</Text>}
             {(typeof cabinsCount !== 'undefined' && cabinsCount > 1) && <Text style={sectionTextStyle}><strong>Number of cottages:</strong> {cabinsCount}</Text>}
             {(typeof adults !== 'undefined') && <Text style={sectionTextStyle}><strong>Adults:</strong> {adults}</Text>}
@@ -160,7 +157,7 @@ export const BookingConfirmation = ({
               <Text style={sectionTextStyle}><strong>VAT Invoice:</strong></Text>
               <Section style={{ padding: '10px', backgroundColor: '#fff' }}>
                 {companyName && <Text style={sectionTextStyle}><strong>Company name:</strong> {companyName}</Text>}
-                {addressLine1 && <Text style={sectionTextStyle}><strong>Address:</strong> {addressLine1}</Text>}
+                {address && <Text style={sectionTextStyle}><strong>Address:</strong> {address}</Text>}
                 {postalCode && <Text style={sectionTextStyle}><strong>Postal code:</strong> {postalCode}</Text>}
                 {city && <Text style={sectionTextStyle}><strong>City:</strong> {city}</Text>}
               </Section>

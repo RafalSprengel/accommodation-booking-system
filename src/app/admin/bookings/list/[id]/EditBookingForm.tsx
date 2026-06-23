@@ -133,7 +133,7 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
     formData.append("invoice", initialData.invoice ? "true" : "false");
     if (initialData.invoiceData) {
       formData.append("invoiceCompany", initialData.invoiceData.companyName || "");
-      formData.append("addressLine1", initialData.invoiceData.addressLine1 || "");
+      formData.append("invoiceAddress", initialData.invoiceData.address || "");
       formData.append("invoicePostalCode", initialData.invoiceData.postalCode || "");
       formData.append("invoiceCity", initialData.invoiceData.city || "");
     }

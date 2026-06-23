@@ -29,7 +29,7 @@ export default async function BookingDetailsPage({ params }: { params: Promise<{
           {booking.invoice ? (
             <div className={styles.invoiceData}>
               <div className={styles.infoRow}><span className={styles.label}>Company name:</span><span>{booking.invoiceData?.companyName || '-'}</span></div>
-              <div className={styles.infoRow}><span className={styles.label}>Address:</span><span>{booking.invoiceData?.addressLine1 || '-'}</span></div>
+              <div className={styles.infoRow}><span className={styles.label}>Address:</span><span>{booking.invoiceData?.address || '-'}</span></div>
               <div className={styles.infoRow}><span className={styles.label}>City:</span><span>{booking.invoiceData?.city || '-'}</span></div>
               <div className={styles.infoRow}><span className={styles.label}>Postal code:</span><span>{booking.invoiceData?.postalCode || '-'}</span></div>
             </div>

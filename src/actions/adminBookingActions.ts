@@ -129,7 +129,7 @@ function validateBookingData(data: any) {
   if (!data.guestPhone) errors.push('Please enter the guest\'s phone number')
   if (data.invoice === 'true') {
     if (!data.invoiceCompany) errors.push('Company name is required for invoice')
-    if (!data.addressLine1) errors.push('Address is required for invoice')
+    if (!data.invoiceAddress) errors.push('Address is required for invoice')
     if (!data.invoicePostalCode) errors.push('Postal code is required for invoice')
     if (!data.invoiceCity) errors.push('City is required for invoice')
   }
@@ -222,7 +222,7 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
     const invoiceData = rawData.invoice === 'true'
       ? {
           companyName: rawData.invoiceCompany,
-          addressLine1: rawData.addressLine1,
+          address: rawData.invoiceAddress,
           city: rawData.invoiceCity,
           postalCode: rawData.invoicePostalCode,
         }
@@ -321,7 +321,6 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
             siteSettings,
             guestPhone: newBooking.guestPhone,
             guestEmail: newBooking.guestEmail,
-            guestAddress: newBooking.guestAddress,
               propertyName: property?.name || '',
             adults: newBooking.adults,
             children: newBooking.children,
@@ -329,7 +328,7 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
             orderDate: newBooking.createdAt?.toISOString().split('T')[0],
             invoiceRequested: Boolean(newBooking.invoice),
             companyName: newBooking.invoiceData?.companyName,
-            addressLine1: newBooking.invoiceData?.addressLine1,
+            address: newBooking.invoiceData?.address,
             city: newBooking.invoiceData?.city,
             postalCode: newBooking.invoiceData?.postalCode,
             cabinsCount: 1,
@@ -352,7 +351,6 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
               siteSettings,
               guestPhone: newBooking.guestPhone,
               guestEmail: newBooking.guestEmail,
-              guestAddress: newBooking.guestAddress,
                 propertyName: property?.name || '',
               adults: newBooking.adults,
               children: newBooking.children,
@@ -360,7 +358,7 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
               orderDate: newBooking.createdAt?.toISOString().split('T')[0],
               invoiceRequested: Boolean(newBooking.invoice),
               companyName: newBooking.invoiceData?.companyName,
-              addressLine1: newBooking.invoiceData?.addressLine1,
+              address: newBooking.invoiceData?.address,
               city: newBooking.invoiceData?.city,
               postalCode: newBooking.invoiceData?.postalCode,
               cabinsCount: 1,
@@ -407,7 +405,7 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
     const invoiceData = rawData.invoice === 'true'
       ? {
           companyName: rawData.invoiceCompany || prevBooking?.invoiceData?.companyName,
-          addressLine1: rawData.addressLine1 || prevBooking?.invoiceData?.addressLine1,
+          address: rawData.invoiceAddress || prevBooking?.invoiceData?.address,
           city: rawData.invoiceCity || prevBooking?.invoiceData?.city,
           postalCode: rawData.invoicePostalCode || prevBooking?.invoiceData?.postalCode,
         }
@@ -544,7 +542,6 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
               siteSettings,
               guestPhone: updatedBooking.guestPhone,
               guestEmail: updatedBooking.guestEmail,
-              guestAddress: updatedBooking.guestAddress,
               propertyName,
               adults: updatedBooking.adults,
               children: updatedBooking.children,
@@ -552,7 +549,7 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
               orderDate: updatedBooking.createdAt?.toISOString().split('T')[0],
               invoiceRequested: Boolean(updatedBooking.invoice),
               companyName: updatedBooking.invoiceData?.companyName,
-              addressLine1: updatedBooking.invoiceData?.addressLine1,
+              address: updatedBooking.invoiceData?.address,
               city: updatedBooking.invoiceData?.city,
               postalCode: updatedBooking.invoiceData?.postalCode,
               cabinsCount: 1,
@@ -584,7 +581,6 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
               siteSettings,
               guestPhone: updatedBooking.guestPhone,
               guestEmail: updatedBooking.guestEmail,
-              guestAddress: updatedBooking.guestAddress,
               propertyName,
               adults: updatedBooking.adults,
               children: updatedBooking.children,
@@ -592,7 +588,7 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
               orderDate: updatedBooking.createdAt?.toISOString().split('T')[0],
               invoiceRequested: Boolean(updatedBooking.invoice),
               companyName: updatedBooking.invoiceData?.companyName,
-              addressLine1: updatedBooking.invoiceData?.addressLine1,
+              address: updatedBooking.invoiceData?.address,
               city: updatedBooking.invoiceData?.city,
               postalCode: updatedBooking.invoiceData?.postalCode,
               cabinsCount: 1,

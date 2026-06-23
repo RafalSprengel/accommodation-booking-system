@@ -1,6 +1,6 @@
 export interface InvoiceData {
   companyName: string;
-  addressLine1: string;
+  address: string;
   city: string;
   postalCode: string;
 }

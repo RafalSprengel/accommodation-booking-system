@@ -21,7 +21,6 @@ interface BookingConfirmationToAdminProps {
   siteSettings: Partial<ISiteSettings>;
   guestPhone?: string;
   guestEmail?: string;
-  guestAddress?: string;
   adults?: number;
   propertyName?: string;
   children?: number;
@@ -29,7 +28,7 @@ interface BookingConfirmationToAdminProps {
   orderDate?: string;
   invoiceRequested?: boolean;
   companyName?: string;
-  addressLine1?: string;
+  address?: string;
   city?: string;
   postalCode?: string;
   cabinsCount?: number;
@@ -46,7 +45,6 @@ export default function BookingConfirmationToAdmin({
   siteSettings,
   guestPhone,
   guestEmail,
-  guestAddress,
   propertyName,
   adults,
   children,
@@ -54,7 +52,7 @@ export default function BookingConfirmationToAdmin({
   orderDate,
   invoiceRequested,
   companyName,
-  addressLine1,
+  address,
   city,
   postalCode,
   cabinsCount,
@@ -149,9 +147,6 @@ export default function BookingConfirmationToAdmin({
             {guestEmail && (
               <Text style={sectionTextStyle}><strong>Guest email:</strong> {guestEmail}</Text>
             )}
-            {guestAddress && (
-              <Text style={sectionTextStyle}><strong>Guest address:</strong> {guestAddress}</Text>
-            )}
             {propertyName && (
               <Text style={sectionTextStyle}><strong>Property:</strong> {propertyName}</Text>
             )}
@@ -182,7 +177,7 @@ export default function BookingConfirmationToAdmin({
             {invoiceRequested && (<>
               <Section style={{ padding: '10px', backgroundColor: '#fff' }}>
                 {companyName && <Text style={sectionTextStyle}><strong>Company name:</strong> {companyName}</Text>}
-                {addressLine1 && <Text style={sectionTextStyle}><strong>Address:</strong> {addressLine1}</Text>}
+                {address && <Text style={sectionTextStyle}><strong>Address:</strong> {address}</Text>}
                 {postalCode && <Text style={sectionTextStyle}><strong>Postal code:</strong> {postalCode}</Text>}
                 {city && <Text style={sectionTextStyle}><strong>City:</strong> {city}</Text>}
               </Section>
