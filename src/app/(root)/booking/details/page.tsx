@@ -49,8 +49,7 @@ export default function BookingDetailsPage() {
     invoice: false,
     invoiceData: {
       companyName: "",
-      nip: "",
-      street: "",
+      addressLine1: "",
       city: "",
       postalCode: "",
     },
@@ -68,8 +67,7 @@ export default function BookingDetailsPage() {
 
   const EMPTY_INVOICE_DATA = {
     companyName: '',
-    nip: '',
-    street: '',
+    addressLine1: '',
     city: '',
     postalCode: '',
   };
@@ -116,8 +114,7 @@ export default function BookingDetailsPage() {
 
         const hasInvoiceData = Boolean(
           parsed.invoiceData.companyName ||
-          parsed.invoiceData.nip ||
-          parsed.invoiceData.street ||
+          parsed.invoiceData.addressLine1 ||
           parsed.invoiceData.city ||
           parsed.invoiceData.postalCode,
         );
@@ -159,15 +156,8 @@ export default function BookingDetailsPage() {
       if (!formData.invoiceData?.companyName.trim()) {
         newErrors.companyName = "Company name is required for VAT invoice";
       }
-      if (!formData.invoiceData?.nip.trim()) {
-        newErrors.nip = "NIP is required for VAT invoice";
-      } else if (
-        !/^[\d-]{10,13}$/.test(formData.invoiceData.nip.replace(/-/g, ""))
-      ) {
-        newErrors.nip = "Invalid NIP format";
-      }
-      if (!formData.invoiceData?.street.trim()) {
-        newErrors.invoiceStreet = "Street is required for VAT invoice";
+      if (!formData.invoiceData?.addressLine1.trim()) {
+        newErrors.addressLine1 = "Address is required for VAT invoice";
       }
       if (!formData.invoiceData?.city.trim()) {
         newErrors.invoiceCity = "City is required for VAT invoice";
@@ -194,8 +184,7 @@ export default function BookingDetailsPage() {
           ? {
             invoiceData: {
               companyName: "",
-              nip: "",
-              street: "",
+              addressLine1: "",
               city: "",
               postalCode: "",
             },
@@ -508,37 +497,19 @@ export default function BookingDetailsPage() {
                 className={`${styles.inputGroup} ${styles.fadeIn}`}
                 style={{ animationDelay: "0.1s" }}
               >
-                <label htmlFor="invoice.nip">Tax ID (NIP) *</label>
+                <label htmlFor="invoice.addressLine1">Address *</label>
                 <input
-                  id="invoice.nip"
-                  name="invoice.nip"
+                  id="invoice.addressLine1"
+                  name="invoice.addressLine1"
                   type="text"
-                  value={formData.invoiceData.nip}
+                  value={formData.invoiceData.addressLine1}
                   onChange={handleChange}
-                  className={errors.nip ? styles.inputError : ""}
-                  placeholder="123-456-78-90"
-                />
-                {errors.nip && (
-                  <span className={styles.errorText}>{errors.nip}</span>
-                )}
-              </div>
-              <div
-                className={`${styles.inputGroup} ${styles.fadeIn}`}
-                style={{ animationDelay: "0.15s" }}
-              >
-                <label htmlFor="invoice.street">Street and number *</label>
-                <input
-                  id="invoice.street"
-                  name="invoice.street"
-                  type="text"
-                  value={formData.invoiceData.street}
-                  onChange={handleChange}
-                  className={errors.invoiceStreet ? styles.inputError : ""}
+                  className={errors.addressLine1 ? styles.inputError : ""}
                   placeholder="123 Example Street"
                 />
-                {errors.invoiceStreet && (
+                {errors.addressLine1 && (
                   <span className={styles.errorText}>
-                    {errors.invoiceStreet}
+                    {errors.addressLine1}
                   </span>
                 )}
               </div>

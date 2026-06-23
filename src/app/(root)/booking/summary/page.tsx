@@ -149,8 +149,7 @@ export default function BookingSummaryPage() {
   
   const hasInvoiceData = Boolean(
     invoiceData.companyName ||
-    invoiceData.nip ||
-    invoiceData.street ||
+    invoiceData.addressLine1 ||
     invoiceData.city ||
     invoiceData.postalCode,
   );
@@ -249,13 +248,9 @@ export default function BookingSummaryPage() {
               </span>
             </div>
             <div className={styles.summaryItem}>
-              <span className={styles.summaryLabel}>Tax ID (NIP):</span>
-              <span className={styles.summaryValue}>{invoiceData.nip}</span>
-            </div>
-            <div className={styles.summaryItem}>
               <span className={styles.summaryLabel}>Address:</span>
               <span className={styles.summaryValue}>
-                {invoiceData.street}, {invoiceData.postalCode}{" "}
+                {invoiceData.addressLine1}, {invoiceData.postalCode}{" "}
                 {invoiceData.city}
               </span>
             </div>

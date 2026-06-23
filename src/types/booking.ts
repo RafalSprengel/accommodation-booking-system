@@ -1,7 +1,6 @@
 export interface InvoiceData {
   companyName: string;
-  nip: string;
-  street: string;
+  addressLine1: string;
   city: string;
   postalCode: string;
 }

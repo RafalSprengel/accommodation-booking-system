@@ -3,25 +3,21 @@
 import {
   faArrowRight,
   faExclamationCircle,
-  faHome,
   faSpinner,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import type { SearchOption, SearchResults } from "@/actions/searchActions";
 import Button from "@/app/_components/UI/Button/Button";
-import FloatingBackButton from "@/app/_components/FloatingBackButton/FloatingBackButton";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { formatDisplayDate } from "@/utils/formatDate";
 import CalendarPicker, {
   type DatesData,
 } from "../../_components/CalendarPicker/CalendarPicker";
 import QuantityPicker from "../../_components/QuantityPicker/QuantityPicker";
-import AllPropertiesCard from "./AllPropertiesCard";
 import styles from "./page.module.css";
 import ResultCard from "./ResultCard";
 import { isRangeAvailable } from '@/actions/availabilityActions'
@@ -35,16 +31,6 @@ interface BookingDates {
 }
 
 interface BookingOrderItem {
-  propertyId: string;
-  displayName: string;
-  guests: number;
-  adults: number;
-  children: number;
-  extraBeds: number;
-  price: number;
-}
-
-interface CombinedOrderSelection {
   propertyId: string;
   displayName: string;
   guests: number;
@@ -125,12 +111,7 @@ export default function BookingClient({
 
   const [isSearching, setIsSearching] = useState(false);
   const [extraBedsMap, setExtraBedsMap] = useState<Record<string, number>>({});
-  const [guestsMap, setGuestsMap] = useState<Record<string, number>>({});
-  const [childrenMap, setChildrenMap] = useState<Record<string, number>>({});
   const [hasDraft, setHasDraft] = useState(false);
-  const [bookingMode, setBookingMode] = useState<"single" | "double" | null>(
-    null,
-  );
   const [isSeasonPriceListOpen, setIsSeasonPriceListOpen] = useState(false);
   const [unavailableModal, setUnavailableModal] = useState<{
     isOpen: boolean
@@ -155,25 +136,6 @@ export default function BookingClient({
   useEffect(() => {
     setIsSeasonPriceListOpen(false);
   }, [searchResults]);
-
-  useEffect(() => {
-    if (!searchResults) {
-      setBookingMode(null);
-      return;
-    }
-
-    if (!searchResults.areAllAvailable) {
-      setBookingMode("single");
-      return;
-    }
-
-    if (searchResults.forceCombined) {
-      setBookingMode("double");
-      return;
-    }
-
-    setBookingMode(null);
-  }, [searchResults, initialStart, initialEnd, initialAdults, initialChildren]);
 
   useEffect(() => {
     if (initialStart || initialEnd) {
@@ -236,8 +198,6 @@ export default function BookingClient({
 
     setIsSearching(true);
     setExtraBedsMap({});
-    setGuestsMap({});
-    setChildrenMap({});
     closeAllBoxes();
 
     const params = new URLSearchParams();
@@ -253,20 +213,6 @@ export default function BookingClient({
     setExtraBedsMap((prev) => ({
       ...prev,
       [optionDisplayName]: value,
-    }));
-  };
-
-  const handleGuestsChange = (optionDisplayName: string, value: number) => {
-    setGuestsMap((prev) => ({
-      ...prev,
-      [optionDisplayName]: Math.max(1, value),
-    }));
-  };
-
-  const handleChildrenChange = (optionDisplayName: string, value: number) => {
-    setChildrenMap((prev) => ({
-      ...prev,
-      [optionDisplayName]: Math.max(0, value),
     }));
   };
 
@@ -360,66 +306,6 @@ export default function BookingClient({
     ]);
   };
 
-  const handleAllSelect = async (selectedOrders: CombinedOrderSelection[]) => {
-    if (!bookingDates.start || !bookingDates.end) return;
-    const propertyIds = selectedOrders.map(o => o.propertyId);
-    try {
-      const result = await isRangeAvailable(bookingDates.start, bookingDates.end, propertyIds);
-      if (!result.available) {
-        const occupied = result.occupiedPropertyIds || [];
-        const occupiedNames = selectedOrders
-          .filter(o => occupied.includes(o.propertyId))
-          .map(o => o.displayName);
-        setUnavailableModal({ isOpen: true, title: 'Date unavailable', occupiedNames: [...occupiedNames], context: 'multi' });
-        return;
-      }
-    } catch (err) {
-      console.error('Error checking availability:', err);
-      setNetworkModal({
-        isOpen: true, title: 'Network error', message: 'Failed to check availability. Please try again.', onRetry: async () => {
-          try {
-            const r = await isRangeAvailable(bookingDates.start!, bookingDates.end!, propertyIds);
-            if (!r.available) {
-              const occupied = r.occupiedPropertyIds || [];
-              const occupiedNames = selectedOrders
-                .filter(o => occupied.includes(o.propertyId))
-                .map(o => o.displayName);
-              setUnavailableModal({ isOpen: true, title: 'Date unavailable', occupiedNames, context: 'multi' });
-            } else {
-              const orders: BookingOrderItem[] = selectedOrders.map((order) => ({
-                propertyId: order.propertyId,
-                displayName: order.displayName,
-                guests: order.guests,
-                adults: order.adults,
-                children: order.children,
-                extraBeds: order.extraBeds,
-                price: order.price,
-              }));
-              handleConfirmBooking(orders);
-            }
-          } catch (retryErr) {
-            console.error('Retry failed:', retryErr);
-          } finally {
-            setNetworkModal({ isOpen: false, title: '' });
-          }
-        }
-      });
-      return;
-    }
-
-    const orders: BookingOrderItem[] = selectedOrders.map((order) => ({
-      propertyId: order.propertyId,
-      displayName: order.displayName,
-      guests: order.guests,
-      adults: order.adults,
-      children: order.children,
-      extraBeds: order.extraBeds,
-      price: order.price,
-    }));
-
-    handleConfirmBooking(orders);
-  };
-
   const renderGuestsText = () => {
     if (totalGuests === 0) return "Select number of guests";
     const adultsText = adults === 1 ? "1 adult" : `${adults} adults`;
@@ -437,12 +323,6 @@ export default function BookingClient({
 
   const isSearchDisabled =
     totalGuests === 0 || !bookingDates.start || !bookingDates.end;
-  const showModeSelector =
-    searchResults !== null && searchResults.propertiesAvailable.length > 0;
-  const singleDisabled = searchResults?.forceCombined === true;
-  const doubleDisabled = searchResults?.areAllAvailable === false;
-  const showSingleResults =
-    !singleDisabled && (searchResults?.areAllAvailable === false || bookingMode === "single");
   const overlappingSeasons = searchResults
     ? searchResults.overlappingSeasons
     : [];
@@ -823,102 +703,16 @@ export default function BookingClient({
                       Available options ({searchResults.propertiesAvailable.length}
                       )
                     </h3>
-                    {showModeSelector && (
-                      <div
-                        className={styles.modeSelector}
-                        role="radiogroup"
-                        aria-label="Booking mode"
-                      >
-                        <label
-                          className={`${styles.modeOption} ${bookingMode === "single" ? styles.modeOptionActive : ""} ${singleDisabled ? styles.modeOptionDisabled : ""}`}
-                        >
-                          <input
-                            type="radio"
-                            name="bookingMode"
-                            checked={bookingMode === "single"}
-                            disabled={singleDisabled}
-                            onChange={() => setBookingMode("single")}
-                          />
-                          <span className={styles.modeLabel}>One cottage</span>
-                          <span
-                            className={styles.modeIconSingle}
-                            aria-hidden="true"
-                          >
-                            <FontAwesomeIcon icon={faHome} />
-                          </span>
-                        </label>
-
-                        <label
-                          className={`${styles.modeOption} ${bookingMode === "double" ? styles.modeOptionActive : ""} ${doubleDisabled ? styles.modeOptionDisabled : ""}`}
-                        >
-                          <input
-                            type="radio"
-                            name="bookingMode"
-                            checked={bookingMode === "double"}
-                            disabled={doubleDisabled}
-                            onChange={() => {
-                              setBookingMode("double");
-                              setGuestsMap((prev) => {
-                                const next = { ...prev };
-                                searchResults.propertiesAvailable.forEach(
-                                  (option) => {
-                                    const current = next[option.displayName];
-                                    next[option.displayName] =
-                                      current && current > 0 ? current : 1;
-                                  },
-                                );
-                                return next;
-                              });
-                            }}
-                          />
-                          <span className={styles.modeLabel}>Both cottages</span>
-                          <span
-                            className={styles.modeIconDouble}
-                            aria-hidden="true"
-                          >
-                            <span className={styles.modeHomeBack}>
-                              <FontAwesomeIcon icon={faHome} />
-                            </span>
-                            <span className={styles.modeHomeFront}>
-                              <FontAwesomeIcon icon={faHome} />
-                            </span>
-                          </span>
-                        </label>
-                      </div>
-                    )}
-                    {showSingleResults &&
-                      searchResults.propertiesAvailable.map((option) => (
-                        <ResultCard
-                          key={option.propertyId}
-                          option={option}
-                          extraBeds={extraBedsMap[option.displayName] || 0}
-                          onExtraBedsChange={handleExtraBedsChange}
-                          onSelect={handleSingleSelect}
-                          childrenFreeAgeLimit={childrenFreeAgeLimit}
-                        />
-                      ))}
-
-                    {showModeSelector &&
-                      bookingMode === "double" &&
-                      searchResults.areAllAvailable && (
-                        <div className={styles.allAvailableNote}>
-                          <AllPropertiesCard
-                            searchResults={searchResults}
-                            extraBedsMap={extraBedsMap}
-                            onExtraBedsChange={handleExtraBedsChange}
-                            guestsMap={guestsMap}
-                            onGuestsChange={handleGuestsChange}
-                            totalGuestsLimit={adults}
-                            childrenMap={childrenMap}
-                            onChildrenChange={handleChildrenChange}
-                            totalChildrenLimit={children}
-                            startDate={bookingDates.start}
-                            endDate={bookingDates.end}
-                            onSelectAll={handleAllSelect}
-                            childrenFreeAgeLimit={childrenFreeAgeLimit}
-                          />
-                        </div>
-                      )}
+                    {searchResults.propertiesAvailable.map((option) => (
+                      <ResultCard
+                        key={option.propertyId}
+                        option={option}
+                        extraBeds={extraBedsMap[option.displayName] || 0}
+                        onExtraBedsChange={handleExtraBedsChange}
+                        onSelect={handleSingleSelect}
+                        childrenFreeAgeLimit={childrenFreeAgeLimit}
+                      />
+                    ))}
                   </div>
                 );
               })()}

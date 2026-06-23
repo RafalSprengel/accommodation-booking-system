@@ -43,8 +43,7 @@ interface PropertyOption {
 
 interface InvoiceData {
   companyName: string;
-  nip: string;
-  street: string;
+  addressLine1: string;
   postalCode: string;
   city: string;
 }
@@ -89,8 +88,7 @@ export default function AddBookingPage() {
   const [wantsInvoice, setWantsInvoice] = useState(false);
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
     companyName: "",
-    nip: "",
-    street: "",
+    addressLine1: "",
     postalCode: "",
     city: "",
   });
@@ -254,8 +252,7 @@ export default function AddBookingPage() {
       setWantsInvoice(false);
       setInvoiceData({
         companyName: "",
-        nip: "",
-        street: "",
+        addressLine1: "",
         postalCode: "",
         city: "",
       });
@@ -314,8 +311,7 @@ export default function AddBookingPage() {
   const validateInvoiceData = (): boolean => {
     const errors: Record<string, string> = {};
     if (!invoiceData.companyName.trim()) errors.companyName = "Required";
-    if (!invoiceData.nip.trim()) errors.nip = "Required";
-    if (!invoiceData.street.trim()) errors.street = "Required";
+    if (!invoiceData.addressLine1.trim()) errors.addressLine1 = "Required";
     if (!invoiceData.postalCode.trim()) {
       errors.postalCode = "Required";
     }
@@ -337,8 +333,7 @@ export default function AddBookingPage() {
     setWantsInvoice(false);
     setInvoiceData({
       companyName: "",
-      nip: "",
-      street: "",
+      addressLine1: "",
       postalCode: "",
       city: "",
     });
@@ -465,8 +460,7 @@ export default function AddBookingPage() {
           name="invoiceCompany"
           value={invoiceData.companyName}
         />
-        <input type="hidden" name="invoiceNip" value={invoiceData.nip} />
-        <input type="hidden" name="invoiceStreet" value={invoiceData.street} />
+        <input type="hidden" name="addressLine1" value={invoiceData.addressLine1} />
         <input
           type="hidden"
           name="invoicePostalCode"
@@ -687,28 +681,16 @@ export default function AddBookingPage() {
               {invoiceErrors.companyName && <span className={styles.errorText}>{invoiceErrors.companyName}</span>}
             </div>
             <div className={styles.inputGroup}>
-              <label>NIP *</label>
+              <label>Address *</label>
               <input
-                name="nip"
+                name="addressLine1"
                 type="text"
-                value={invoiceData.nip}
+                value={invoiceData.addressLine1}
                 onChange={handleInvoiceChange}
-                className={invoiceErrors.nip ? styles.inputError : ""}
+                className={invoiceErrors.addressLine1 ? styles.inputError : ""}
                 disabled={!wantsInvoice}
               />
-              {invoiceErrors.nip && <span className={styles.errorText}>{invoiceErrors.nip}</span>}
-            </div>
-            <div className={styles.inputGroup}>
-              <label>Street and number *</label>
-              <input
-                name="street"
-                type="text"
-                value={invoiceData.street}
-                onChange={handleInvoiceChange}
-                className={invoiceErrors.street ? styles.inputError : ""}
-                disabled={!wantsInvoice}
-              />
-              {invoiceErrors.street && <span className={styles.errorText}>{invoiceErrors.street}</span>}
+              {invoiceErrors.addressLine1 && <span className={styles.errorText}>{invoiceErrors.addressLine1}</span>}
             </div>
             <div className={styles.grid}>
               <div className={styles.inputGroup}>

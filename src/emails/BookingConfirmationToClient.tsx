@@ -31,8 +31,7 @@ interface BookingEmailProps {
   orderDate?: string;
   invoiceRequested?: boolean;
   companyName?: string;
-  nip?: string;
-  street?: string;
+  addressLine1?: string;
   city?: string;
   postalCode?: string;
   cabinsCount?: number;
@@ -56,8 +55,7 @@ export const BookingConfirmation = ({
   orderDate,
   invoiceRequested,
   companyName,
-  nip,
-  street,
+  addressLine1,
   city,
   postalCode,
   cabinsCount,
@@ -162,8 +160,7 @@ export const BookingConfirmation = ({
               <Text style={sectionTextStyle}><strong>VAT Invoice:</strong></Text>
               <Section style={{ padding: '10px', backgroundColor: '#fff' }}>
                 {companyName && <Text style={sectionTextStyle}><strong>Company name:</strong> {companyName}</Text>}
-                {nip && <Text style={sectionTextStyle}><strong>Tax ID (NIP):</strong> {nip}</Text>}
-                {street && <Text style={sectionTextStyle}><strong>Street:</strong> {street}</Text>}
+                {addressLine1 && <Text style={sectionTextStyle}><strong>Address:</strong> {addressLine1}</Text>}
                 {postalCode && <Text style={sectionTextStyle}><strong>Postal code:</strong> {postalCode}</Text>}
                 {city && <Text style={sectionTextStyle}><strong>City:</strong> {city}</Text>}
               </Section>

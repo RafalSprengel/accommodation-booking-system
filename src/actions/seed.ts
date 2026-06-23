@@ -61,8 +61,8 @@ export async function seedSeasons() {
     const seasons = [
       {
         _id: new Types.ObjectId('6a0276c6b002180738334dda'),
-        name: 'Sezon świąteczno-noworoczny',
-        description: 'Podwyższone ceny w okresie Świąt Bożego Narodzenia i Nowego Roku.',
+        name: 'Christmas/New Year Season',
+        description: 'Higher prices during Christmas and New Year period.',
         startDate: new Date('2000-12-20T12:00:00.000Z'),
         endDate: new Date('2001-01-05T12:00:00.000Z'),
         isActive: true,
@@ -72,8 +72,8 @@ export async function seedSeasons() {
       },
       {
         _id: new Types.ObjectId('6a0276c6b002180738334ddb'),
-        name: 'Sezon ferii zimowych',
-        description: 'Ferie zimowe w północnej części Polski.',
+        name: 'Winter Break Season',
+        description: 'Winter break in northern Poland.',
         startDate: new Date('2000-01-15T12:00:00.000Z'),
         endDate: new Date('2000-02-29T12:00:00.000Z'),
         isActive: true,
@@ -83,8 +83,8 @@ export async function seedSeasons() {
       },
       {
         _id: new Types.ObjectId('6a0276c6b002180738334dd9'),
-        name: 'Sezon wysoki (wakacje letnie)',
-        description: 'Ceny obowiązują w sezonie letnim – czerwiec, lipiec, sierpień.',
+        name: 'High Season (Summer Holidays)',
+        description: 'Prices valid in the summer season – June, July, August.',
         startDate: new Date('2000-06-01T12:00:00.000Z'),
         endDate: new Date('2000-08-31T12:00:00.000Z'),
         isActive: true,
@@ -94,8 +94,8 @@ export async function seedSeasons() {
       },
       {
         _id: new Types.ObjectId('6a027c2be997703cfd85a1d0'),
-        name: 'Majówka',
-        description: 'Długi weekend majowy.',
+        name: 'May Holiday',
+        description: 'Long May weekend.',
         startDate: new Date('2000-05-01T12:00:00.000Z'),
         endDate: new Date('2000-05-03T12:00:00.000Z'),
         isActive: true,
@@ -127,8 +127,8 @@ export async function seedProperties() {
     const properties = [
       {
         _id: new Types.ObjectId('69d78477b191d7bb540f83e1'),
-        name: 'Chatka A',
-        description: 'Przytulny domek z widokiem na las.',
+        name: 'Cottage A',
+        description: 'A cosy cottage with a forest view.',
         maxAdults: 6,
         maxChildren: 6,
         maxExtraBeds: 2,
@@ -139,8 +139,8 @@ export async function seedProperties() {
       },
       {
         _id: new Types.ObjectId('69d78477b191d7bb540f83e2'),
-        name: 'Chatka B',
-        description: 'Przytulny domek z widokiem na las.',
+        name: 'Cottage B',
+        description: 'A cosy cottage with a forest view.',
         maxAdults: 6,
         maxChildren: 6,
         maxExtraBeds: 2,
@@ -167,8 +167,8 @@ export async function seedProperties() {
 }
 
 /**
- * Seeduje kolekcję PropertyPrices.
- * Musi być wywołana PO seedProperties() i seedSeasons().
+ * Seeds the PropertyPrices collection.
+ * Must be called AFTER seedProperties() and seedSeasons().
  */
 export async function seedPropertyPrices() {
   try {
@@ -409,11 +409,11 @@ export async function seedBookings() {
         propertyId: new Types.ObjectId(properties[0]._id),
           startDate: nextWeekStart,
           endDate: nextWeekEnd,
-          firstName: 'Jan',
-          lastName: 'Kowalski',
-          guestEmail: 'jan.kowalski@example.com',
+          firstName: 'John',
+          lastName: 'Smith',
+          guestEmail: 'john.smith@example.com',
         guestPhone: '+48 123 456 789',
-        guestAddress: 'ul. Przykładowa 1, 00-001 Warszawa',
+        guestAddress: '1 Sample Street, 00-001 Warsaw',
         adults: 4,
         children: 0,
         extraBedsCount: 1,
@@ -424,10 +424,10 @@ export async function seedBookings() {
         status: 'confirmed',
         invoice: true,
         invoiceData: {
-          companyName: 'Test Sp. z o.o.',
+          companyName: 'Test Ltd.',
           nip: '1234567890',
-          street: 'ul. Faktury 10',
-          city: 'Warszawa',
+          street: '10 Invoice Street',
+          city: 'Warsaw',
           postalCode: '00-002',
         },
         source: 'online',
@@ -440,7 +440,7 @@ export async function seedBookings() {
           lastName: 'Nowak',
           guestEmail: 'anna.nowak@example.com',
         guestPhone: '+48 987 654 321',
-        guestAddress: 'ul. Inna 5, 80-001 Gdańsk',
+        guestAddress: '5 Other Street, 80-001 Gdansk',
         adults: 2,
         children: 0,
         extraBedsCount: 0,
@@ -470,8 +470,8 @@ export async function seedBookings() {
 }
 
 /**
- * Pełny reset bazy danych.
- * Kolejność ma znaczenie: sezony → domki → ceny (PropertyPrices) → reszta.
+ * Full database reset.
+ * Order matters: seasons → cottages → prices (PropertyPrices) → rest.
  */
 export async function seedAllData() {
   try {
@@ -479,7 +479,7 @@ export async function seedAllData() {
 
     await clearAllData();
 
-    // Kolejność jest ważna – PropertyPrices wymaga ID z Season i Property
+    // Order is important – PropertyPrices requires IDs from Season and Property
     const seasons = await seedSeasons();
     if (!seasons.success) throw new Error(seasons.error);
 
@@ -519,14 +519,7 @@ export async function seedAllData() {
 
 export async function seedAdmin() {
   const siteSettings = await getSiteSettings();
-  const admins = [
-    {
-      email: siteSettings.email || siteSettingsDefaults.email,
-      password: 'wilczki',
-      name: 'Marika',
-      username: 'Marika',
-    },
-  ];
+  const adminEmail = siteSettings.email || siteSettingsDefaults.email;
 
   try {
     await dbConnect();
@@ -535,44 +528,35 @@ export async function seedAdmin() {
     const db = mongoose.connection.db;
     if (!db) throw new Error('No MongoDB connection');
 
-    // Usuwamy istniejących użytkowników o tych samych emailach/username'ach, aby uniknąć konfliktów
-    const emails = admins.map(a => a.email);
-    const usernames = admins.map(a => a.username);
-
+    // Remove existing user with the same email or username to avoid conflicts
     await db.collection('user').deleteMany({
-      $or: [{ email: { $in: emails } }, { username: { $in: usernames } }]
+      $or: [{ email: adminEmail }, { username: 'admin' }]
     });
     await db.collection('account').deleteMany({});
 
-    let createdCount = 0;
+    await auth.api.signUpEmail({
+      body: {
+        email: adminEmail,
+        password: 'admin',
+        name: 'admin',
+      },
+    });
 
-    for (const admin of admins) {
-      await auth.api.signUpEmail({
-        body: {
-          email: admin.email,
-          password: admin.password,
-          name: admin.name,
-        },
-      });
-
-      await db.collection('user').updateOne(
-        { email: admin.email },
-        {
-          $set: {
-            emailVerified: true,
-            role: 'admin',
-            username: admin.username.toLowerCase(),
-            displayUsername: admin.username
-          }
+    await db.collection('user').updateOne(
+      { email: adminEmail },
+      {
+        $set: {
+          emailVerified: true,
+          role: 'admin',
+          username: 'admin',
+          displayUsername: 'admin'
         }
-      );
-
-      createdCount++;
-    }
+      }
+    );
 
     return {
       success: true,
-      message: `Created ${createdCount} administrators using Better Auth.`,
+      message: 'Created 1 administrator using Better Auth.',
     };
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';

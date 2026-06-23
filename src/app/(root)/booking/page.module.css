@@ -422,75 +422,6 @@
   font-family: var(--font-heading);
 }
 
-.modeSelector {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.modeOption {
-  border: 1px solid #d6dee6;
-  border-radius: 10px;
-  padding: 12px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.modeOption input {
-  accent-color: var(--accent-color);
-}
-
-.modeOptionActive {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px rgba(201, 179, 99, 0.2);
-}
-
-.modeOptionDisabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.modeLabel {
-  font-weight: 600;
-  color: #334155;
-  min-width: 110px;
-}
-
-.modeIconSingle {
-  margin-left: auto;
-  font-size: 1.6rem;
-  color: var(--accent-color);
-}
-
-.modeIconDouble {
-  margin-left: auto;
-  width: 34px;
-  height: 28px;
-  position: relative;
-  color: var(--accent-color);
-}
-
-.modeHomeBack {
-  position: absolute;
-  left: 0;
-  top: 6px;
-  font-size: 1.2rem;
-  opacity: 0.75;
-}
-
-.modeHomeFront {
-  position: absolute;
-  left: 12px;
-  top: 0;
-  font-size: 1.4rem;
-}
-
 .resultCard {
   background: var(--bg-white);
   border: 1px solid #eef2f5;
@@ -509,36 +440,6 @@
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   border-color: var(--accent-color);
-}
-
-.allPropertiesGridCard {
-  background: var(--bg-white);
-  border: 1px solid #eef2f5;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-}
-
-.allPropertiesGridCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  border-color: var(--accent-color);
-}
-
-.allPropertiesResultCard {
-  box-shadow: none;
-  border-color: #e5e7eb;
-}
-
-.allPropertiesResultCard:hover {
-  transform: none;
-  box-shadow: none;
-  border-color: #e5e7eb;
-}
-
-.allPropertiesTotalPrice {
-  margin-top: 8px;
 }
 
 .cardHeader {
@@ -627,12 +528,6 @@
   text-align: right;
 }
 
-.allocationSummary {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
 .extraBedsNote {
   margin: 0;
   padding: 8px;
@@ -640,20 +535,6 @@
   border-radius: 6px;
   font-size: 0.85rem;
   color: #64748b;
-  text-align: center;
-}
-
-.extraBedsNoteError {
-  border: 1px solid #dc2626;
-  background: #fef2f2;
-}
-
-.allocationErrorText {
-  margin-top: -2px;
-  margin-bottom: 6px;
-  color: #dc2626;
-  font-size: 0.85rem;
-  font-weight: 600;
   text-align: center;
 }
 
@@ -769,10 +650,6 @@
     gap: 30px;
   }
 
-  .modeSelector {
-    grid-template-columns: 1fr 1fr;
-  }
-
   .cardTitle {
     font-size: 1.2rem;
   }
@@ -847,24 +724,6 @@
   .container {
     padding: 50px 30px;
   }
-}
-
-@media (min-width: 850px) {
-  .allPropertiesResultCard {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
-  }
-
-  .allPropertiesResultCard>.cardHeader,
-  .allPropertiesResultCard>.cardTitle,
-  .allPropertiesResultCard>.cardDesc,
-  .allPropertiesResultCard>.cardDetails {
-    grid-column: 1 / -1;
-  }
-
-
 }
 
 @media (max-width: 600px) {

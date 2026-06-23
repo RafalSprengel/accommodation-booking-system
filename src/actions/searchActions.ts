@@ -36,8 +36,6 @@ export interface SearchOption {
 
 export interface SearchResults {
   propertiesAvailable: SearchOption[];
-  areAllAvailable: boolean;
-  forceCombined: boolean;
   overlappingSeasons: OverlappingSeasonInfo[];
 }
 
@@ -110,9 +108,7 @@ function findPriceTier(
   if (!tiers?.length) return null;
   const matchedTier = tiers.find((r) => baseGuests >= r.minGuests && baseGuests <= r.maxGuests);
   if (matchedTier) return matchedTier;
-
-  // For guests below the first threshold (e.g. 0 in multi-cabin allocation),
-  // use the lowest tier instead of falling back to the highest one.
+  
   if (baseGuests < tiers[0].minGuests) return tiers[0];
 
   return tiers[tiers.length - 1];
@@ -299,7 +295,6 @@ export async function calculateTotalPrice(
 
 export async function searchAction(params: SearchParams): Promise<SearchResults> {
   const { startDate, endDate, adults, children, extraBeds } = params;
-  const effectiveGuests = adults;
   if (adults < 1) {
     throw new Error('Number of paying guests must be greater than zero.');
   }
@@ -330,8 +325,6 @@ export async function searchAction(params: SearchParams): Promise<SearchResults>
         currentDate = currentDate.add(1, 'day');
       }
     }
-
-    const totalActiveProperties = await Property.countDocuments({ isActive: true });
 
     const systemConfig = await SystemConfig.findById('main');
     const autoBlockOtherCabins = systemConfig?.autoBlockOtherCabins ?? true;
@@ -368,7 +361,7 @@ export async function searchAction(params: SearchParams): Promise<SearchResults>
       });
 
     if (autoBlockOtherCabins && occupiedIds.length > 0) {
-      return { propertiesAvailable: [], areAllAvailable: false, forceCombined: false, overlappingSeasons };
+      return { propertiesAvailable: [], overlappingSeasons };
     }
 
     const availableProperties = await Property.find({
@@ -377,29 +370,18 @@ export async function searchAction(params: SearchParams): Promise<SearchResults>
     }).select('-createdAt -updatedAt').sort({ name: 1 });
 
     if (availableProperties.length === 0) {
-      return { propertiesAvailable: [], areAllAvailable: false, forceCombined: false, overlappingSeasons };
+      return { propertiesAvailable: [], overlappingSeasons };
     }
 
     const options: SearchOption[] = [];
-
-    const combinedMaxAdults = availableProperties.reduce((sum, p) => sum + p.maxAdults, 0);
-    const combinedMaxChildren = availableProperties.reduce((sum, p) => sum + p.maxChildren, 0);
-    const canCombinedAccommodate =
-      adults <= combinedMaxAdults && children <= combinedMaxChildren;
-    const anyFitsIndividually = availableProperties.some(
-      (p) => adults <= p.maxAdults && children <= p.maxChildren
-    );
-    const forceCombined = canCombinedAccommodate && !anyFitsIndividually;
 
     for (const property of availableProperties) {
       const fitsIndividually =
         adults <= property.maxAdults && children <= property.maxChildren;
 
-      if (!fitsIndividually && !canCombinedAccommodate) continue;
+      if (!fitsIndividually) continue;
 
-      const allocAdults = fitsIndividually
-        ? adults
-        : Math.min(property.maxAdults, adults);
+      const allocAdults = adults;
 
       const price = await calculateTotalPrice({
         startDate,
@@ -434,12 +416,6 @@ export async function searchAction(params: SearchParams): Promise<SearchResults>
       });
     }
     const result = options.sort((a, b) => a.totalPrice - b.totalPrice);
-
-    // Jeśli wybrano tylko jednego dorosłego, nie pokazuj opcji kilku domków
-    let areAllAvailable = result.length === totalActiveProperties && result.length > 1;
-    if (adults === 1 && result.length > 1) {
-      areAllAvailable = false;
-    }
 
     if (overlappingSeasons.length > 0 && result.length > 0) {
       const seasonIds = overlappingSeasons.map((season) => new Types.ObjectId(season.seasonId));
@@ -481,8 +457,6 @@ export async function searchAction(params: SearchParams): Promise<SearchResults>
 
     return {
       propertiesAvailable: result,
-      areAllAvailable,
-      forceCombined,
       overlappingSeasons,
     };
   } catch (error) {

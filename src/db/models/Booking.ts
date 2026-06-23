@@ -138,8 +138,7 @@ const BookingSchema = new Schema({
   },
   invoiceData: {
     companyName: { type: String, trim: true },
-    nip: { type: String, trim: true },
-    street: { type: String, trim: true },
+    addressLine1: { type: String, trim: true },
     city: { type: String, trim: true },
     postalCode: { type: String, trim: true }
   },
