@@ -138,7 +138,6 @@ export default function BookingDetailsPage() {
     if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
     if (!formData.lastName.trim())
       newErrors.lastName = "Last name is required";
-    if (!formData.address.trim()) newErrors.address = "Address is required";
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
@@ -402,22 +401,6 @@ export default function BookingDetailsPage() {
                 <span className={styles.errorText}>{errors.lastName}</span>
               )}
             </div>
-          </div>
-          <div className={styles.inputGroup}>
-            <label htmlFor="address">Address *</label>
-            <input
-              id="address"
-              name="address"
-              type="text"
-              value={formData.address}
-              onChange={handleChange}
-              placeholder="Street, number, postal code, city"
-              className={errors.address ? styles.inputError : ""}
-              autoComplete="street-address"
-            />
-            {errors.address && (
-              <span className={styles.errorText}>{errors.address}</span>
-            )}
           </div>
         </div>
 
