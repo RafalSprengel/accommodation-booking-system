@@ -2,7 +2,7 @@
 
 # Wolf Lodges - Accommodation Booking & Dynamic Pricing System
 
-## <a href="https://accommodation.rafalsprengel.com/">Live</a>
+## <a href="https://accommodation.rafalsprengel.com/">See Live</a>
 A Next.js application for the Wilcze Chatki accommodation property (Szumles Krolewski, Kaszuby).
 
 Project scope:
