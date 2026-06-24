@@ -2,8 +2,8 @@
 
 # Wolf Lodges - Accommodation Booking & Dynamic Pricing System
 
-## <a href="https://accommodation.rafalsprengel.com/">See Live: http://accommodation.rafalsprengel.com/</a>
-
+## 🔗 Live Demo
+https://accommodation.rafalsprengel.com/
 
 Project scope:
 - public website with availability search and booking flow,
