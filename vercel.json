@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/stats/js", "destination": "https://gc.zgo.at/count.js" },
+    { "source": "/stats/count", "destination": "https://accommodation.goatcounter.com/count" }
+  ]
+}
