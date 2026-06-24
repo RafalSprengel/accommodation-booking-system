@@ -1,6 +1,6 @@
 <img width="1200" height="900" alt="landing-page" src="https://github.com/user-attachments/assets/9bd75bfb-b57e-48fd-93d3-e8979e6aa509" />
 
-# Wilcze Chatki - Booking and Admin System
+# Wolf Lodges - Accommodation Booking & Dynamic Pricing System
 
 A Next.js application for the Wilcze Chatki accommodation property (Szumles Krolewski, Kaszuby).
 
