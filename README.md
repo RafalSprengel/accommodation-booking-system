@@ -4,7 +4,6 @@
 
 ## <a href="https://accommodation.rafalsprengel.com/">See Live: http://accommodation.rafalsprengel.com/</a>
 
-A Next.js application for the Wilcze Chatki accommodation property (Szumles Krolewski, Kaszuby).
 
 Project scope:
 - public website with availability search and booking flow,
@@ -44,7 +43,7 @@ Project scope:
 
 | Category | Technologies |
 | :--- | :--- |
-| **Frontend** | Next.js 16 (App Router), React 19, TypeScript, CSS Modules (Mobile-first) |
+| **Frontend** | Next.js (App Router), React, TypeScript, CSS Modules (Mobile-first) |
 | **Backend** | Next.js Server Actions, Node.js |
 | **Database** | MongoDB Atlas, Mongoose ORM |
 | **Payments** | Stripe API (Checkout + Webhooks) |
