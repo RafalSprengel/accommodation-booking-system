@@ -67,34 +67,31 @@ src/
 ├── emails/           # React Email templates for notifications
 ├── lib/              # Integrations (auth, stripe, email sender)
 └── utils/            # Helper functions (date formatting, price calculation)
+```
 
-const markdownString = `## ⚙️ Environment Setup
+## ⚙️ Environment Setup
 
 1. Clone the repository and install dependencies:
-   \`\`\`bash
+```bash
    npm install
-   \`\`\`
-
-2. Copy \`.env.example\` to \`.env.local\` and fill in your values:
-   \`\`\`env
+```
+2. Copy `.env.example` to `.env.local` and fill in your values:
+```env
    # Database
    MONGODB_URI=your_mongodb_connection_string
-
    # Stripe
    NEXT_PUBLIC_STRIPE_PUBLIC_KEY=your_stripe_public_key
    STRIPE_SECRET_KEY=your_stripe_secret_key
    STRIPE_WEBHOOK_SECRET=your_webhook_signing_secret
-
    # Auth & Email
    BETTER_AUTH_SECRET=your_random_secret
    BETTER_AUTH_URL=http://localhost:3000
    RESEND_API_KEY=your_resend_api_key
-   \`\`\`
-
+```
 3. Run the development server:
-   \`\`\`bash
+```bash
    npm run dev
-   \`\`\`
+```
 
 ---
 
@@ -103,21 +100,21 @@ const markdownString = `## ⚙️ Environment Setup
 The project includes scripts to populate the database with initial data for testing:
 
 - **Initial Seed (Non-destructive):** Creates default system config, seasons, and properties if they don't exist.
-  \`\`\`bash
+```bash
   npm run seed:initial
-  \`\`\`
+```
 - **Full Reset (Destructive):** Clears core collections and rebuilds data from scratch.
-  \`\`\`bash
+```bash
   npm run seed:reset
-  \`\`\`
+```
 
 ---
 
 ## 💳 Payment Flow
 
-1. **Draft Creation:** A server action creates bookings with \`pending\` and \`unpaid\` statuses.
-2. **Stripe Session:** A Checkout session is created with metadata (\`bookingIds\`, \`orderId\`).
+1. **Draft Creation:** A server action creates bookings with `pending` and `unpaid` statuses.
+2. **Stripe Session:** A Checkout session is created with metadata (`bookingIds`, `orderId`).
 3. **Webhook Handling:**
-   - \`checkout.session.completed\`: Updates booking status to \`confirmed\` and \`paid\`, sends confirmation emails.
-   - \`checkout.session.expired\` / \`failed\`: Marks booking as \`failed\` and notifies the user.
-4. **Lazy Verification:** A background task periodically checks pending sessions to ensure calendar consistency.`;
+   - `checkout.session.completed`: Updates booking status to `confirmed` and `paid`, sends confirmation emails.
+   - `checkout.session.expired` / `failed`: Marks booking as `failed` and notifies the user.
+4. **Lazy Verification:** A background task periodically checks pending sessions to ensure calendar consistency.
