@@ -1,4 +1,4 @@
-<img width="1898" height="1665" alt="Zrzut ekranu 2026-01-31 233105" src="https://github.com/user-attachments/assets/f382cc75-d156-43e1-8208-890d539aa009" />
+<img width="1200" height="900" alt="landing-page" src="https://github.com/user-attachments/assets/9bd75bfb-b57e-48fd-93d3-e8979e6aa509" />
 
 # Wilcze Chatki - Booking and Admin System
 
