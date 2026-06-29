@@ -3,6 +3,7 @@
 import dbConnect from '@/db/connection';
 import SiteSettings, { ISiteSettings } from '@/db/models/SiteSettings';
 import { revalidatePath } from 'next/cache';
+import { ensureAdmin } from '@/lib/ensureAdmin';
 
 export async function getSiteSettings(): Promise<Partial<ISiteSettings>> {
   try {
@@ -30,8 +31,8 @@ export async function getSiteSettings(): Promise<Partial<ISiteSettings>> {
 export async function updateSiteSettings(
   values: Partial<ISiteSettings>
 ): Promise<{ success: boolean; message: string }> {
+  await ensureAdmin();
   try {
-    // 2. Filtrowanie pól (whitelist)
     const allowedFields: (keyof ISiteSettings)[] = [
       'phone',
       'email',
@@ -72,9 +73,9 @@ export async function updateSiteSettings(
     // 5. Obsługa błędów walidacji
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map((err: any) => err.message);
-      return { 
-        success: false, 
-        message: `Validation error: ${messages.join(', ')}` 
+      return {
+        success: false,
+        message: `Validation error: ${messages.join(', ')}`
       };
     }
 

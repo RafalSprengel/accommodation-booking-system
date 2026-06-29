@@ -7,6 +7,7 @@ import Booking from '@/db/models/Booking'
 import { stripe } from '@/lib/stripe'
 import type { PaymentMethod } from '@/types/bookingStatus'
 import { Types } from 'mongoose'
+import { ensureAdmin } from '@/lib/ensureAdmin'
 
 export type AdminPaymentStatus = 'pending' | 'confirmed' | 'failed' | 'all'
 export type AdminPaymentTab = 'online' | 'offline'
@@ -78,6 +79,7 @@ function normalizePaymentRow(row: Record<string, unknown>): AdminPaymentRow {
 }
 
 export async function getAdminPaymentsData(): Promise<AdminPaymentsData> {
+  await ensureAdmin()
   await dbConnect()
 
   const [onlineRows, offlineRows] = await Promise.all([
@@ -108,6 +110,7 @@ export async function syncOnlinePaymentAction(bookingId: string): Promise<{
   level: 'success' | 'info' | 'error'
   message: string
 }> {
+  await ensureAdmin()
   try {
     await dbConnect()
 

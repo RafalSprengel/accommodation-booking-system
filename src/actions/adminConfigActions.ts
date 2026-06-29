@@ -3,16 +3,18 @@
 import dbConnect from '@/db/connection';
 import SystemConfig, { type ISystemConfig } from '@/db/models/SystemConfig';
 import { revalidatePath } from 'next/cache';
+import { ensureAdmin } from '@/lib/ensureAdmin'
 
 async function ensureSystemConfigExists() {
-  await dbConnect();
-
   const defaultConfig = {
     _id: 'main',
     autoBlockOtherCabins: true,
   };
 
   try {
+
+    await dbConnect();
+
     const existingConfig = await SystemConfig.findById('main');
 
     if (!existingConfig) {
@@ -37,9 +39,10 @@ async function ensureSystemConfigExists() {
 }
 
 export async function getSystemConfig() {
-  await ensureSystemConfigExists();
-
+  await ensureAdmin();
   try {
+
+    await ensureSystemConfigExists();
     await dbConnect();
     const config = await SystemConfig.findById('main');
 
@@ -64,6 +67,7 @@ export async function updateSystemConfigSetting(
   settingKey: keyof ISystemConfig,
   value: boolean
 ): Promise<{ success: boolean; currentValue?: boolean; message: string }> {
+  await ensureAdmin();
   try {
     await dbConnect();
     const config = await SystemConfig.findByIdAndUpdate(

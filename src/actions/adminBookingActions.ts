@@ -5,6 +5,7 @@ import Property from '@/db/models/Property'
 import SystemConfig from '@/db/models/SystemConfig'
 import BookingConfig from '@/db/models/BookingConfig'
 import { revalidatePath } from 'next/cache'
+import { ensureAdmin } from '@/lib/ensureAdmin'
 import { calculateTotalPrice } from './searchActions'
 import { buildBookingOverlapFilter } from '@/utils/bookingOverlap'
 import { resolveOccupiedPropertyIdsFromBookings } from '@/utils/lazyAvailabilityCleanup'
@@ -59,6 +60,7 @@ async function getAllowCheckinOnDepartureDay(): Promise<boolean> {
 }
 
 export async function getUnavailableDatesForProperty(propertyId: string): Promise<UnavailableDate[]> {
+  await ensureAdmin()
   await dbConnect()
   const config = await SystemConfig.findById('main')
   const autoBlockOtherCabins = config?.autoBlockOtherCabins ?? true
@@ -137,6 +139,7 @@ function validateBookingData(data: any) {
 }
 
 export async function getAdminBookingsList() {
+  await ensureAdmin()
   await dbConnect()
 
   // Leniwe weryfikowanie "oczekujących" rezerwacji przed pobraniem całej listy
@@ -179,6 +182,7 @@ export async function getAdminBookingsList() {
 }
 
 export async function getBookingById(bookingId: string) {
+  await ensureAdmin()
   await dbConnect()
   const booking = await Booking.findById(bookingId)
     .populate('propertyId', 'name')
@@ -209,6 +213,7 @@ export async function getBookingById(bookingId: string) {
 }
 
 export async function createBookingByAdmin(prevState: any, formData: FormData) {
+  await ensureAdmin()
   await dbConnect()
   const rawData = Object.fromEntries(formData.entries())
   const validationErrors = validateBookingData(rawData)
@@ -382,6 +387,7 @@ export async function createBookingByAdmin(prevState: any, formData: FormData) {
 }
 
 export async function updateBookingAction(prevState: any, formData: FormData) {
+  await ensureAdmin()
   await dbConnect()
   const rawData = Object.fromEntries(formData.entries())
   const bookingId = rawData.bookingId as string
@@ -612,6 +618,7 @@ export async function updateBookingAction(prevState: any, formData: FormData) {
 }
 
 export async function deleteBookingAction(bookingId: string) {
+  await ensureAdmin()
   await dbConnect()
 
   if (!Types.ObjectId.isValid(bookingId)) {
@@ -643,6 +650,7 @@ export async function calculatePriceAction(
     propertySelection: string
   }
 ): Promise<{ price: number }> {
+  await ensureAdmin()
   try {
     const price = await calculateTotalPrice({
       startDate: params.startDate,
@@ -659,6 +667,7 @@ export async function calculatePriceAction(
 }
 
 export async function getUnavailableDatesForBlocking(propertyId: string): Promise<UnavailableDate[]> {
+  await ensureAdmin()
   await dbConnect()
   const allowCheckinOnDepartureDay = await getAllowCheckinOnDepartureDay()
 
@@ -705,6 +714,7 @@ export async function getUnavailableDatesForBlocking(propertyId: string): Promis
 }
 
 export async function getBlockedBookings(propertyId?: string): Promise<BlockedBookingListItem[]> {
+  await ensureAdmin()
   await dbConnect()
 
   const query: any = { status: 'blocked' }
@@ -729,6 +739,7 @@ export async function getBlockedBookings(propertyId?: string): Promise<BlockedBo
 }
 
 export async function createBlockedBookingByAdmin(data: BlockCreateInput) {
+  await ensureAdmin()
   try {
     await dbConnect()
     const allowCheckinOnDepartureDay = await getAllowCheckinOnDepartureDay()
@@ -844,6 +855,7 @@ export async function createBlockedBookingByAdmin(data: BlockCreateInput) {
 }
 
 export async function deleteBlockedBookingByAdmin(bookingId: string) {
+  await ensureAdmin()
   try {
     await dbConnect()
 

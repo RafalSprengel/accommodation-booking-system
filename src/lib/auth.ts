@@ -65,6 +65,7 @@ function createAuth(db: Db) {
                 } catch (err) {
                     console.error('[auth] sendVerificationEmail: send error:', err);
                 }
+                return;
             }
         },
 

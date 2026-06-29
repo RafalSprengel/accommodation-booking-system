@@ -1,10 +1,9 @@
 "use server";
 
-import { headers } from "next/headers";
-import { getAuth } from "@/lib/auth";
 import dbConnect from "@/db/connection";
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
+import { ensureAdmin } from "@/lib/ensureAdmin";
 
 export async function changeAdminEmail(newEmail: string): Promise<{ success: boolean; error?: string }> {
     const trimmed = newEmail.trim().toLowerCase();
@@ -14,12 +13,7 @@ export async function changeAdminEmail(newEmail: string): Promise<{ success: boo
     }
 
     try {
-        const auth = await getAuth();
-        const session = await auth.api.getSession({ headers: await headers() });
-
-        if (!session?.user?.id) {
-            return { success: false, error: "No active session." };
-        }
+        const session = await ensureAdmin();
 
         await dbConnect();
         const db = mongoose.connection.db;

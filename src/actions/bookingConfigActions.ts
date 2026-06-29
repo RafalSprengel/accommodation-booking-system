@@ -2,6 +2,7 @@
 import dbConnect from '@/db/connection';
 import BookingConfig from '@/db/models/BookingConfig';
 import { revalidatePath } from 'next/cache';
+import { ensureAdmin } from '@/lib/ensureAdmin';
 
 export interface BookingConfig {
   minBookingDays: number;
@@ -61,6 +62,7 @@ export async function getBookingConfig(): Promise<BookingConfig> {
 }
 
 export async function updateAllowCheckinOnDepartureDay(allow: boolean) {
+  await ensureAdmin();
   try {
     await dbConnect();
     await BookingConfig.findByIdAndUpdate(
@@ -77,6 +79,7 @@ export async function updateAllowCheckinOnDepartureDay(allow: boolean) {
 }
 
 export async function updateBookingConfig(_prevState: Record<string, unknown>, formData: FormData) {
+  await ensureAdmin();
   try {
     await dbConnect();
     const minBookingDays = parseInt(formData.get('minBookingDays') as string, 10) || 1;

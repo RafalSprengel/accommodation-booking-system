@@ -7,6 +7,7 @@ import CustomPrice from '@/db/models/CustomPrice'
 import { revalidatePath } from 'next/cache'
 import { Types } from 'mongoose'
 import { DEFAULT_FALLBACK_PRICES } from '@/utils/priceDefaults'
+import { ensureAdmin } from '@/lib/ensureAdmin'
 
 export interface PropertyType {
   _id: string;
@@ -56,6 +57,7 @@ export async function getPropertyById(id: string): Promise<PropertyType | null> 
 }
 
 export async function createProperty(formData: FormData) {
+  await ensureAdmin();
   await dbConnect();
   
   try {
@@ -98,6 +100,7 @@ export async function createProperty(formData: FormData) {
 }
 
 export async function updateProperty(id: string, formData: FormData) {
+  await ensureAdmin();
   await dbConnect();
   
   try {
@@ -130,6 +133,7 @@ export async function updateProperty(id: string, formData: FormData) {
 }
 
 export async function togglePropertyActive(id: string, isActive: boolean) {
+  await ensureAdmin();
   await dbConnect();
   await Property.findByIdAndUpdate(id, { isActive });
   revalidatePath('/admin/properties');
@@ -137,6 +141,7 @@ export async function togglePropertyActive(id: string, isActive: boolean) {
 }
 
 export async function deleteProperty(id: string) {
+  await ensureAdmin();
   await dbConnect();
   
   const BookingModule = await import('@/db/models/Booking');

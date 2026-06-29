@@ -6,6 +6,7 @@ import CustomPrice from '@/db/models/CustomPrice';
 import { revalidatePath } from 'next/cache';
 import mongoose from 'mongoose';
 import { normalizeDate } from '@/utils/normalizeDate';
+import { ensureAdmin } from '@/lib/ensureAdmin';
 
 interface PriceTier {
   minGuests: number;
@@ -29,6 +30,7 @@ export interface CustomPriceEntry {
 }
 
 export async function updateCustompriceForDate(data: CustomPriceUpdate) {
+  await ensureAdmin();
   try {
     await dbConnect();
 
@@ -75,6 +77,7 @@ export async function updateCustompriceForDate(data: CustomPriceUpdate) {
 }
 
 export async function deleteCustomPricesForDate(data: { propertyId: string; dates: string[] }) {
+  await ensureAdmin();
   try {
     await dbConnect();
 

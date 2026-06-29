@@ -7,6 +7,7 @@ import Property from '@/db/models/Property';
 import CustomPrice from '@/db/models/CustomPrice';
 import { revalidatePath } from 'next/cache';
 import { hasSeasonOverlap } from '@/utils/validateSeasonOverlap';
+import { ensureAdmin } from '@/lib/ensureAdmin';
 
 export interface ISeasonData {
   _id: string;
@@ -84,6 +85,7 @@ export async function updateSeasonDates(
   startDate: string,
   endDate: string
 ) {
+  await ensureAdmin();
   try {
     await dbConnect();
 
@@ -146,6 +148,7 @@ export async function updateSeasonDates(
 }
 
 export async function createSeason(name: string, description: string, startDate: string, endDate: string) {
+  await ensureAdmin();
   try {
     await dbConnect();
 
@@ -205,6 +208,7 @@ export async function createSeason(name: string, description: string, startDate:
 }
 
 export async function deleteSeason(seasonId: string) {
+  await ensureAdmin();
   try {
     await dbConnect();
 
@@ -275,6 +279,7 @@ export async function updateBasicPrices(
   previousState: { message: string; success: boolean } | null,
   formData: FormData
 ) {
+  await ensureAdmin();
   try {
     const propertyId = formData.get('propertyId') as string;
     const weekdayPrices = JSON.parse(formData.get('weekdayTiers') as string);
@@ -313,6 +318,7 @@ export async function updateBasicPrices(
  * Usuwa ceny poza sezonem dla domku.
  */
 export async function deleteBasicPrices(propertyId: string) {
+  await ensureAdmin();
   try {
     await dbConnect();
     await PropertyPrices.deleteOne({ propertyId, seasonId: null });
@@ -325,17 +331,12 @@ export async function deleteBasicPrices(propertyId: string) {
   }
 }
 
-/**
- * Zapisuje ceny sezonowe lub podstawowe dla domku.
- * mode === 'basic'  →  seasonId: null
- * mode === 'season' →  seasonId: <id>
- *
- * Używa upsert – jedno zapytanie, żadnej logiki merge.
- */
+
 export async function updateSeasonPricesForProperty(
   previousState: { message: string; success: boolean } | null,
   formData: FormData
 ) {
+  await ensureAdmin();
   try {
     const propertyId = formData.get('propertyId') as string;
     const mode = formData.get('mode') as 'basic' | 'season';
@@ -392,10 +393,9 @@ export async function updateSeasonPrices(
   return updateSeasonPricesForProperty(previousState, formData);
 }
 
-/**
- * Kopiuje wszystkie ceny (podstawowe + sezonowe) z jednego domku do pozostałych aktywnych domków.
- */
+
 export async function copyPricesToAllProperties(sourcePropertyId: string) {
+  await ensureAdmin();
   try {
     await dbConnect();
 

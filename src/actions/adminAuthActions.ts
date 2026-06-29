@@ -1,8 +1,10 @@
 import User from "@/db/models/Users"
 import { randomBytes } from "node:crypto";
 import dbConnect from "@/db/connection"
+import { ensureAdmin } from "@/lib/ensureAdmin"
 
 export async function resetAdminPassword(username: string) {
+    await ensureAdmin();
     await dbConnect();
 
     function generatePassword(length = 6) {
