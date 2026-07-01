@@ -2,7 +2,6 @@ import { Sansita, PT_Serif, Mulish } from "next/font/google";
 import type { Metadata } from 'next';
 import '@/app/globals.css';
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import Script from 'next/script';
 
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -42,10 +41,10 @@ export default function RootLayout({
             <body className={`${sansita.variable} ${ptSerif.variable} ${mulish.variable}`}>
                 {children}
                 <SpeedInsights />
-                <Script
-                    src="/stats/js"
-                    data-goatcounter="/stats/count"
-                    strategy="afterInteractive"
+                <script
+                    data-goatcounter="https://accommodation.goatcounter.com/count"
+                    async
+                    src="//gc.zgo.at/count.js"
                 />
             </body>
         </html>
