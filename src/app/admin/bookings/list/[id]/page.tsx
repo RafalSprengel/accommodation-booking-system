@@ -31,21 +31,6 @@ export default async function BookingDetailsPage({ params }: { params: Promise<{
         </div>
 
         <div className={styles.sideCard}>
-          <h3 className={styles.cardTitle}>VAT Invoice</h3>
-          {booking.invoice ? (
-            <div className={styles.invoiceData}>
-              <div className={styles.infoRow}><span className={styles.label}>Company name:</span><span>{booking.invoiceData?.companyName || '-'}</span></div>
-              <div className={styles.infoRow}><span className={styles.label}>Address:</span><span>{booking.invoiceData?.address || '-'}</span></div>
-              <div className={styles.infoRow}><span className={styles.label}>City:</span><span>{booking.invoiceData?.city || '-'}</span></div>
-              <div className={styles.infoRow}><span className={styles.label}>Postal code:</span><span>{booking.invoiceData?.postalCode || '-'}</span></div>
-            </div>
-          ) : (
-            <div className={styles.invoiceData}>
-              <div className={styles.infoRow}><span className={styles.label}>No invoice data</span></div>
-            </div>
-          )}
-        </div>
-        <div className={styles.sideCard}>
           <div className={styles.infoBlock}>
             <h3 className={styles.cardTitle}>Summary</h3>
             <div className={styles.infoRow}><span className={styles.label}>ID:</span><code className={styles.code}>{booking._id}</code></div>

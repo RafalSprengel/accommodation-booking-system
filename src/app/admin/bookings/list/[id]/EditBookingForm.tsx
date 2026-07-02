@@ -20,13 +20,37 @@ interface FormData {
   startDate: string;
   endDate: string;
   internalNotes: string;
+  invoice: boolean;
+  invoiceCompany: string;
+  invoiceAddress: string;
+  invoicePostalCode: string;
+  invoiceCity: string;
 }
+
+const FIELD_LABELS: Record<string, string> = {
+  firstName: "First name",
+  lastName: "Last name",
+  guestEmail: "Email",
+  guestPhone: "Phone",
+  adults: "Adults",
+  children: "Children",
+  extraBedsCount: "Extra beds",
+  totalPrice: "Total price",
+  paidAmount: "Paid amount",
+  startDate: "Check-in date",
+  endDate: "Check-out date",
+  invoiceCompany: "Company name",
+  invoiceAddress: "Address",
+  invoicePostalCode: "Postal code",
+  invoiceCity: "City",
+};
 
 export default function EditBookingForm({ initialData }: { initialData: any }) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const formatDate = (date: any) => {
     if (!date) return "";
@@ -47,6 +71,11 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
     startDate: formatDate(initialData.startDate),
     endDate: formatDate(initialData.endDate),
     internalNotes: (initialData.adminNotes as string) ?? (initialData.internalNotes as string) ?? '',
+    invoice: initialData.invoice ?? false,
+    invoiceCompany: initialData.invoiceData?.companyName ?? '',
+    invoiceAddress: initialData.invoiceData?.address ?? '',
+    invoicePostalCode: initialData.invoiceData?.postalCode ?? '',
+    invoiceCity: initialData.invoiceData?.city ?? '',
   };
 
   const orderId =
@@ -62,7 +91,15 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   ) => {
-    const { name, value } = e.target;
+    const target = e.target;
+    const name = target.name;
+    const value = target.type === "checkbox" ? (target as HTMLInputElement).checked : target.value;
+    // Clear error for the field being changed
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      delete next[name];
+      return next;
+    });
     if (
       [
         "adults",
@@ -88,14 +125,47 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
   const handleEditToggle = () => {
     if (isEditing) {
       setForm(originalData);
+      setFieldErrors({});
       setIsSaved(false);
     }
     setIsEditing(!isEditing);
   };
 
+  /** Parse server validation error message and map each error to a field */
+  const parseFieldErrors = (message: string): Record<string, string> => {
+    const errors: Record<string, string> = {};
+    const rules: [string, string, string][] = [
+      ["Company name", "invoiceCompany", "invoice"],
+      ["Address", "invoiceAddress", "invoice"],
+      ["Postal code", "invoicePostalCode", "invoice"],
+      ["City", "invoiceCity", "invoice"],
+      ["First name", "firstName", ""],
+      ["Last name", "lastName", ""],
+      ["email", "guestEmail", ""],
+      ["phone", "guestPhone", ""],
+      ["adults", "adults", ""],
+      ["children", "children", ""],
+      ["extra beds", "extraBedsCount", ""],
+      ["Total price", "totalPrice", ""],
+      ["Paid amount", "paidAmount", ""],
+    ];
+
+    for (const [searchText, fieldKey, requiredCheck] of rules) {
+      if (message.toLowerCase().includes(searchText.toLowerCase())) {
+        if (requiredCheck === "invoice" && !form.invoice) continue;
+        errors[fieldKey] = `"${FIELD_LABELS[fieldKey] || fieldKey}" is required.`;
+      }
+    }
+    return errors;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
+
+    // Collect errors locally (setFieldErrors is async, so we build an object first)
+    const localErrors: Record<string, string> = {};
+    setFieldErrors({});
 
     const requiredNumeric = [
       "adults",
@@ -107,10 +177,31 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
     for (const field of requiredNumeric) {
       const val = form[field as keyof FormData];
       if (val === "" || val === null || Number.isNaN(val)) {
-        toast.error("All numeric fields must be filled.");
-        setIsSaving(false);
-        return;
+        localErrors[field] = `"${FIELD_LABELS[field]}" must be filled.`;
       }
+    }
+
+    // Check invoice required fields locally before sending
+    if (form.invoice) {
+      const requiredInvoiceFields = [
+        { key: "invoiceCompany", label: "Company name" },
+        { key: "invoiceAddress", label: "Address" },
+        { key: "invoicePostalCode", label: "Postal code" },
+        { key: "invoiceCity", label: "City" },
+      ];
+      for (const { key, label } of requiredInvoiceFields) {
+        if (!form[key as keyof FormData]?.toString().trim()) {
+          localErrors[key] = `"${label}" is required for invoice.`;
+        }
+      }
+    }
+
+    // If we have local errors, stop
+    if (Object.keys(localErrors).length > 0) {
+      setFieldErrors(localErrors);
+      setIsSaving(false);
+      toast.error("Please fix the errors before saving.");
+      return;
     }
 
     const formData = new FormData();
@@ -129,14 +220,12 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
     formData.append("startDate", form.startDate);
     formData.append("endDate", form.endDate);
     formData.append("internalNotes", form.internalNotes ?? "");
-    // Preserve invoice data if present so saving other fields doesn't clear it
-    formData.append("invoice", initialData.invoice ? "true" : "false");
-    if (initialData.invoiceData) {
-      formData.append("invoiceCompany", initialData.invoiceData.companyName || "");
-      formData.append("invoiceAddress", initialData.invoiceData.address || "");
-      formData.append("invoicePostalCode", initialData.invoiceData.postalCode || "");
-      formData.append("invoiceCity", initialData.invoiceData.city || "");
-    }
+    // Invoice data from form
+    formData.append("invoice", form.invoice ? "true" : "false");
+    formData.append("invoiceCompany", form.invoiceCompany ?? "");
+    formData.append("invoiceAddress", form.invoiceAddress ?? "");
+    formData.append("invoicePostalCode", form.invoicePostalCode ?? "");
+    formData.append("invoiceCity", form.invoiceCity ?? "");
 
     const result = await updateBookingAction(null, formData);
 
@@ -145,9 +234,16 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
       setOriginalData({ ...form });
       setIsSaved(true);
       setIsEditing(false);
+      setFieldErrors({});
       router.refresh();
     } else {
-      toast.error(result.message || "An error occurred.");
+      // Try to parse field-level errors from server message
+      const parsed = parseFieldErrors(result.message || "");
+      if (Object.keys(parsed).length > 0) {
+        setFieldErrors(parsed);
+      } else {
+        toast.error(result.message || "An error occurred.");
+      }
     }
 
     setIsSaving(false);
@@ -157,6 +253,65 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
     if (isSaving) return "⏳ Saving...";
     if (isSaved && !hasChanges()) return "✅ Saved";
     return "💾 Save";
+  };
+
+  /** Helper to render input with error message */
+  const renderField = (
+    name: keyof FormData,
+    label: string,
+    type: "input" | "number" | "email" | "tel" | "date" | "select" | "textarea" = "input",
+    extraProps: Record<string, any> = {},
+  ) => {
+    const error = fieldErrors[name];
+    const isSelect = type === "select";
+    const isTextarea = type === "textarea";
+    const isNumber = type === "number";
+    const isEmail = type === "email";
+    const isTel = type === "tel";
+    const isDate = type === "date";
+    const inputType = isNumber ? "number" : isEmail ? "email" : isTel ? "tel" : isDate ? "date" : "text";
+    const hasError = !!error;
+
+    return (
+      <div className={`${styles.inputGroup} ${hasError ? styles.inputGroupError : ""}`}>
+        <label htmlFor={name}>{label}</label>
+        {isSelect ? (
+          <select
+            id={name}
+            name={name}
+            value={form[name] as string}
+            onChange={handleChange}
+            disabled={!isEditing}
+            className={`${!isEditing ? styles.readOnly : ""} ${hasError ? styles.inputError : ""}`}
+            {...extraProps}
+          >
+            {extraProps.children}
+          </select>
+        ) : isTextarea ? (
+          <textarea
+            id={name}
+            name={name}
+            value={form[name] as string}
+            onChange={handleChange}
+            disabled={!isEditing}
+            className={`${!isEditing ? styles.readOnly : ""} ${hasError ? styles.inputError : ""}`}
+            {...extraProps}
+          />
+        ) : (
+          <input
+            id={name}
+            name={name}
+            type={inputType}
+            value={form[name] as string | number}
+            onChange={handleChange}
+            readOnly={!isEditing}
+            className={`${!isEditing ? styles.readOnly : ""} ${hasError ? styles.inputError : ""}`}
+            {...extraProps}
+          />
+        )}
+        {hasError && <span className={styles.fieldError}>{error}</span>}
+      </div>
+    );
   };
 
   return (
@@ -181,164 +336,51 @@ export default function EditBookingForm({ initialData }: { initialData: any }) {
       </div>
 
       <div className={styles.formGrid}>
-        <div className={styles.inputGroup}>
-          <label>First name</label>
-          <input
-            name="firstName"
-            value={form.firstName}
-            onChange={handleChange}
-            required
-            readOnly={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          />
+        {renderField("firstName", "First name")}
+        {renderField("lastName", "Last name")}
+        {renderField("guestEmail", "Email", "email")}
+        {renderField("guestPhone", "Phone", "tel")}
+        {renderField("adults", "Adults", "number", { min: 1 })}
+        {renderField("children", "Children (free)", "number", { min: 0 })}
+        {renderField("extraBedsCount", "Extra beds", "number", { min: 0 })}
+        {renderField("startDate", "Check-in date", "date")}
+        {renderField("endDate", "Check-out date", "date")}
+        {renderField("totalPrice", "Total price (GBP)", "number", { step: "0.01" })}
+        {renderField("paidAmount", "Paid amount (GBP)", "number", { step: "0.01" })}
+        {renderField("status", "Status", "select", {
+          children: (
+            <>
+              <option value="pending" disabled>Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="failed" disabled>Rejected (failed)</option>
+            </>
+          ),
+        })}
+        {renderField("internalNotes", "Internal notes", "textarea", { rows: 3 })}
+      </div>
+
+      <div className={styles.formGrid}>
+        <div className={styles.inputGroup} style={{ gridColumn: '1 / -1' }}>
+          <label className={styles.checkboxLabel}>
+            <input
+              name="invoice"
+              type="checkbox"
+              checked={form.invoice}
+              onChange={handleChange}
+              disabled={!isEditing}
+            />
+            <span>VAT Invoice</span>
+          </label>
         </div>
-        <div className={styles.inputGroup}>
-          <label>Last name</label>
-          <input
-            name="lastName"
-            value={form.lastName}
-            onChange={handleChange}
-            required
-            readOnly={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label>Email</label>
-          <input
-            name="guestEmail"
-            type="email"
-            value={form.guestEmail}
-            onChange={handleChange}
-            required
-            readOnly={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label>Phone</label>
-          <input
-            name="guestPhone"
-            type="tel"
-            value={form.guestPhone}
-            onChange={handleChange}
-            required
-            readOnly={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label>Adults</label>
-          <input
-            name="adults"
-            type="number"
-            min="1"
-            value={form.adults}
-            onChange={handleChange}
-            readOnly={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label>Children (free)</label>
-          <input
-            name="children"
-            type="number"
-            min="0"
-            value={form.children}
-            onChange={handleChange}
-            readOnly={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label>Extra beds</label>
-          <input
-            name="extraBedsCount"
-            type="number"
-            min="0"
-            value={form.extraBedsCount}
-            onChange={handleChange}
-            readOnly={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label>Check-in date</label>
-          <input
-            name="startDate"
-            type="date"
-            value={form.startDate}
-            onChange={handleChange}
-            required
-            readOnly={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label>Check-out date</label>
-          <input
-            name="endDate"
-            type="date"
-            value={form.endDate}
-            onChange={handleChange}
-            required
-            readOnly={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label>Total price (GBP)</label>
-          <input
-            name="totalPrice"
-            type="number"
-            step="0.01"
-            value={form.totalPrice}
-            onChange={handleChange}
-            required
-            readOnly={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label>Paid amount (GBP)</label>
-          <input
-            name="paidAmount"
-            type="number"
-            step="0.01"
-            value={form.paidAmount}
-            onChange={handleChange}
-            required
-            readOnly={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label>Status</label>
-          <select
-            name="status"
-            value={form.status}
-            onChange={handleChange}
-            disabled={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          >
-            <option value="pending" disabled>Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="cancelled">Cancelled</option>
-            <option value="failed" disabled>Rejected (failed)</option>
-          </select>
-        </div>
-        <div className={styles.inputGroup}>
-          <label>Internal notes</label>
-          <textarea
-            name="internalNotes"
-            rows={3}
-            value={form.internalNotes}
-            onChange={handleChange}
-            disabled={!isEditing}
-            className={!isEditing ? styles.readOnly : ""}
-          />
-        </div>
+        {form.invoice && (
+          <>
+            {renderField("invoiceCompany", "Company name")}
+            {renderField("invoiceAddress", "Address")}
+            {renderField("invoicePostalCode", "Postal code")}
+            {renderField("invoiceCity", "City")}
+          </>
+        )}
       </div>
 
       {isEditing && (
