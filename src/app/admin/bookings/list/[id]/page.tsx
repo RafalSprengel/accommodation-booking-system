@@ -38,6 +38,7 @@ export default async function BookingDetailsPage({ params }: { params: Promise<{
             <div className={styles.infoRow}><span className={styles.label}>Cottage:</span><span className={styles.value}>{propertyName}</span></div>
             <div className={styles.infoRow}><span className={styles.label}>Type:</span><span className={styles.value}>{bookingTypeLabel}</span></div>
             <div className={styles.infoRow}><span className={styles.label}>Payment method:</span><span className={styles.value}>{booking.paymentMethod === 'online' ? 'Online' : booking.paymentMethod === 'cash' ? 'Cash' : booking.paymentMethod === 'transfer' ? 'Cash / Transfer' : booking.paymentMethod}</span></div>
+            <div className={styles.infoRow}><span className={styles.label}>Price:</span><span className={styles.value}>{totalPrice.toFixed(2)} GBP</span></div>
             {isFullyPaid ? (
               <div className={styles.infoRow}>
                 <span className={styles.label}>Payment status:</span>
