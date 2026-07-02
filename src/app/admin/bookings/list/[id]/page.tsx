@@ -64,7 +64,7 @@ export default async function BookingDetailsPage({ params }: { params: Promise<{
             )}
             {booking.source === 'admin' && (
               <div className={styles.adminBubble} style={{ marginTop: 12, fontSize: '0.92em', background: '#f1f5f9', color: '#334155', borderRadius: 8, padding: '6px 12px', display: 'inline-block' }}>
-                Booking made via admin panel
+                Booking made via admin panel.
               </div>
             )}
           </div>
