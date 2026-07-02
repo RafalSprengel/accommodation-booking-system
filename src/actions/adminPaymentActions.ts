@@ -19,6 +19,7 @@ export interface AdminPaymentRow {
   firstName?: string
   lastName?: string
   totalPrice: number
+  paidAmount?: number
   paymentMethod: PaymentMethod
   status: string
   stripeSessionId?: string
@@ -63,6 +64,7 @@ function normalizePaymentRow(row: Record<string, unknown>): AdminPaymentRow {
     firstName: (row.firstName as string) || (typeof row.guestName === 'string' ? (row.guestName as string).split(' ')[0] : undefined),
     lastName: (row.lastName as string) || (typeof row.guestName === 'string' ? (row.guestName as string).split(' ').slice(1).join(' ') : undefined),
     totalPrice: row.totalPrice,
+    paidAmount: typeof row.paidAmount === 'number' ? row.paidAmount : undefined,
     paymentMethod: row.paymentMethod,
     status: row.status,
   }
@@ -87,14 +89,14 @@ export async function getAdminPaymentsData(): Promise<AdminPaymentsData> {
       source: 'online',
       status: { $in: ['pending', 'confirmed', 'failed'] },
     })
-      .select('orderId createdAt firstName lastName totalPrice paymentMethod status stripeSessionId')
+      .select('orderId createdAt firstName lastName totalPrice paidAmount paymentMethod status stripeSessionId')
       .sort({ createdAt: -1 })
       .lean(),
     Booking.find({
       paymentMethod: { $in: ['cash', 'transfer'] },
       status: { $in: ['pending', 'confirmed', 'failed'] },
     })
-      .select('orderId createdAt firstName lastName totalPrice paymentMethod status')
+      .select('orderId createdAt firstName lastName totalPrice paidAmount paymentMethod status')
       .sort({ createdAt: -1 })
       .lean(),
   ])

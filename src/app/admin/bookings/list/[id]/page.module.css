@@ -217,6 +217,41 @@
   border: 1px solid #fecaca;
 }
 
+.paymentInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
+}
+
+.pricePaid {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.priceDue {
+  color: #dc2626;
+  font-weight: 700;
+  padding-top: 4px;
+  border-top: 1px dashed #e2e8f0;
+  margin-top: 4px;
+}
+
+.paymentPaid {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.paymentDeposit {
+  color: #ca8a04;
+  font-weight: 600;
+}
+
+.paymentUnpaid {
+  color: #dc2626;
+  font-weight: 600;
+}
+
 @media (min-width: 768px) {
   .container {
     max-width: 1000px;

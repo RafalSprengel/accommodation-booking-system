@@ -282,7 +282,7 @@ export default function PaymentsPanel({
                     <td>{row.orderId ? row.orderId : "No number"}</td>
                     <td>{createdAt.toLocaleString("en-GB")}</td>
                     <td>{`${row.firstName || ''} ${row.lastName || ''}`.trim()}</td>
-                    <td>{row.totalPrice.toFixed(2)} GBP</td>
+                    <td>{(typeof row.paidAmount === 'number' ? row.paidAmount : row.totalPrice).toFixed(2)} GBP</td>
                     {mode === "online" ? (
                       <td>{formatStatus(row.status)}</td>
                     ) : (
