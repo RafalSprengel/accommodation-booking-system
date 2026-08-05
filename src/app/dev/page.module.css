@@ -129,6 +129,12 @@
   border-radius: 10px;
 }
 
+.btnDanger,
+.btnPrimary,
+.btnSecondary {
+  cursor: pointer;
+}
+
 .divider {
   border: 0;
   border-top: 1px solid #2d333b;

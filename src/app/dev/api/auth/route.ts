@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-const DEV_AUTH_LOGIN = process.env.DEV_AUTH_LOGIN || 'rafal';
-const DEV_AUTH_PASSWORD = process.env.DEV_AUTH_PASSWORD || 'wilczki';
+const DEV_AUTH_LOGIN = process.env.DEV_AUTH_LOGIN;
+const DEV_AUTH_PASSWORD = process.env.DEV_AUTH_PASSWORD;
 
 export async function POST(request: Request) {
   const body = await request.json();
