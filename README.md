@@ -1,6 +1,6 @@
 <img width="1200" height="900" alt="landing-page" src="https://github.com/user-attachments/assets/9bd75bfb-b57e-48fd-93d3-e8979e6aa509" />
 
-# 🐺 Wolf Lodges – Accommodation Booking & Dynamic Pricing System
+# 🐺 Wolf Lodges – Accommodation Booking & Management System
 
 A full-stack booking platform for a small holiday-cottage business: public website, multi-step booking wizard with Stripe payments, and a complete admin panel with a dynamic pricing engine, occupancy calendar and automatic payment reconciliation.
 
